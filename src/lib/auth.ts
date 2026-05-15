@@ -1,7 +1,8 @@
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
+import { dash } from "@better-auth/infra";
 import { Pool } from "pg";
-import { Kysely, PostgresDialect } from "kysely";
+import { PostgresDialect } from "kysely";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -9,14 +10,13 @@ const pool = new Pool({
   max: 1,
 });
 
-const db = new Kysely<Record<string, never>>({
-  dialect: new PostgresDialect({ pool }),
-});
-
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET!,
   baseURL: process.env.BETTER_AUTH_URL!,
-  database: db,
+  database: {
+    dialect: new PostgresDialect({ pool }),
+    type: "postgres",
+  },
   emailAndPassword: {
     enabled: true,
   },
@@ -27,6 +27,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    dash(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         const nodemailer = await import("nodemailer");
