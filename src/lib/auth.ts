@@ -1,6 +1,5 @@
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
-import { dash } from "@better-auth/infra";
 import { Pool } from "pg";
 import { Kysely, PostgresDialect } from "kysely";
 
@@ -28,7 +27,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    dash(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         const nodemailer = await import("nodemailer");
