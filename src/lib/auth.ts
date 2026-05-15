@@ -1,14 +1,23 @@
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
 import { dash } from "@better-auth/infra";
+import { Pool } from "pg";
+import { Kysely, PostgresDialect } from "kysely";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+  max: 1,
+});
+
+const db = new Kysely<Record<string, never>>({
+  dialect: new PostgresDialect({ pool }),
+});
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET!,
   baseURL: process.env.BETTER_AUTH_URL!,
-  database: {
-    provider: "pg",
-    url: process.env.DATABASE_URL!,
-  },
+  database: db,
   emailAndPassword: {
     enabled: true,
   },
