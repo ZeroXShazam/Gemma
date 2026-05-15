@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { magicLink } from "better-auth/plugins";
-import { supabaseAdmin } from "@/lib/supabase";
+import { dash } from "@better-auth/infra";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
@@ -29,6 +29,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    dash(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         await transporter.sendMail({
