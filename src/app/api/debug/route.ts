@@ -14,7 +14,7 @@ export async function GET() {
   // Test DB connection
   try {
     const { Pool } = await import("pg");
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false }, max: 1 });
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false }, max: 1, connectionTimeoutMillis: 5000 });
     await pool.query("SELECT 1");
     await pool.end();
     results.db = "connected";
