@@ -1,36 +1,118 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gemma · German A1–A2 Trainer
 
-## Getting Started
+A spaced-repetition flashcard app for learning German grammar and vocabulary at A1–A2 level. Built with Next.js, Better Auth, and Supabase.
 
-First, run the development server:
+**Live:** https://gemma-iota.vercel.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Features
+
+- **SM-2 spaced repetition** — learning steps (1 min → 10 min), review, mature states with configurable ease
+- **129 cards across 13 types** — verbs, nouns, prepositions, wh-words, pronouns, possessives, adjectives, modals, Perfekt, negation, comparatives, reflexives, conjunctions
+- **Two-phase review** — Phase 1: fill-in-the-blank cloze; Phase 2: rate recall (Again / Hard / Good / Easy)
+- **Per-user progress** — SRS state stored in Supabase per user, persists across sessions and devices
+- **20 new cards/day limit** — configurable daily intake with automatic reset
+- **Filters** — level tabs (A1 / A2 / All) and per-type toggles
+- **Keyboard shortcuts** — Enter to submit/continue, 1–4 to rate
+- **Auth** — email/password, sign-up, Google OAuth via Better Auth
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Auth | Better Auth v1.6 (email/password + Google OAuth + magic link) |
+| Database | Supabase (PostgreSQL via pooler) |
+| ORM/adapter | Kysely 0.28 + pg |
+| Deployment | Vercel |
+| Package manager | pnpm |
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── auth/[[...all]]/   # Better Auth handler
+│   │   ├── user/progress/     # GET/PUT card SRS state
+│   │   └── user/settings/     # GET/PUT user settings & daily counters
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx               # Auth gate → AuthForm or Trainer
+└── lib/
+    ├── auth.ts                # Better Auth server config
+    ├── auth-client.ts         # Better Auth React client
+    ├── cards.ts               # 129 card definitions
+    ├── srs.ts                 # SM-2 algorithm (computeNext, previewIntervals)
+    ├── supabase.ts            # Supabase client + admin
+    └── types.ts               # Shared TypeScript types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run `schema.sql` (Better Auth core tables) and `schema-progress.sql` (trainer tables) in your Supabase SQL editor, or via the pg client:
 
-## Learn More
+```bash
+node -e "
+const { Pool } = require('pg')
+const fs = require('fs')
+const pool = new Pool({ host: '...', user: '...', password: '...', database: 'postgres', ssl: { rejectUnauthorized: false } })
+pool.query(fs.readFileSync('schema-progress.sql', 'utf8')).then(() => { console.log('done'); pool.end() })
+"
+```
 
-To learn more about Next.js, take a look at the following resources:
+**`user_card_progress`** — one row per (user, card): ease, interval, reps, lapses, due (unix ms), state, step
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**`user_settings`** — one row per user: enabled_types, new_cards_today, today_date, total_reviewed
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Local Development
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Create `.env.local`:
+
+```env
+DATABASE_URL=postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:5432/postgres?sslmode=no-verify
+BETTER_AUTH_SECRET=<random 32-char string>
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=<from Google Cloud Console>
+GOOGLE_CLIENT_SECRET=<from Google Cloud Console>
+NEXT_PUBLIC_SUPABASE_URL=https://PROJECT_REF.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
+```
+
+```bash
+pnpm dev
+```
+
+Open http://localhost:3000.
+
+---
+
+## Google OAuth Setup
+
+In [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials → your OAuth 2.0 client:
+
+- **Authorized JavaScript origins:** `https://your-domain.vercel.app`, `http://localhost:3000`
+- **Authorized redirect URIs:** `https://your-domain.vercel.app/api/auth/callback/google`, `http://localhost:3000/api/auth/callback/google`
+
+When adding credentials to Vercel, always use `printf` (not `echo`) to avoid trailing newlines:
+
+```bash
+printf 'your-secret' | vercel env add GOOGLE_CLIENT_SECRET production
+```
