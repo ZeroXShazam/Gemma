@@ -48,6 +48,7 @@ export interface CardDef {
   noun?: string;
   article?: Gender;
   nounForms?: { nom: string; akk: string; dat: string };
+  plural?: string;
   word?: string;
 }
 

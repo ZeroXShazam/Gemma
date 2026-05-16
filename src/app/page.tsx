@@ -16,6 +16,19 @@ const TYPE_LABELS: Record<CardType, string> = {
   reflexive: 'Reflexive', conjunction: 'Conjunctions',
 }
 
+const VERB_EN: Record<string, string> = {
+  sein: 'to be', haben: 'to have', gehen: 'to go', kommen: 'to come',
+  lesen: 'to read', essen: 'to eat', trinken: 'to drink', fahren: 'to drive',
+  sprechen: 'to speak', sehen: 'to see', nehmen: 'to take', geben: 'to give',
+  finden: 'to find', wissen: 'to know', machen: 'to do', arbeiten: 'to work',
+  wohnen: 'to live', lernen: 'to learn', heißen: 'to be called', helfen: 'to help',
+  schlafen: 'to sleep', verstehen: 'to understand', bleiben: 'to stay',
+  treffen: 'to meet', denken: 'to think', schreiben: 'to write',
+  bringen: 'to bring', laufen: 'to run',
+  können: 'can', müssen: 'must', wollen: 'to want', sollen: 'should',
+  dürfen: 'may', mögen: 'to like', möchten: 'would like',
+}
+
 const RATING_CFG = [
   { r: 'again' as Rating, label: 'Again', color: '#f87171', key: '1' },
   { r: 'hard'  as Rating, label: 'Hard',  color: '#fb923c', key: '2' },
@@ -58,6 +71,8 @@ function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSC
   const review: SRSCard[] = []
   const newCards: SRSCard[] = []
 
+  const allNew: SRSCard[] = []
+
   for (const card of CARDS_DATA) {
     if (lv !== 'All' && card.level !== lv) continue
     if (!s.enabledTypes.includes(card.type)) continue
@@ -65,10 +80,21 @@ function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSC
     const sc = { ...card, ...srs } as SRSCard
     if (srs.state === 'learning' && srs.due <= now) learning.push(sc)
     else if ((srs.state === 'review' || srs.state === 'mature') && srs.due <= now) review.push(sc)
-    else if (srs.state === 'new' && newCards.length < budget) newCards.push(sc)
+    else if (srs.state === 'new') allNew.push(sc)
   }
 
-  return [...learning, ...review, ...newCards]
+  for (let i = allNew.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[allNew[i], allNew[j]] = [allNew[j], allNew[i]]
+  }
+  newCards.push(...allNew.slice(0, budget))
+
+  const all = [...learning, ...review, ...newCards]
+  for (let i = all.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[all[i], all[j]] = [all[j], all[i]]
+  }
+  return all
 }
 
 const sInput: React.CSSProperties = {
@@ -180,7 +206,12 @@ function CardBack({ card }: { card: SRSCard }) {
     ]
     return (
       <div>
-        <div style={{ fontWeight: 700, fontSize: 16, color: '#ededed', marginBottom: 12 }}>{card.verb}</div>
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ fontWeight: 700, fontSize: 16, color: '#ededed' }}>{card.verb}</div>
+          {card.verb && VERB_EN[card.verb] && (
+            <div style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{VERB_EN[card.verb]}</div>
+          )}
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 16px', marginBottom: 12 }}>
           {rows.map(([p, v]) => (
             <div key={p} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px', background: '#1a1a1a', borderRadius: 4 }}>
@@ -198,20 +229,18 @@ function CardBack({ card }: { card: SRSCard }) {
   }
 
   if (card.type === 'noun' && card.nounForms) {
-    const f = card.nounForms
     const art = card.article!
     const gc = art === 'der' ? '#60a5fa' : art === 'die' ? '#f472b6' : '#34d399'
     return (
-      <div>
-        <div style={{ fontSize: 20, fontWeight: 700, color: gc, marginBottom: 16 }}>{art} {card.noun}</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-          {(['Nom', 'Akk', 'Dat'] as const).map((cas, i) => (
-            <div key={cas} style={{ textAlign: 'center', padding: '10px 8px', background: '#1a1a1a', borderRadius: 8 }}>
-              <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>{cas}</div>
-              <div style={{ fontWeight: 700, color: gc, fontSize: 16 }}>{[f.nom, f.akk, f.dat][i]}</div>
-              <div style={{ fontSize: 13, color: '#888' }}>{card.noun}</div>
-            </div>
-          ))}
+      <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: '#1a1a1a', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: '#555', marginBottom: 6 }}>Singular</div>
+          <div style={{ fontWeight: 700, color: gc, fontSize: 20 }}>{art} {card.noun}</div>
+        </div>
+        <div style={{ color: '#333', fontSize: 18 }}>/</div>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: '#1a1a1a', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: '#555', marginBottom: 6 }}>Plural</div>
+          <div style={{ fontWeight: 700, color: '#ededed', fontSize: 20 }}>die {card.plural}</div>
         </div>
       </div>
     )
@@ -241,6 +270,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [loading, setLoading]   = useState(true)
   const [showMenu, setShowMenu] = useState(false)
   const [exIdx, setExIdx]       = useState(0)
+  const [choices, setChoices]   = useState<string[]>([])
   const inputEl = useRef<HTMLInputElement>(null)
 
   useEffect(() => { loadData() }, [])
@@ -316,9 +346,26 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const ex = card ? card.examples[exIdx % card.examples.length] : undefined
   const intervals = card ? previewIntervals(card) : null
 
+  useEffect(() => {
+    if (!card || card.type !== 'prep' || !card.word) { setChoices([]); return }
+    const allWords = [...new Set(CARDS_DATA.filter(c => c.type === 'prep' && c.word && c.word !== card.word).map(c => c.word!))]
+    const shuffled = allWords.sort(() => Math.random() - 0.5).slice(0, 3)
+    setChoices([...shuffled, card.word].sort(() => Math.random() - 0.5))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [card?.id, exIdx])
+
   function doCheck() {
     if (!ex || checked) return
     const ok = answerOk(input, ex.focus)
+    setCorrect(ok)
+    setChecked(true)
+    if (ok) setTimeout(() => setPhase('flip'), 800)
+  }
+
+  function pickChoice(value: string) {
+    if (!ex || checked) return
+    const ok = answerOk(value, ex.focus)
+    setInput(value)
     setCorrect(ok)
     setChecked(true)
     if (ok) setTimeout(() => setPhase('flip'), 800)
@@ -431,7 +478,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   const [before, after] = ex ? blankParts(ex.de, ex.focus) : ['', '']
-  const hint = card?.verb ?? card?.noun ?? card?.word ?? null
+  const hint = (card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null)
+  const genderHint = card?.type === 'noun' && card.article
+    ? ({ der: 'm', die: 'f', das: 'n' } as const)[card.article]
+    : null
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }} onClick={() => setShowMenu(false)}>
@@ -544,7 +594,22 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                   </span>
                 )}
                 <span>{after}</span>
+                {genderHint && !checked && (
+                  <span style={{ fontSize: 13, color: '#444', marginLeft: 6 }}>({genderHint})</span>
+                )}
               </div>
+
+              {card.type === 'prep' && choices.length > 0 && !checked && (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
+                  {choices.map(c => (
+                    <button key={c} onClick={() => pickChoice(c)} style={{
+                      padding: '6px 16px', borderRadius: 20,
+                      border: '1px solid #2a2a2a', background: '#1a1a1a',
+                      color: '#ccc', cursor: 'pointer', fontSize: 15, fontFamily: 'inherit',
+                    }}>{c}</button>
+                  ))}
+                </div>
+              )}
 
               {(hint || ex.subject === 'sie') && !checked && (
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 6 }}>
@@ -573,11 +638,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           {/* Phase 2: Flip / Rate */}
           {phase === 'flip' && ex && (
             <>
-              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 20 }}>
+              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 4 }}>
                 <span>{before}</span>
                 <span style={{ color: '#60a5fa', fontWeight: 700 }}>{ex.focus}</span>
                 <span>{after}</span>
               </div>
+              <div style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>{ex.en}</div>
 
               <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: 20, marginBottom: 20 }}>
                 <CardBack card={card} />
@@ -587,6 +653,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 {card.examples.map((e, i) => (
                   <div key={i} style={{ marginBottom: 8, padding: '8px 10px', background: '#0d0d0d', borderRadius: 8 }}>
                     <div style={{ fontSize: 14, color: '#bbb' }}>{e.de}</div>
+                    <div style={{ fontSize: 12, color: '#444', marginTop: 2 }}>{e.en}</div>
                   </div>
                 ))}
               </div>

@@ -3,8 +3,36 @@ import type { CardDef, Conjugations, Example, Level } from './types';
 function verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
   return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex };
 }
-function noun(id: string, art: 'der'|'die'|'das', n: string, forms: {nom:string;akk:string;dat:string}, ex: Example[]): CardDef {
-  return { id, type: 'noun', level: 'A1', article: art, noun: n, nounForms: forms, examples: ex };
+type Art = 'der'|'die'|'das';
+type Cas = 'nom'|'akk'|'dat';
+const POSS_FORMS: Record<string, Record<Art, Record<Cas, string>>> = {
+  mein:  { der:{nom:'mein', akk:'meinen', dat:'meinem'}, die:{nom:'meine', akk:'meine', dat:'meiner'}, das:{nom:'mein', akk:'mein', dat:'meinem'} },
+  dein:  { der:{nom:'dein', akk:'deinen', dat:'deinem'}, die:{nom:'deine', akk:'deine', dat:'deiner'}, das:{nom:'dein', akk:'dein', dat:'deinem'} },
+  sein:  { der:{nom:'sein', akk:'seinen', dat:'seinem'}, die:{nom:'seine', akk:'seine', dat:'seiner'}, das:{nom:'sein', akk:'sein', dat:'seinem'} },
+  ihr:   { der:{nom:'ihr',  akk:'ihren',  dat:'ihrem'},  die:{nom:'ihre',  akk:'ihre',  dat:'ihrer'},  das:{nom:'ihr',  akk:'ihr',  dat:'ihrem'}  },
+  unser: { der:{nom:'unser',akk:'unseren',dat:'unserem'},die:{nom:'unsere',akk:'unsere',dat:'unserer'},das:{nom:'unser',akk:'unser',dat:'unserem'} },
+  euer:  { der:{nom:'euer', akk:'euren',  dat:'eurem'},  die:{nom:'eure',  akk:'eure',  dat:'eurer'},  das:{nom:'euer', akk:'euer', dat:'eurem'}  },
+  Ihr:   { der:{nom:'Ihr',  akk:'Ihren',  dat:'Ihrem'},  die:{nom:'Ihre',  akk:'Ihre',  dat:'Ihrer'},  das:{nom:'Ihr',  akk:'Ihr',  dat:'Ihrem'}  },
+}
+const POSS_EN: Record<string, string> = {
+  mein:'my', dein:'your', sein:'his', ihr:'her', unser:'our', euer:'your (pl.)', Ihr:'your (formal)',
+}
+
+function genPossEx(art: Art, n: string, enN: string): Example[] {
+  const exs: Example[] = []
+  for (const [poss, byArt] of Object.entries(POSS_FORMS)) {
+    const f = byArt[art], en = POSS_EN[poss]
+    exs.push(
+      { de:`Das ist ${f.nom} ${n}.`,       en:`That is ${en} ${enN}.`,       focus:f.nom, caseLabel:'Nom' },
+      { de:`Ich habe ${f.akk} ${n}.`,      en:`I have ${en} ${enN}.`,        focus:f.akk, caseLabel:'Akk' },
+      { de:`Ich spreche von ${f.dat} ${n}.`,en:`I speak about ${en} ${enN}.`,focus:f.dat, caseLabel:'Dat' },
+    )
+  }
+  return exs
+}
+
+function noun(id: string, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, enN: string, ex: Example[]): CardDef {
+  return { id, type: 'noun', level: 'A1', article: art, noun: n, nounForms: forms, plural: pl, examples: [...ex, ...genPossEx(art, n, enN)] };
 }
 function gram(id: string, type: CardDef['type'], lv: Level, rule: string, ex: Example[], word?: string): CardDef {
   return { id, type, level: lv, rule, examples: ex, word };
@@ -158,127 +186,127 @@ const VERBS: CardDef[] = [
 // ─── NOUNS ────────────────────────────────────────────────────────────────────
 
 const NOUNS: CardDef[] = [
-  noun('noun-mann','der','Mann',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-mann','der','Mann',{nom:'der',akk:'den',dat:'dem'},'Männer','man',[
     {de:'Der Mann ist groß.',en:'The man is tall.',focus:'Der',caseLabel:'Nom'},
     {de:'Ich sehe den Mann.',en:'I see the man.',focus:'den',caseLabel:'Akk'},
     {de:'Ich spreche mit dem Mann.',en:'I speak with the man.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-frau','die','Frau',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-frau','die','Frau',{nom:'die',akk:'die',dat:'der'},'Frauen','woman',[
     {de:'Die Frau lächelt.',en:'The woman smiles.',focus:'Die',caseLabel:'Nom'},
     {de:'Er liebt die Frau.',en:'He loves the woman.',focus:'die',caseLabel:'Akk'},
     {de:'Er hilft der Frau.',en:'He helps the woman.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-kind','das','Kind',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-kind','das','Kind',{nom:'das',akk:'das',dat:'dem'},'Kinder','child',[
     {de:'Das Kind spielt draußen.',en:'The child plays outside.',focus:'Das',caseLabel:'Nom'},
     {de:'Ich sehe das Kind.',en:'I see the child.',focus:'das',caseLabel:'Akk'},
     {de:'Sie liest dem Kind vor.',en:'She reads to the child.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-buch','das','Buch',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-buch','das','Buch',{nom:'das',akk:'das',dat:'dem'},'Bücher','book',[
     {de:'Das Buch ist interessant.',en:'The book is interesting.',focus:'Das',caseLabel:'Nom'},
     {de:'Sie liest das Buch.',en:'She is reading the book.',focus:'das',caseLabel:'Akk'},
     {de:'Er spricht von dem Buch.',en:'He speaks about the book.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-wein','der','Wein',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-wein','der','Wein',{nom:'der',akk:'den',dat:'dem'},'Weine','wine',[
     {de:'Der Wein schmeckt gut.',en:'The wine tastes good.',focus:'Der',caseLabel:'Nom'},
     {de:'Ich trinke den Wein.',en:'I drink the wine.',focus:'den',caseLabel:'Akk'},
     {de:'Sie spricht von dem Wein.',en:'She speaks about the wine.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-wasser','das','Wasser',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-wasser','das','Wasser',{nom:'das',akk:'das',dat:'dem'},'Wässer','water',[
     {de:'Das Wasser ist kalt.',en:'The water is cold.',focus:'Das',caseLabel:'Nom'},
     {de:'Ich trinke das Wasser.',en:'I drink the water.',focus:'das',caseLabel:'Akk'},
     {de:'Er kocht mit dem Wasser.',en:'He cooks with the water.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-haus','das','Haus',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-haus','das','Haus',{nom:'das',akk:'das',dat:'dem'},'Häuser','house',[
     {de:'Das Haus ist groß.',en:'The house is big.',focus:'Das',caseLabel:'Nom'},
     {de:'Wir kaufen das Haus.',en:'We are buying the house.',focus:'das',caseLabel:'Akk'},
     {de:'Er wartet vor dem Haus.',en:'He waits in front of the house.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-auto','das','Auto',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-auto','das','Auto',{nom:'das',akk:'das',dat:'dem'},'Autos','car',[
     {de:'Das Auto fährt schnell.',en:'The car drives fast.',focus:'Das',caseLabel:'Nom'},
     {de:'Er kauft das Auto.',en:'He buys the car.',focus:'das',caseLabel:'Akk'},
     {de:'Sie fährt mit dem Auto.',en:'She travels by car.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-tisch','der','Tisch',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-tisch','der','Tisch',{nom:'der',akk:'den',dat:'dem'},'Tische','table',[
     {de:'Der Tisch ist neu.',en:'The table is new.',focus:'Der',caseLabel:'Nom'},
     {de:'Wir brauchen den Tisch.',en:'We need the table.',focus:'den',caseLabel:'Akk'},
     {de:'Das Buch liegt auf dem Tisch.',en:'The book lies on the table.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-hund','der','Hund',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-hund','der','Hund',{nom:'der',akk:'den',dat:'dem'},'Hunde','dog',[
     {de:'Der Hund bellt laut.',en:'The dog barks loudly.',focus:'Der',caseLabel:'Nom'},
     {de:'Sie hat den Hund gefunden.',en:'She found the dog.',focus:'den',caseLabel:'Akk'},
     {de:'Er gibt dem Hund Wasser.',en:'He gives the dog water.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-katze','die','Katze',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-katze','die','Katze',{nom:'die',akk:'die',dat:'der'},'Katzen','cat',[
     {de:'Die Katze schläft.',en:'The cat is sleeping.',focus:'Die',caseLabel:'Nom'},
     {de:'Ich mag die Katze.',en:'I like the cat.',focus:'die',caseLabel:'Akk'},
     {de:'Sie spielt mit der Katze.',en:'She plays with the cat.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-apfel','der','Apfel',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-apfel','der','Apfel',{nom:'der',akk:'den',dat:'dem'},'Äpfel','apple',[
     {de:'Der Apfel ist rot.',en:'The apple is red.',focus:'Der',caseLabel:'Nom'},
     {de:'Er isst den Apfel.',en:'He eats the apple.',focus:'den',caseLabel:'Akk'},
     {de:'Sie macht Saft mit dem Apfel.',en:'She makes juice with the apple.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-brot','das','Brot',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-brot','das','Brot',{nom:'das',akk:'das',dat:'dem'},'Brote','bread',[
     {de:'Das Brot ist frisch.',en:'The bread is fresh.',focus:'Das',caseLabel:'Nom'},
     {de:'Ich kaufe das Brot.',en:'I buy the bread.',focus:'das',caseLabel:'Akk'},
     {de:'Er macht ein Sandwich mit dem Brot.',en:'He makes a sandwich with the bread.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-zeit','die','Zeit',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-zeit','die','Zeit',{nom:'die',akk:'die',dat:'der'},'Zeiten','time',[
     {de:'Die Zeit vergeht schnell.',en:'Time passes quickly.',focus:'Die',caseLabel:'Nom'},
     {de:'Ich habe keine die Zeit.',en:'I have no time.',focus:'die',caseLabel:'Akk'},
     {de:'Sie spricht von der Zeit.',en:'She speaks about time.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-tag','der','Tag',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-tag','der','Tag',{nom:'der',akk:'den',dat:'dem'},'Tage','day',[
     {de:'Der Tag war schön.',en:'The day was beautiful.',focus:'Der',caseLabel:'Nom'},
     {de:'Ich genieße den Tag.',en:'I enjoy the day.',focus:'den',caseLabel:'Akk'},
     {de:'Er denkt an dem Tag.',en:'He thinks about that day.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-geld','das','Geld',{nom:'das',akk:'das',dat:'dem'},[
+  noun('noun-geld','das','Geld',{nom:'das',akk:'das',dat:'dem'},'Gelder','money',[
     {de:'Das Geld liegt auf dem Tisch.',en:'The money is on the table.',focus:'Das',caseLabel:'Nom'},
     {de:'Er braucht das Geld.',en:'He needs the money.',focus:'das',caseLabel:'Akk'},
     {de:'Mit dem Geld kaufe ich ein Buch.',en:'With the money I buy a book.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-tür','die','Tür',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-tür','die','Tür',{nom:'die',akk:'die',dat:'der'},'Türen','door',[
     {de:'Die Tür ist geschlossen.',en:'The door is closed.',focus:'Die',caseLabel:'Nom'},
     {de:'Er öffnet die Tür.',en:'He opens the door.',focus:'die',caseLabel:'Akk'},
     {de:'Sie steht vor der Tür.',en:'She stands in front of the door.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-schule','die','Schule',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-schule','die','Schule',{nom:'die',akk:'die',dat:'der'},'Schulen','school',[
     {de:'Die Schule beginnt um acht Uhr.',en:'School starts at eight o\'clock.',focus:'Die',caseLabel:'Nom'},
     {de:'Er mag die Schule nicht.',en:'He does not like school.',focus:'die',caseLabel:'Akk'},
     {de:'Sie wartet vor der Schule.',en:'She waits in front of the school.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-stadt','die','Stadt',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-stadt','die','Stadt',{nom:'die',akk:'die',dat:'der'},'Städte','city',[
     {de:'Die Stadt ist groß.',en:'The city is big.',focus:'Die',caseLabel:'Nom'},
     {de:'Ich besuche die Stadt.',en:'I visit the city.',focus:'die',caseLabel:'Akk'},
     {de:'Er wohnt in der Stadt.',en:'He lives in the city.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-kaffee','der','Kaffee',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-kaffee','der','Kaffee',{nom:'der',akk:'den',dat:'dem'},'Kaffees','coffee',[
     {de:'Der Kaffee ist heiß.',en:'The coffee is hot.',focus:'Der',caseLabel:'Nom'},
     {de:'Ich trinke den Kaffee.',en:'I drink the coffee.',focus:'den',caseLabel:'Akk'},
     {de:'Er macht eine Pause mit dem Kaffee.',en:'He takes a break with the coffee.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-zug','der','Zug',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-zug','der','Zug',{nom:'der',akk:'den',dat:'dem'},'Züge','train',[
     {de:'Der Zug kommt pünktlich.',en:'The train arrives on time.',focus:'Der',caseLabel:'Nom'},
     {de:'Sie nimmt den Zug.',en:'She takes the train.',focus:'den',caseLabel:'Akk'},
     {de:'Ich fahre mit dem Zug.',en:'I travel by train.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-bus','der','Bus',{nom:'der',akk:'den',dat:'dem'},[
+  noun('noun-bus','der','Bus',{nom:'der',akk:'den',dat:'dem'},'Busse','bus',[
     {de:'Der Bus fährt ab.',en:'The bus departs.',focus:'Der',caseLabel:'Nom'},
     {de:'Ich nehme den Bus.',en:'I take the bus.',focus:'den',caseLabel:'Akk'},
     {de:'Sie fährt mit dem Bus.',en:'She travels by bus.',focus:'dem',caseLabel:'Dat'},
   ]),
-  noun('noun-arbeit','die','Arbeit',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-arbeit','die','Arbeit',{nom:'die',akk:'die',dat:'der'},'Arbeiten','work',[
     {de:'Die Arbeit macht Spaß.',en:'The work is fun.',focus:'Die',caseLabel:'Nom'},
     {de:'Er sucht die Arbeit.',en:'He is looking for work.',focus:'die',caseLabel:'Akk'},
     {de:'Sie kommt von der Arbeit.',en:'She comes from work.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-familie','die','Familie',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-familie','die','Familie',{nom:'die',akk:'die',dat:'der'},'Familien','family',[
     {de:'Die Familie ist wichtig.',en:'The family is important.',focus:'Die',caseLabel:'Nom'},
     {de:'Er besucht die Familie.',en:'He visits the family.',focus:'die',caseLabel:'Akk'},
     {de:'Sie spricht von der Familie.',en:'She speaks about the family.',focus:'der',caseLabel:'Dat'},
   ]),
-  noun('noun-straße','die','Straße',{nom:'die',akk:'die',dat:'der'},[
+  noun('noun-straße','die','Straße',{nom:'die',akk:'die',dat:'der'},'Straßen','street',[
     {de:'Die Straße ist lang.',en:'The street is long.',focus:'Die',caseLabel:'Nom'},
     {de:'Er überquert die Straße.',en:'He crosses the street.',focus:'die',caseLabel:'Akk'},
     {de:'Sie wohnt in der Straße.',en:'She lives in the street.',focus:'der',caseLabel:'Dat'},
