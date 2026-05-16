@@ -6,8 +6,6 @@ import { CARDS_DATA, ALL_TYPES } from '@/lib/cards'
 import { defaultSRS, computeNext, previewIntervals } from '@/lib/srs'
 import type { SRSState, SRSCard, Rating, CardType } from '@/lib/types'
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const NEW_DAILY_LIMIT = 20
 
 const TYPE_LABELS: Record<CardType, string> = {
@@ -25,8 +23,6 @@ const RATING_CFG = [
   { r: 'easy'  as Rating, label: 'Easy',  color: '#34d399', key: '4' },
 ]
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function todayStr() { return new Date().toISOString().slice(0, 10) }
 
 function blankParts(de: string, focus: string): [string, string] {
@@ -37,8 +33,6 @@ function blankParts(de: string, focus: string): [string, string] {
 function answerOk(input: string, focus: string): boolean {
   return input.trim().toLowerCase() === focus.toLowerCase()
 }
-
-// ─── Settings type ────────────────────────────────────────────────────────────
 
 interface Settings {
   enabledTypes: CardType[]
@@ -54,8 +48,6 @@ const DEFAULT_SETTINGS: Settings = {
   totalReviewed: 0,
 }
 
-// ─── Queue builder ────────────────────────────────────────────────────────────
-
 function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
   const now = Date.now()
   const today = todayStr()
@@ -69,23 +61,15 @@ function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSC
   for (const card of CARDS_DATA) {
     if (lv !== 'All' && card.level !== lv) continue
     if (!s.enabledTypes.includes(card.type)) continue
-
     const srs = pm[card.id] ?? defaultSRS()
     const sc = { ...card, ...srs } as SRSCard
-
-    if (srs.state === 'learning' && srs.due <= now) {
-      learning.push(sc)
-    } else if ((srs.state === 'review' || srs.state === 'mature') && srs.due <= now) {
-      review.push(sc)
-    } else if (srs.state === 'new' && newCards.length < budget) {
-      newCards.push(sc)
-    }
+    if (srs.state === 'learning' && srs.due <= now) learning.push(sc)
+    else if ((srs.state === 'review' || srs.state === 'mature') && srs.due <= now) review.push(sc)
+    else if (srs.state === 'new' && newCards.length < budget) newCards.push(sc)
   }
 
   return [...learning, ...review, ...newCards]
 }
-
-// ─── Shared styles ────────────────────────────────────────────────────────────
 
 const sInput: React.CSSProperties = {
   width: '100%', padding: '10px 12px',
@@ -101,8 +85,6 @@ const sBtnSecondary: React.CSSProperties = {
   border: '1px solid #2a2a2a', borderRadius: 8, fontWeight: 600, fontSize: 14,
   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
 }
-
-// ─── AuthForm ─────────────────────────────────────────────────────────────────
 
 function AuthForm() {
   const [tab, setTab]           = useState<'in' | 'up'>('in')
@@ -187,15 +169,14 @@ function AuthForm() {
   )
 }
 
-// ─── CardBack ─────────────────────────────────────────────────────────────────
-
 function CardBack({ card }: { card: SRSCard }) {
   const c = card.conjugations
 
   if ((card.type === 'verb' || card.type === 'modal') && c) {
     const rows: [string, string][] = [
-      ['ich', c.ich], ['du', c.du], ['er/sie/es', c.er],
-      ['wir', c.wir], ['ihr', c.ihr], ['sie/Sie', c.sie],
+      ['ich', c.ich],       ['wir', c.wir],
+      ['du', c.du],         ['ihr', c.ihr],
+      ['er/sie/es', c.er],  ['sie/Sie', c.sie],
     ]
     return (
       <div>
@@ -246,8 +227,6 @@ function CardBack({ card }: { card: SRSCard }) {
   return null
 }
 
-// ─── Trainer ──────────────────────────────────────────────────────────────────
-
 function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [pm, setPm]             = useState<Record<string, SRSState>>({})
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
@@ -273,7 +252,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         fetch('/api/user/progress').then(r => r.json()),
         fetch('/api/user/settings').then(r => r.json()),
       ])
-
       const map: Record<string, SRSState> = {}
       if (Array.isArray(pr)) {
         for (const row of pr) {
@@ -283,7 +261,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           }
         }
       }
-
       const loaded: Settings = sr
         ? {
             enabledTypes: (sr.enabled_types ?? [...ALL_TYPES]) as CardType[],
@@ -292,7 +269,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             totalReviewed: sr.total_reviewed ?? 0,
           }
         : DEFAULT_SETTINGS
-
       setPm(map)
       setSettings(loaded)
       const q = buildQueue(map, loaded, lv)
@@ -351,12 +327,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   async function doRate(rating: Rating) {
     if (!card || saving) return
     setSaving(true)
-
     const wasNew = card.state === 'new'
     const next = computeNext(card, rating)
     const newPm = { ...pm, [card.id]: next }
     setPm(newPm)
-
     const today = todayStr()
     const ns: Settings = {
       ...settings,
@@ -367,7 +341,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       totalReviewed: settings.totalReviewed + 1,
     }
     setSettings(ns)
-
     await Promise.all([
       fetch('/api/user/progress', {
         method: 'PUT',
@@ -380,9 +353,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed }),
       }),
     ])
-
     setSaving(false)
-
     const nextIdx = idx + 1
     if (nextIdx < queue.length) {
       setIdx(nextIdx)
@@ -393,11 +364,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       setExIdx(Math.floor(Math.random() * queue[nextIdx].examples.length))
       setTimeout(() => inputEl.current?.focus(), 50)
     } else {
-      setIdx(queue.length) // triggers done screen
+      setIdx(queue.length)
     }
   }
 
-  // Keyboard shortcuts
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement)?.tagName
@@ -422,22 +392,15 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, checked, correct, saving, card, input, ex])
 
-  // Stats counters
   const now = Date.now()
   const today = todayStr()
   const filtered = CARDS_DATA.filter(c =>
     (lv === 'All' || c.level === lv) && settings.enabledTypes.includes(c.type)
   )
-  const dueN = filtered.filter(c => {
-    const s = pm[c.id]
-    return s && (s.state === 'review' || s.state === 'mature') && s.due <= now
-  }).length
-  const learnN = filtered.filter(c => {
-    const s = pm[c.id]
-    return s && s.state === 'learning' && s.due <= now
-  }).length
+  const dueN   = filtered.filter(c => { const s = pm[c.id]; return s && (s.state === 'review' || s.state === 'mature') && s.due <= now }).length
+  const learnN = filtered.filter(c => { const s = pm[c.id]; return s && s.state === 'learning' && s.due <= now }).length
   const budget = Math.max(0, NEW_DAILY_LIMIT - (settings.todayDate === today ? settings.newCardsToday : 0))
-  const newN = Math.min(budget, filtered.filter(c => !pm[c.id] || pm[c.id].state === 'new').length)
+  const newN   = Math.min(budget, filtered.filter(c => !pm[c.id] || pm[c.id].state === 'new').length)
 
   if (loading) {
     return (
@@ -447,7 +410,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     )
   }
 
-  // Done / empty screen
   if (!card || idx >= queue.length) {
     return (
       <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#ededed', gap: 16, padding: 16, textAlign: 'center' }}>
@@ -469,22 +431,19 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   const [before, after] = ex ? blankParts(ex.de, ex.focus) : ['', '']
+  const hint = card?.verb ?? card?.noun ?? card?.word ?? null
 
   return (
-    <div
-      style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }}
-      onClick={() => setShowMenu(false)}
-    >
-      {/* ── Header ─────────────────────────────────────────────────────── */}
+    <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }} onClick={() => setShowMenu(false)}>
+
+      {/* Header */}
       <div style={{ borderBottom: '1px solid #1a1a1a', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
         <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Gemma</span>
-
         <div style={{ display: 'flex', gap: 6, flex: 1, flexWrap: 'wrap' }}>
           <Pill c="#60a5fa">{learnN} learn</Pill>
           <Pill c="#f59e0b">{dueN} due</Pill>
           <Pill c="#34d399">{newN} new</Pill>
         </div>
-
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           {(['A1', 'A2', 'All'] as const).map(l => (
             <button key={l} onClick={e => { e.stopPropagation(); changeLevel(l) }} style={{
@@ -493,13 +452,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               color: lv === l ? '#ededed' : '#555', fontWeight: 600, fontSize: 13,
             }}>{l}</button>
           ))}
-
           <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
             <button onClick={() => setShowMenu(!showMenu)} style={{
               padding: '4px 10px', border: '1px solid #222', borderRadius: 6,
               background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 14,
             }}>⋯</button>
-
             {showMenu && (
               <div style={{
                 position: 'absolute', right: 0, top: '110%',
@@ -530,16 +487,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         </div>
       </div>
 
-      {/* ── Progress bar ────────────────────────────────────────────────── */}
+      {/* Progress bar */}
       <div style={{ height: 2, background: '#1a1a1a' }}>
-        <div style={{
-          height: '100%', background: '#3b82f6',
-          width: `${(idx / queue.length) * 100}%`,
-          transition: 'width 0.3s ease',
-        }} />
+        <div style={{ height: '100%', background: '#3b82f6', width: `${(idx / queue.length) * 100}%`, transition: 'width 0.3s ease' }} />
       </div>
 
-      {/* ── Card area ───────────────────────────────────────────────────── */}
+      {/* Card */}
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontSize: 12, color: '#444', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -550,80 +503,94 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
         <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 14, padding: '24px 20px' }}>
 
-          {/* ── Phase 1: Cloze ────────────────────────────────────────── */}
+          {/* Phase 1: Cloze — inline input inside the sentence */}
           {phase === 'cloze' && ex && (
             <>
-              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 6 }}>
+              <div style={{ fontSize: 22, lineHeight: 2.2 }}>
                 <span>{before}</span>
-                <span style={{
-                  display: 'inline-block',
-                  minWidth: Math.max(ex.focus.length * 11, 48),
-                  borderBottom: `2px solid ${checked ? (correct ? '#34d399' : '#f87171') : '#3b82f6'}`,
-                  color: checked ? (correct ? '#34d399' : '#f87171') : 'transparent',
-                  textAlign: 'center', margin: '0 2px', fontWeight: 700,
-                }}>
-                  {checked ? ex.focus : '    '}
-                </span>
-                <span>{after}</span>
-              </div>
-
-              <div style={{ fontSize: 14, color: '#444', marginBottom: 20 }}>{ex.en}</div>
-
-              {!checked ? (
-                <div style={{ display: 'flex', gap: 8 }}>
+                {!checked ? (
                   <input
                     ref={inputEl}
                     type="text"
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
-                    placeholder="Type the missing word…"
                     autoFocus
-                    style={{ ...sInput, flex: 1 }}
+                    style={{
+                      display: 'inline-block',
+                      width: Math.max(ex.focus.length * 14, 80),
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '2px solid #3b82f6',
+                      color: '#ededed',
+                      fontSize: 22,
+                      fontFamily: 'inherit',
+                      outline: 'none',
+                      padding: '0 4px',
+                      margin: '0 2px',
+                      textAlign: 'center',
+                      verticalAlign: 'baseline',
+                    }}
                   />
-                  <button onClick={doCheck} style={sBtnPrimary}>Check</button>
+                ) : (
+                  <span style={{
+                    display: 'inline-block',
+                    minWidth: Math.max(ex.focus.length * 14, 80),
+                    borderBottom: `2px solid ${correct ? '#34d399' : '#f87171'}`,
+                    color: correct ? '#34d399' : '#f87171',
+                    textAlign: 'center', margin: '0 2px', fontWeight: 700, padding: '0 4px',
+                  }}>
+                    {ex.focus}
+                  </span>
+                )}
+                <span>{after}</span>
+              </div>
+
+              {(hint || ex.subject === 'sie') && !checked && (
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 6 }}>
+                  {hint && (
+                    <span style={{ fontSize: 13, color: '#444', fontStyle: 'italic' }}>{hint}</span>
+                  )}
+                  {ex.subject === 'sie' && (
+                    <span style={{ fontSize: 11, color: '#3b3b3b', background: '#1a1a1a', padding: '2px 7px', borderRadius: 4 }}>
+                      sie = they &nbsp;·&nbsp; Sie = formal you
+                    </span>
+                  )}
                 </div>
-              ) : correct ? (
-                <p style={{ color: '#34d399', fontWeight: 600 }}>Correct — revealing card…</p>
-              ) : (
-                <div>
+              )}
+
+              {checked && !correct && (
+                <div style={{ marginTop: 16 }}>
                   <p style={{ color: '#f87171', fontWeight: 600, marginBottom: 14 }}>
-                    Incorrect — the answer was <span style={{ color: '#ededed' }}>"{ex.focus}"</span>
+                    The answer was <span style={{ color: '#ededed' }}>"{ex.focus}"</span>
                   </p>
-                  <button onClick={() => setPhase('flip')} style={sBtnPrimary}>
-                    Continue →
-                  </button>
+                  <button onClick={() => setPhase('flip')} style={sBtnPrimary}>Continue →</button>
                 </div>
               )}
             </>
           )}
 
-          {/* ── Phase 2: Flip / Rate ──────────────────────────────────── */}
+          {/* Phase 2: Flip / Rate */}
           {phase === 'flip' && ex && (
             <>
-              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 6 }}>
+              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 20 }}>
                 <span>{before}</span>
                 <span style={{ color: '#60a5fa', fontWeight: 700 }}>{ex.focus}</span>
                 <span>{after}</span>
               </div>
-              <div style={{ fontSize: 14, color: '#444', marginBottom: 20 }}>{ex.en}</div>
 
-              {/* Card back */}
               <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: 20, marginBottom: 20 }}>
                 <CardBack card={card} />
               </div>
 
-              {/* All examples */}
               <div style={{ marginBottom: 24 }}>
                 {card.examples.map((e, i) => (
                   <div key={i} style={{ marginBottom: 8, padding: '8px 10px', background: '#0d0d0d', borderRadius: 8 }}>
                     <div style={{ fontSize: 14, color: '#bbb' }}>{e.de}</div>
-                    <div style={{ fontSize: 12, color: '#444', marginTop: 2 }}>{e.en}</div>
                   </div>
                 ))}
               </div>
 
-              {/* Rating buttons */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                 {RATING_CFG.map(({ r, label, color, key }) => (
                   <button key={r} onClick={() => doRate(r)} disabled={saving} style={{
@@ -646,20 +613,13 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   )
 }
 
-// ─── Pill ─────────────────────────────────────────────────────────────────────
-
 function Pill({ c, children }: { c: string; children: React.ReactNode }) {
   return (
-    <span style={{
-      fontSize: 12, color: c, background: `${c}22`,
-      padding: '2px 8px', borderRadius: 20, fontWeight: 600,
-    }}>
+    <span style={{ fontSize: 12, color: c, background: `${c}22`, padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>
       {children}
     </span>
   )
 }
-
-// ─── Root ─────────────────────────────────────────────────────────────────────
 
 export default function Page() {
   const { data: session, isPending } = useSession()
