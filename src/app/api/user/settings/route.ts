@@ -32,6 +32,9 @@ export async function PUT(req: NextRequest) {
   if (body.dailyNewLimit === null || typeof body.dailyNewLimit === 'number') {
     row.daily_new_limit = body.dailyNewLimit;
   }
+  if (body.theme === 'dark' || body.theme === 'light') {
+    row.theme = body.theme;
+  }
   const { error } = await supabaseAdmin()
     .from('user_settings')
     .upsert(row, { onConflict: 'user_id' });

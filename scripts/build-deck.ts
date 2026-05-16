@@ -239,7 +239,8 @@ function parseVerb(wt: string): Parsed['verb'] {
   };
 }
 
-function stripWiki(s: string): string {
+function stripWiki(s: string | undefined | null): string {
+  if (!s) return '';
   return s
     .replace(/<[^>]+>/g, '')
     .replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, '$2')
@@ -271,7 +272,22 @@ function parseEnDef(
     entries[0];
   const definitions = entry?.definitions || [];
   if (definitions.length === 0) return {};
-  const def = stripWiki(definitions[0].definition);
+  // Find first non-meta definition. Wiktionary stores headers like "senses related to dressing"
+  // or cross-references like "verbal noun of anziehen" as the first definition entry.
+  const isMeta = (s: string) =>
+    /^senses?\s+related\s+to\b/i.test(s) ||
+    /\b(verbal noun|past participle|present participle|alternative form|alternative spelling|alternative case form|inflection of|feminine|masculine|plural|genitive|dative|accusative|nominative)\s+of\b/i.test(
+      s,
+    );
+  let def = '';
+  for (const d of definitions) {
+    const cleaned = stripWiki(d.definition);
+    if (cleaned && !isMeta(cleaned)) {
+      def = cleaned;
+      break;
+    }
+  }
+  if (!def) def = stripWiki(definitions[0].definition);
   const examples: { de: string; en: string }[] = [];
   for (const d of definitions) {
     for (const p of d.parsedExamples || []) {
@@ -390,6 +406,48 @@ function pluralize3rd(en: string): string {
   return [inflected, ...parts.slice(1)].join(' ');
 }
 
+function needsETInsert(stem: string): boolean {
+  // Standard rule (simplified): -et instead of -t when stem ends in t/d, or m/n
+  // preceded by another (non-liquid) consonant (atmen → atmet).
+  if (/[td]$/.test(stem)) return true;
+  if (/[^aeiouhlrmn][mn]$/i.test(stem)) return true;
+  return false;
+}
+
+function deriveConjugations(
+  lemma: string,
+  conj: NonNullable<Parsed['verb']>,
+): { ich: string; du: string; er: string; wir: string; ihr: string; sie: string } {
+  const ichRaw = conj.ich || '';
+  const isSeparable = /\s/.test(ichRaw);
+
+  if (isSeparable) {
+    const [, prefix] = ichRaw.split(/\s+/);
+    const baseInf = lemma.startsWith(prefix) ? lemma.slice(prefix.length) : lemma;
+    const stem = baseInf.replace(/en$/, '');
+    const ihrEnd = needsETInsert(stem) ? 'et' : 't';
+    return {
+      ich: ichRaw,
+      du: conj.du || `${stem}${needsETInsert(stem) ? 'est' : 'st'} ${prefix}`,
+      er: conj.er || `${stem}${ihrEnd} ${prefix}`,
+      wir: `${baseInf} ${prefix}`,
+      ihr: `${stem}${ihrEnd} ${prefix}`,
+      sie: `${baseInf} ${prefix}`,
+    };
+  }
+
+  const stem = lemma.replace(/en$/, '');
+  const ihrEnd = needsETInsert(stem) ? 'et' : 't';
+  return {
+    ich: ichRaw || `${stem}e`,
+    du: conj.du || `${stem}${needsETInsert(stem) ? 'est' : 'st'}`,
+    er: conj.er || `${stem}${ihrEnd}`,
+    wir: lemma,
+    ihr: `${stem}${ihrEnd}`,
+    sie: lemma,
+  };
+}
+
 function emitVerb(
   lemma: string,
   conj: NonNullable<Parsed['verb']>,
@@ -397,17 +455,11 @@ function emitVerb(
   level: Level,
 ): Emission {
   const id = slugId('gen-verb', lemma);
-  const ich = conj.ich || lemma.replace(/en$/, 'e');
-  const du = conj.du || lemma.replace(/en$/, 'st');
-  const er = conj.er || lemma.replace(/en$/, 't');
-  const wir = lemma;
-  const sie3 = lemma;
-  const ihr = (() => {
-    if (er && /t$/.test(er)) return er;
-    return lemma.replace(/en$/, 't');
-  })();
-  const praet = conj.praeteritum || `${ich}te`;
-  const partizip2 = conj.partizip2 || `ge${lemma.replace(/en$/, 't')}`;
+  const c = deriveConjugations(lemma, conj);
+  const { ich, du, er, wir, ihr, sie: sie3 } = c;
+  const stem = lemma.replace(/en$/, '');
+  const praet = conj.praeteritum || `${stem}te`;
+  const partizip2 = conj.partizip2 || `ge${stem}t`;
   const auxConj = conj.hilfsverb === 'sein' ? 'ist' : 'hat';
   const perf = `${auxConj} ${partizip2}`;
   const en3 = pluralize3rd(enInf);
@@ -580,6 +632,12 @@ async function main() {
     const enInfo = parseEnDef(c?.enDef, preferPos);
     const enDef = enInfo.def || '';
 
+    // Skip multi-word lemmas — phrasal expressions don't fit the noun/verb card schema cleanly.
+    if (/\s/.test(lemma)) {
+      dropped++;
+      continue;
+    }
+
     if (cardType === 'noun') {
       const article = pickArticle(e);
       if (!article) {
@@ -587,18 +645,19 @@ async function main() {
         continue;
       }
       const plural = parsed.noun?.plural;
-      const enNoun = enDef ? firstWord(enDef) : lemma.toLowerCase();
+      const enNoun = enDef ? cleanGloss(enDef) : lemma.toLowerCase();
       emissions.push(emitNoun(lemma, article, plural, enNoun, e.level));
     } else if (cardType === 'verb') {
       if (!parsed.verb || !parsed.verb.ich) {
         dropped++;
         continue;
       }
-      const enInf = enDef ? firstWord(enDef).replace(/^to\s+/i, '') : lemma;
+      const enInf = enDef ? cleanGloss(enDef).replace(/^to\s+/i, '') : lemma;
       emissions.push(emitVerb(lemma, parsed.verb, enInf, e.level));
     } else {
       // gram-style card (adjective / prep / conjunction / pronoun / possessive)
-      if (!enDef) {
+      const cleanedDef = cleanGloss(enDef);
+      if (!cleanedDef) {
         dropped++;
         continue;
       }
@@ -608,9 +667,9 @@ async function main() {
         focus: lemma,
       }));
       if (examples.length === 0) {
-        examples.push({ de: capitalize(lemma) + '.', en: enDef, focus: capitalize(lemma) });
+        examples.push({ de: capitalize(lemma) + '.', en: cleanedDef, focus: capitalize(lemma) });
       }
-      emissions.push(emitGram(cardType, lemma, enDef, e.level, examples));
+      emissions.push(emitGram(cardType, lemma, cleanedDef, e.level, examples));
     }
   }
   console.log(`  Emitted: ${emissions.length}    Dropped (missing data): ${dropped}`);
@@ -680,12 +739,18 @@ export const CARDS_GENERATED: CardDef[] = [
   console.log(`\n✅ Wrote ${OUT_FILE}`);
 }
 
-function firstWord(def: string): string {
-  // take first comma/semicolon-delimited gloss
-  const cleaned = def.replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '');
-  const head = cleaned.split(/[,;:]/)[0].trim();
-  // Strip trailing period
-  return head.replace(/\.$/, '').trim() || def.trim();
+function cleanGloss(def: string): string {
+  // Strip parentheticals, brackets, leading "senses related to ...", "synonym of ...", italics markers.
+  let s = def
+    .replace(/\([^)]*\)/g, '')
+    .replace(/\[[^\]]*\]/g, '')
+    .replace(/^\s*senses?\s+related\s+to\s+[^,.;:]+[,.;:]\s*/i, '')
+    .replace(/^\s*(synonym|alternative form|alternative spelling) of\s+/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  // Take first gloss (split on , ; :)
+  const head = s.split(/[,;:]/)[0].trim();
+  return (head || s).replace(/\.$/, '').trim();
 }
 
 function capitalize(s: string): string {

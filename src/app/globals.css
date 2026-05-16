@@ -1,20 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+:root,
+:root[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --card: #111111;
+  --elev: #1a1a1a;
+  --input-bg: #0d0d0d;
+  --border: #222222;
+  --border-soft: #1e1e1e;
+  --border-strong: #2a2a2a;
+  --text: #ededed;
+  --text-soft: #bbbbbb;
+  --muted: #777777;
+  --dim: #555555;
+  --faint: #333333;
+  --btn-primary-bg: #ededed;
+  --btn-primary-text: #0a0a0a;
+  --tab-active-bg: #262626;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="light"] {
+  --bg: #fafafa;
+  --card: #ffffff;
+  --elev: #f1f1f2;
+  --input-bg: #ffffff;
+  --border: #e3e3e5;
+  --border-soft: #ececee;
+  --border-strong: #c8c8cb;
+  --text: #0f0f10;
+  --text-soft: #2f2f31;
+  --muted: #5e5e62;
+  --dim: #8a8a8e;
+  --faint: #b9b9bd;
+  --btn-primary-bg: #0f0f10;
+  --btn-primary-text: #fafafa;
+  --tab-active-bg: #e3e3e5;
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
 }
 

@@ -163,6 +163,8 @@ function answerOk(input: string, focus: string | string[]): boolean {
   return acceptableFocuses(focus).some((f) => normalize(f) === n)
 }
 
+type Theme = 'dark' | 'light'
+
 interface Settings {
   enabledTypes: CardType[]
   newCardsToday: number
@@ -172,6 +174,7 @@ interface Settings {
   streakDays: number
   lastReviewDate: string
   dailyNewLimit: number | null  // null = unlimited
+  theme: Theme
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -183,6 +186,7 @@ const DEFAULT_SETTINGS: Settings = {
   streakDays: 0,
   lastReviewDate: '',
   dailyNewLimit: null,
+  theme: 'dark',
 }
 
 function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
@@ -225,16 +229,16 @@ function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings,
 
 const sInput: React.CSSProperties = {
   width: '100%', padding: '10px 12px',
-  background: '#0d0d0d', border: '1px solid #2a2a2a', borderRadius: 8,
-  color: '#ededed', fontSize: 15, outline: 'none',
+  background: 'var(--input-bg)', border: '1px solid var(--border-strong)', borderRadius: 8,
+  color: 'var(--text)', fontSize: 15, outline: 'none',
 }
 const sBtnPrimary: React.CSSProperties = {
-  padding: '10px 20px', background: '#ededed', color: '#0a0a0a',
+  padding: '10px 20px', background: 'var(--btn-primary-bg)', color: 'var(--btn-primary-text)',
   border: 'none', borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: 'pointer',
 }
 const sBtnSecondary: React.CSSProperties = {
-  padding: '10px 20px', background: 'transparent', color: '#ccc',
-  border: '1px solid #2a2a2a', borderRadius: 8, fontWeight: 600, fontSize: 14,
+  padding: '10px 20px', background: 'transparent', color: 'var(--text-soft)',
+  border: '1px solid var(--border-strong)', borderRadius: 8, fontWeight: 600, fontSize: 14,
   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
 }
 
@@ -267,18 +271,18 @@ function AuthForm() {
   const tabBtn = (t: 'in' | 'up', label: string) => (
     <button key={t} onClick={() => { setTab(t); setErr('') }} style={{
       flex: 1, padding: '7px 0', borderRadius: 6, border: 'none', cursor: 'pointer',
-      background: tab === t ? '#262626' : 'transparent',
-      color: tab === t ? '#ededed' : '#555', fontWeight: 600, fontSize: 13,
+      background: tab === t ? 'var(--tab-active-bg)' : 'transparent',
+      color: tab === t ? 'var(--text)' : 'var(--dim)', fontWeight: 600, fontSize: 13,
     }}>{label}</button>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div style={{ width: '100%', maxWidth: 360, background: '#111', border: '1px solid #222', borderRadius: 12, padding: 32 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: '#ededed', textAlign: 'center' }}>Gemma</h1>
-        <p style={{ fontSize: 13, color: '#555', textAlign: 'center', marginBottom: 24 }}>German A1–A2 Trainer</p>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div style={{ width: '100%', maxWidth: 360, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 32 }}>
+        <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: 'var(--text)', textAlign: 'center' }}>Gemma</h1>
+        <p style={{ fontSize: 13, color: 'var(--dim)', textAlign: 'center', marginBottom: 24 }}>German A1–A2 Trainer</p>
 
-        <div style={{ display: 'flex', marginBottom: 24, background: '#0a0a0a', borderRadius: 8, padding: 3 }}>
+        <div style={{ display: 'flex', marginBottom: 24, background: 'var(--bg)', borderRadius: 8, padding: 3 }}>
           {tabBtn('in', 'Sign In')}
           {tabBtn('up', 'Sign Up')}
         </div>
@@ -299,9 +303,9 @@ function AuthForm() {
         </form>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <div style={{ flex: 1, height: 1, background: '#222' }} />
-          <span style={{ color: '#444', fontSize: 12 }}>or</span>
-          <div style={{ flex: 1, height: 1, background: '#222' }} />
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+          <span style={{ color: 'var(--dim)', fontSize: 12 }}>or</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
         </div>
 
         <button
@@ -333,22 +337,22 @@ function CardBack({ card }: { card: SRSCard }) {
     return (
       <div>
         <div style={{ marginBottom: 12 }}>
-          <div style={{ fontWeight: 700, fontSize: 16, color: '#ededed' }}>{card.verb}</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>{card.verb}</div>
           {card.verb && VERB_EN[card.verb] && (
-            <div style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{VERB_EN[card.verb]}</div>
+            <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 2 }}>{VERB_EN[card.verb]}</div>
           )}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 16px', marginBottom: 12 }}>
           {rows.map(([p, v]) => (
-            <div key={p} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px', background: '#1a1a1a', borderRadius: 4 }}>
-              <span style={{ color: '#555', fontSize: 13 }}>{p}</span>
-              <span style={{ color: '#ededed', fontWeight: 600, fontSize: 13 }}>{v}</span>
+            <div key={p} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px', background: 'var(--elev)', borderRadius: 4 }}>
+              <span style={{ color: 'var(--dim)', fontSize: 13 }}>{p}</span>
+              <span style={{ color: 'var(--text)', fontWeight: 600, fontSize: 13 }}>{v}</span>
             </div>
           ))}
         </div>
-        <div style={{ fontSize: 12, color: '#555', display: 'flex', gap: 16 }}>
-          <span>Prät.: <span style={{ color: '#888' }}>{card.praeteritum}</span></span>
-          <span>Perf.: <span style={{ color: '#888' }}>{card.perfekt}</span></span>
+        <div style={{ fontSize: 12, color: 'var(--dim)', display: 'flex', gap: 16 }}>
+          <span>Prät.: <span style={{ color: 'var(--muted)' }}>{card.praeteritum}</span></span>
+          <span>Perf.: <span style={{ color: 'var(--muted)' }}>{card.perfekt}</span></span>
         </div>
       </div>
     )
@@ -359,14 +363,14 @@ function CardBack({ card }: { card: SRSCard }) {
     const gc = art === 'der' ? '#60a5fa' : art === 'die' ? '#f472b6' : '#34d399'
     return (
       <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: '#1a1a1a', borderRadius: 8 }}>
-          <div style={{ fontSize: 11, color: '#555', marginBottom: 6 }}>Singular</div>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: 'var(--elev)', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6 }}>Singular</div>
           <div style={{ fontWeight: 700, color: gc, fontSize: 20 }}>{art} {card.noun}</div>
         </div>
-        <div style={{ color: '#333', fontSize: 18 }}>/</div>
-        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: '#1a1a1a', borderRadius: 8 }}>
-          <div style={{ fontSize: 11, color: '#555', marginBottom: 6 }}>Plural</div>
-          <div style={{ fontWeight: 700, color: '#ededed', fontSize: 20 }}>die {card.plural}</div>
+        <div style={{ color: 'var(--faint)', fontSize: 18 }}>/</div>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: 'var(--elev)', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6 }}>Plural</div>
+          <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 20 }}>die {card.plural}</div>
         </div>
       </div>
     )
@@ -374,7 +378,7 @@ function CardBack({ card }: { card: SRSCard }) {
 
   if (card.rule) {
     return (
-      <div style={{ fontSize: 14, color: '#ccc', lineHeight: 1.7 }}
+      <div style={{ fontSize: 14, color: 'var(--text-soft)', lineHeight: 1.7 }}
         dangerouslySetInnerHTML={{ __html: card.rule }} />
     )
   }
@@ -399,6 +403,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [exIdx, setExIdx]       = useState(0)
   const [reverse, setReverse]   = useState(false)
   const [choices, setChoices]   = useState<string[]>([])
+  const [prevExIdx, setPrevExIdx] = useState(0)
+  const [prevReverse, setPrevReverse] = useState(false)
+  const [reviewingPrev, setReviewingPrev] = useState(false)
   const inputEl = useRef<HTMLInputElement>(null)
 
   useEffect(() => { loadData() }, [])
@@ -437,6 +444,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             streakDays: sr.streak_days ?? 0,
             lastReviewDate: sr.last_review_date ?? '',
             dailyNewLimit: typeof sr.daily_new_limit === 'number' ? sr.daily_new_limit : null,
+            theme: sr.theme === 'light' ? 'light' : 'dark',
           }
         : DEFAULT_SETTINGS
       const fetched = await fetchCards(loaded.activeLanguage)
@@ -468,6 +476,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     setInput('')
     setChecked(false)
     setCorrect(false)
+    setReviewingPrev(false)
     if (q.length > 0) {
       const first = q[0] as SRSCard
       setExIdx(pickExampleIdx(first))
@@ -490,7 +499,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
         activeLanguage: ns.activeLanguage,
         streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
-        dailyNewLimit: ns.dailyNewLimit,
+        dailyNewLimit: ns.dailyNewLimit, theme: ns.theme,
       }),
     })
   }
@@ -508,6 +517,18 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     applyQueueChange(cards, pm, ns, lv)
     persistSettings(ns)
   }
+
+  function changeTheme(theme: Theme) {
+    if (theme === settings.theme) return
+    const ns = { ...settings, theme }
+    setSettings(ns)
+    persistSettings(ns)
+  }
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', settings.theme)
+    try { localStorage.setItem('theme', settings.theme) } catch {}
+  }, [settings.theme])
 
   async function changeLanguage(newLang: Language) {
     if (newLang === settings.activeLanguage) return
@@ -609,6 +630,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       persistSettings(ns),
     ])
     setSaving(false)
+    setPrevExIdx(exIdx)
+    setPrevReverse(reverse)
+    setReviewingPrev(false)
     const nextIdx = idx + 1
     if (nextIdx < queue.length) {
       const nextCard = queue[nextIdx]
@@ -630,6 +654,13 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement)?.tagName
+      if (reviewingPrev) {
+        if (e.key === 'Escape' || e.key === 'Enter') {
+          e.preventDefault()
+          setReviewingPrev(false)
+        }
+        return
+      }
       if (tag === 'INPUT' || tag === 'TEXTAREA') {
         if (e.key === 'Enter') {
           e.preventDefault()
@@ -650,7 +681,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, checked, correct, saving, card, input, ex])
+  }, [phase, checked, correct, saving, card, input, ex, reviewingPrev])
 
   useEffect(() => {
     if (phase === 'flip' && ex) speak(ex.de, settings.activeLanguage)
@@ -675,7 +706,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
         Loading your progress…
       </div>
     )
@@ -684,14 +715,14 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   if (!card || idx >= queue.length) {
     const isEmptyDeck = cards.length === 0
     return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#ededed', gap: 16, padding: 16, textAlign: 'center' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', gap: 16, padding: 16, textAlign: 'center' }}>
         <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : '✓'}</div>
         <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
           {isEmptyDeck
             ? `No ${LANGUAGE_LABELS[settings.activeLanguage]} cards yet`
             : queue.length === 0 ? 'All caught up!' : 'Session complete!'}
         </h2>
-        <p style={{ color: '#555', margin: 0 }}>
+        <p style={{ color: 'var(--dim)', margin: 0 }}>
           {isEmptyDeck
             ? 'This deck is empty. Switch to another language or seed cards.'
             : queue.length === 0
@@ -701,9 +732,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
           {ALL_LANGUAGES.map(l => (
             <button key={l} onClick={() => changeLanguage(l)} style={{
-              padding: '6px 14px', borderRadius: 6, border: '1px solid #222', cursor: 'pointer',
-              background: settings.activeLanguage === l ? '#222' : 'transparent',
-              color: settings.activeLanguage === l ? '#ededed' : '#666',
+              padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border)', cursor: 'pointer',
+              background: settings.activeLanguage === l ? 'var(--border)' : 'transparent',
+              color: settings.activeLanguage === l ? 'var(--text)' : 'var(--muted)',
               fontWeight: 600, fontSize: 13,
             }}>{LANGUAGE_LABELS[l]}</button>
           ))}
@@ -722,11 +753,22 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     : ((card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null))
   const hint = rawHint && ex && lemmaRevealsFocus(rawHint, acceptableFocuses(ex.focus)) ? null : rawHint
 
+  const prevCardBase = idx > 0 ? queue[idx - 1] : undefined
+  const prevCard = prevCardBase
+    ? ({ ...prevCardBase, ...(pm[prevCardBase.id] ?? defaultSRS()) } as SRSCard)
+    : undefined
+  const prevBaseEx = prevCard ? prevCard.examples[prevExIdx % prevCard.examples.length] : undefined
+  const prevEx = prevBaseEx && prevCard?.type === 'noun' && prevCard.noun
+    ? expandNounFocus(prevBaseEx, prevCard.noun)
+    : prevBaseEx
+  const [prevBefore, prevAfter] = prevEx ? blankParts(prevEx.de, prevEx.focus) : ['', '']
+  const canReviewPrev = !!prevCard && !!prevEx && !saving
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }} onClick={() => setShowMenu(false)}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }} onClick={() => setShowMenu(false)}>
 
       {/* Header */}
-      <div style={{ borderBottom: '1px solid #1a1a1a', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+      <div style={{ borderBottom: '1px solid var(--elev)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
         <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Gemma</span>
         <div style={{ display: 'flex', gap: 6, flex: 1, flexWrap: 'wrap' }}>
           <Pill c="#60a5fa">{learnN} learn</Pill>
@@ -740,33 +782,44 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           {(['A1', 'A2', 'All'] as const).map(l => (
             <button key={l} onClick={e => { e.stopPropagation(); changeLevel(l) }} style={{
               padding: '4px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
-              background: lv === l ? '#222' : 'transparent',
-              color: lv === l ? '#ededed' : '#555', fontWeight: 600, fontSize: 13,
+              background: lv === l ? 'var(--border)' : 'transparent',
+              color: lv === l ? 'var(--text)' : 'var(--dim)', fontWeight: 600, fontSize: 13,
             }}>{l}</button>
           ))}
           <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
             <button onClick={() => setShowMenu(!showMenu)} style={{
-              padding: '4px 10px', border: '1px solid #222', borderRadius: 6,
-              background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 14,
+              padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 6,
+              background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 14,
             }}>⋯</button>
             {showMenu && (
               <div style={{
                 position: 'absolute', right: 0, top: '110%',
-                background: '#111', border: '1px solid #222', borderRadius: 10,
-                padding: '12px 16px', width: 210, zIndex: 200, boxShadow: '0 8px 32px #000c',
+                background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10,
+                padding: '12px 16px', width: 210, zIndex: 200, boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
               }}>
-                <div style={{ fontSize: 11, color: '#444', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Language</div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Language</div>
                 <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
                   {ALL_LANGUAGES.map(l => (
                     <button key={l} onClick={() => changeLanguage(l)} style={{
-                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid #222',
-                      background: settings.activeLanguage === l ? '#222' : 'transparent',
-                      color: settings.activeLanguage === l ? '#ededed' : '#666',
+                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid var(--border)',
+                      background: settings.activeLanguage === l ? 'var(--border)' : 'transparent',
+                      color: settings.activeLanguage === l ? 'var(--text)' : 'var(--muted)',
                       fontWeight: 600, fontSize: 12, cursor: 'pointer',
                     }}>{LANGUAGE_LABELS[l]}</button>
                   ))}
                 </div>
-                <div style={{ fontSize: 11, color: '#444', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>New cards / day</div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Theme</div>
+                <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
+                  {(['dark', 'light'] as const).map(t => (
+                    <button key={t} onClick={() => changeTheme(t)} style={{
+                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid var(--border)',
+                      background: settings.theme === t ? 'var(--border)' : 'transparent',
+                      color: settings.theme === t ? 'var(--text)' : 'var(--muted)',
+                      fontWeight: 600, fontSize: 12, cursor: 'pointer', textTransform: 'capitalize',
+                    }}>{t}</button>
+                  ))}
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>New cards / day</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
                   <input
                     type="number"
@@ -779,26 +832,26 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                     }}
                     style={{
                       flex: 1, padding: '5px 8px', borderRadius: 6,
-                      background: '#0d0d0d', border: '1px solid #2a2a2a',
-                      color: '#ededed', fontSize: 13, outline: 'none', fontFamily: 'inherit',
+                      background: 'var(--input-bg)', border: '1px solid var(--border-strong)',
+                      color: 'var(--text)', fontSize: 13, outline: 'none', fontFamily: 'inherit',
                     }}
                   />
                   {settings.dailyNewLimit !== null && (
                     <button onClick={() => changeDailyLimit(null)} title="Disable cap"
                       style={{
-                        padding: '5px 8px', borderRadius: 6, border: '1px solid #222',
-                        background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 11,
+                        padding: '5px 8px', borderRadius: 6, border: '1px solid var(--border)',
+                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 11,
                       }}>off</button>
                   )}
                   {settings.dailyNewLimit === null && (
                     <button onClick={() => changeDailyLimit(DEFAULT_NEW_LIMIT_SUGGESTION)} title="Enable cap"
                       style={{
-                        padding: '5px 8px', borderRadius: 6, border: '1px solid #222',
-                        background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 11,
+                        padding: '5px 8px', borderRadius: 6, border: '1px solid var(--border)',
+                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 11,
                       }}>set</button>
                   )}
                 </div>
-                <div style={{ fontSize: 11, color: '#444', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Card Types</div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Card Types</div>
                 {ALL_TYPES.map(t => (
                   <label key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', cursor: 'pointer' }}>
                     <input type="checkbox" checked={settings.enabledTypes.includes(t)}
@@ -808,10 +861,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                           : settings.enabledTypes.filter(x => x !== t)
                         changeTypes(next)
                       }} />
-                    <span style={{ fontSize: 13, color: '#bbb' }}>{TYPE_LABELS[t]}</span>
+                    <span style={{ fontSize: 13, color: 'var(--text-soft)' }}>{TYPE_LABELS[t]}</span>
                   </label>
                 ))}
-                <div style={{ borderTop: '1px solid #1e1e1e', marginTop: 12, paddingTop: 12 }}>
+                <div style={{ borderTop: '1px solid var(--border-soft)', marginTop: 12, paddingTop: 12 }}>
                   <button onClick={onSignOut} style={{ ...sBtnSecondary, width: '100%', fontSize: 12, padding: '7px 0' }}>
                     Sign Out
                   </button>
@@ -823,14 +876,14 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: 2, background: '#1a1a1a' }}>
+      <div style={{ height: 2, background: 'var(--elev)' }}>
         <div style={{ height: '100%', background: '#3b82f6', width: `${(idx / queue.length) * 100}%`, transition: 'width 0.3s ease' }} />
       </div>
 
       {/* Card */}
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <span style={{ fontSize: 12, color: '#444', textTransform: 'uppercase', letterSpacing: 1 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, gap: 8 }}>
+          <span style={{ fontSize: 12, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
             {TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
             {(pm[card.id]?.recentResults ?? '').length > 0 && (
               <span style={{ marginLeft: 8, letterSpacing: 1 }}>
@@ -842,20 +895,79 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               </span>
             )}
           </span>
-          <span style={{ fontSize: 12, color: '#333' }}>{idx + 1} / {queue.length}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {canReviewPrev && !reviewingPrev && (
+              <button onClick={() => setReviewingPrev(true)} title="Review previous card"
+                style={{
+                  padding: '2px 8px', borderRadius: 6, border: '1px solid var(--border)',
+                  background: 'transparent', color: 'var(--muted)', cursor: 'pointer',
+                  fontSize: 11, fontFamily: 'inherit', lineHeight: 1.4,
+                }}>↶ last</button>
+            )}
+            <span style={{ fontSize: 12, color: 'var(--faint)' }}>{idx + 1} / {queue.length}</span>
+          </span>
         </div>
 
-        <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 14, padding: '24px 20px' }}>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border-soft)', borderRadius: 14, padding: '24px 20px' }}>
+
+          {/* Review previous card (read-only flip view, no rating) */}
+          {reviewingPrev && prevCard && prevEx && (
+            <>
+              <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>
+                ↶ Reviewing previous · {TYPE_LABELS[prevCard.type]} · {prevCard.level}
+                {prevReverse ? ' · ⇄ reverse' : ''}
+              </div>
+              {prevReverse ? (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 16, color: 'var(--text-soft)', marginBottom: 8, lineHeight: 1.5 }}>{prevEx.en}</div>
+                  <div style={{ fontSize: 22, lineHeight: 1.6 }}>
+                    <span>{prevBefore}</span>
+                    <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(prevEx.focus)}</span>
+                    <span>{prevAfter}</span>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
+                  <div style={{ fontSize: 22, lineHeight: 1.6, flex: 1 }}>
+                    <span>{prevBefore}</span>
+                    <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(prevEx.focus)}</span>
+                    <span>{prevAfter}</span>
+                  </div>
+                  {ttsAvailable() && (
+                    <button
+                      onClick={() => speak(prevEx.de, settings.activeLanguage)}
+                      title="Replay"
+                      aria-label="Replay audio"
+                      style={{
+                        background: 'transparent', border: '1px solid var(--border)', borderRadius: 6,
+                        color: 'var(--muted)', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
+                        marginTop: 4, lineHeight: 1,
+                      }}
+                    >🔊</button>
+                  )}
+                </div>
+              )}
+              {!prevReverse && (
+                <div style={{ fontSize: 14, color: 'var(--dim)', marginBottom: 20 }}>{prevEx.en}</div>
+              )}
+              <div style={{ borderTop: '1px solid var(--elev)', paddingTop: 20, marginBottom: 20 }}>
+                <CardBack card={prevCard} />
+              </div>
+              <button onClick={() => setReviewingPrev(false)} style={{ ...sBtnPrimary, width: '100%' }}>
+                ↩ Resume
+              </button>
+            </>
+          )}
 
           {/* Phase 1: Cloze — inline input inside the sentence (or reverse: prompt only) */}
-          {phase === 'cloze' && ex && (
+          {!reviewingPrev && phase === 'cloze' && ex && (
             <>
               {reverse ? (
                 <div>
-                  <div style={{ fontSize: 11, color: '#444', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
                     EN → DE · Translate the missing piece
                   </div>
-                  <div style={{ fontSize: 18, color: '#ccc', marginBottom: 16, lineHeight: 1.5 }}>{ex.en}</div>
+                  <div style={{ fontSize: 18, color: 'var(--text-soft)', marginBottom: 16, lineHeight: 1.5 }}>{ex.en}</div>
                   {!checked ? (
                     <input
                       ref={inputEl}
@@ -901,7 +1013,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                         background: 'transparent',
                         border: 'none',
                         borderBottom: '2px solid #3b82f6',
-                        color: '#ededed',
+                        color: 'var(--text)',
                         fontSize: 22,
                         fontFamily: 'inherit',
                         outline: 'none',
@@ -931,8 +1043,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                   {choices.map(c => (
                     <button key={c} onClick={() => pickChoice(c)} style={{
                       padding: '6px 16px', borderRadius: 20,
-                      border: '1px solid #2a2a2a', background: '#1a1a1a',
-                      color: '#ccc', cursor: 'pointer', fontSize: 15, fontFamily: 'inherit',
+                      border: '1px solid var(--border-strong)', background: 'var(--elev)',
+                      color: 'var(--text-soft)', cursor: 'pointer', fontSize: 15, fontFamily: 'inherit',
                     }}>{c}</button>
                   ))}
                 </div>
@@ -940,15 +1052,15 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
               {!checked && (
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 13, color: '#666', fontStyle: 'italic' }}>
+                  <span style={{ fontSize: 13, color: 'var(--muted)', fontStyle: 'italic' }}>
                     {ex.en}
-                    {ex.caseLabel && <span style={{ color: '#3b3b3b', marginLeft: 6 }}>({ex.caseLabel})</span>}
+                    {ex.caseLabel && <span style={{ color: 'var(--faint)', marginLeft: 6 }}>({ex.caseLabel})</span>}
                   </span>
                   {hint && (
-                    <span style={{ fontSize: 13, color: '#444', fontStyle: 'italic' }}>· {hint}</span>
+                    <span style={{ fontSize: 13, color: 'var(--dim)', fontStyle: 'italic' }}>· {hint}</span>
                   )}
                   {ex.subject === 'sie' && (
-                    <span style={{ fontSize: 11, color: '#3b3b3b', background: '#1a1a1a', padding: '2px 7px', borderRadius: 4 }}>
+                    <span style={{ fontSize: 11, color: 'var(--faint)', background: 'var(--elev)', padding: '2px 7px', borderRadius: 4 }}>
                       sie = they &nbsp;·&nbsp; Sie = formal you
                     </span>
                   )}
@@ -958,12 +1070,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               {checked && !correct && (
                 <div style={{ marginTop: 16 }}>
                   <p style={{ color: '#f87171', fontWeight: 600, marginBottom: ex.note ? 6 : 14 }}>
-                    The answer was <span style={{ color: '#ededed' }}>
+                    The answer was <span style={{ color: 'var(--text)' }}>
                       {'"' + acceptableFocuses(ex.focus).join('" / "') + '"'}
                     </span>
                   </p>
                   {ex.note && (
-                    <p style={{ color: '#888', fontSize: 13, marginBottom: 14, fontStyle: 'italic' }}>{ex.note}</p>
+                    <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 14, fontStyle: 'italic' }}>{ex.note}</p>
                   )}
                   <button onClick={() => setPhase('flip')} style={sBtnPrimary}>Continue →</button>
                 </div>
@@ -972,7 +1084,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           )}
 
           {/* Phase 2: Flip / Rate */}
-          {phase === 'flip' && ex && (
+          {!reviewingPrev && phase === 'flip' && ex && (
             <>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
                 <div style={{ fontSize: 22, lineHeight: 1.6, flex: 1 }}>
@@ -986,16 +1098,16 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                     title="Replay (Space)"
                     aria-label="Replay audio"
                     style={{
-                      background: 'transparent', border: '1px solid #222', borderRadius: 6,
-                      color: '#777', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
+                      background: 'transparent', border: '1px solid var(--border)', borderRadius: 6,
+                      color: 'var(--muted)', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
                       marginTop: 4, lineHeight: 1,
                     }}
                   >🔊</button>
                 )}
               </div>
-              <div style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>{ex.en}</div>
+              <div style={{ fontSize: 14, color: 'var(--dim)', marginBottom: 20 }}>{ex.en}</div>
 
-              <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: 20, marginBottom: 20 }}>
+              <div style={{ borderTop: '1px solid var(--elev)', paddingTop: 20, marginBottom: 20 }}>
                 <CardBack card={card} />
               </div>
 
@@ -1005,16 +1117,16 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                   return (
                     <div key={i} style={{
                       marginBottom: 8, padding: '8px 10px', borderRadius: 8,
-                      background: isCurrent ? '#1a1a1a' : '#0d0d0d',
-                      border: isCurrent ? '1px solid #2a2a2a' : '1px solid transparent',
+                      background: isCurrent ? 'var(--elev)' : 'var(--input-bg)',
+                      border: isCurrent ? '1px solid var(--border-strong)' : '1px solid transparent',
                     }}>
-                      <div style={{ fontSize: 14, color: isCurrent ? '#ededed' : '#bbb' }}>{e.de}</div>
-                      <div style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{e.en}</div>
+                      <div style={{ fontSize: 14, color: isCurrent ? 'var(--text)' : 'var(--text-soft)' }}>{e.de}</div>
+                      <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 2 }}>{e.en}</div>
                     </div>
                   )
                 })}
                 {card.examples.length > MAX_FLIP_EXAMPLES && (
-                  <div style={{ fontSize: 11, color: '#333', textAlign: 'right', marginTop: 4 }}>
+                  <div style={{ fontSize: 11, color: 'var(--faint)', textAlign: 'right', marginTop: 4 }}>
                     showing {MAX_FLIP_EXAMPLES} of {card.examples.length}
                   </div>
                 )}
@@ -1055,7 +1167,7 @@ export default function Page() {
 
   if (isPending) {
     return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#444' }}>
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
         Loading…
       </div>
     )

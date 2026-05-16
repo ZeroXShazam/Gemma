@@ -16,3 +16,7 @@ ALTER TABLE user_settings
 -- Optional per-user daily new-card cap. NULL = unlimited.
 ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS daily_new_limit INTEGER;
+
+-- UI theme preference ('dark' | 'light'). Defaults to 'dark'.
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS theme TEXT NOT NULL DEFAULT 'dark';
