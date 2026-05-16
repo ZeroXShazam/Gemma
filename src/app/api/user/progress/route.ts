@@ -17,20 +17,27 @@ export async function PUT(req: NextRequest) {
   const session = await auth.api.getSession({ headers: req.headers });
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const body = await req.json();
+  const row: Record<string, unknown> = {
+    user_id: session.user.id,
+    card_id: body.cardId,
+    ease: body.ease,
+    interval_days: body.interval,
+    reps: body.reps,
+    lapses: body.lapses,
+    due: body.due,
+    state: body.state,
+    step: body.step,
+    updated_at: new Date().toISOString(),
+  };
+  if (body.exampleMisses && typeof body.exampleMisses === 'object') {
+    row.example_misses = body.exampleMisses;
+  }
+  if (typeof body.recentResults === 'string') {
+    row.recent_results = body.recentResults;
+  }
   const { error } = await supabaseAdmin()
     .from('user_card_progress')
-    .upsert({
-      user_id: session.user.id,
-      card_id: body.cardId,
-      ease: body.ease,
-      interval_days: body.interval,
-      reps: body.reps,
-      lapses: body.lapses,
-      due: body.due,
-      state: body.state,
-      step: body.step,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,card_id' });
+    .upsert(row, { onConflict: 'user_id,card_id' });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

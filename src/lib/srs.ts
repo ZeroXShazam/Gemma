@@ -16,6 +16,8 @@ export function defaultSRS(): SRSState {
     due: 0,
     state: 'new',
     step: 0,
+    exampleMisses: {},
+    recentResults: '',
   };
 }
 

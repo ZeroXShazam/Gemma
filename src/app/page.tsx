@@ -2,9 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useSession, signIn, signUp, signOut } from '@/lib/auth-client'
-import { CARDS_DATA, ALL_TYPES } from '@/lib/cards'
 import { defaultSRS, computeNext, previewIntervals } from '@/lib/srs'
-import type { SRSState, SRSCard, Rating, CardType } from '@/lib/types'
+import { speak, cancelSpeech, ttsAvailable } from '@/lib/tts'
+import {
+  ALL_TYPES, ALL_LANGUAGES, LANGUAGE_LABELS,
+  type SRSState, type SRSCard, type Rating, type CardType, type CardDef, type Language, type Example,
+} from '@/lib/types'
 
 const NEW_DAILY_LIMIT = 20
 
@@ -38,13 +41,84 @@ const RATING_CFG = [
 
 function todayStr() { return new Date().toISOString().slice(0, 10) }
 
-function blankParts(de: string, focus: string): [string, string] {
-  const i = de.indexOf(focus)
-  return i === -1 ? [de, ''] : [de.slice(0, i), de.slice(i + focus.length)]
+function canonicalFocus(focus: string | string[]): string {
+  return Array.isArray(focus) ? focus[0] : focus
 }
 
-function answerOk(input: string, focus: string): boolean {
-  return input.trim().toLowerCase() === focus.toLowerCase()
+function acceptableFocuses(focus: string | string[]): string[] {
+  return Array.isArray(focus) ? focus : [focus]
+}
+
+const REVERSE_PROBABILITY = 0.33
+const RECENT_MAX = 5
+
+function pickReverse(card: SRSCard | undefined): boolean {
+  if (!card) return false
+  if (card.state !== 'review' && card.state !== 'mature') return false
+  if (card.type === 'prep') return false // prep uses choice chips, no production
+  return Math.random() < REVERSE_PROBABILITY
+}
+
+function pickExampleIdx(card: SRSCard): number {
+  const len = card.examples.length
+  if (len <= 1) return 0
+  const misses = card.exampleMisses ?? {}
+  const weights = card.examples.map((_, i) => (misses[String(i)] ?? 0) + 1)
+  const total = weights.reduce((a, b) => a + b, 0)
+  let r = Math.random() * total
+  for (let i = 0; i < weights.length; i++) {
+    r -= weights[i]
+    if (r <= 0) return i
+  }
+  return len - 1
+}
+
+function pushResult(s: string, ok: boolean): string {
+  const next = s + (ok ? '1' : '0')
+  return next.length > RECENT_MAX ? next.slice(-RECENT_MAX) : next
+}
+
+function yesterdayStr(today: string): string {
+  const d = new Date(today + 'T00:00:00Z')
+  d.setUTCDate(d.getUTCDate() - 1)
+  return d.toISOString().slice(0, 10)
+}
+
+function nextStreak(s: Settings, today: string): { streakDays: number; lastReviewDate: string } {
+  if (s.lastReviewDate === today) return { streakDays: s.streakDays, lastReviewDate: today }
+  if (s.lastReviewDate === yesterdayStr(today)) return { streakDays: s.streakDays + 1, lastReviewDate: today }
+  return { streakDays: 1, lastReviewDate: today }
+}
+
+function expandNounFocus(ex: Example, noun: string): Example {
+  const c = canonicalFocus(ex.focus)
+  const expected = `${c} ${noun}`
+  if (!ex.de.includes(expected)) return ex
+  const expanded = acceptableFocuses(ex.focus).map((f) => `${f} ${noun}`)
+  return { ...ex, focus: expanded.length === 1 ? expanded[0] : expanded }
+}
+
+function blankParts(de: string, focus: string | string[]): [string, string] {
+  const c = canonicalFocus(focus)
+  const i = de.indexOf(c)
+  return i === -1 ? [de, ''] : [de.slice(0, i), de.slice(i + c.length)]
+}
+
+function normalize(s: string): string {
+  return s
+    .trim()
+    .toLowerCase()
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+function answerOk(input: string, focus: string | string[]): boolean {
+  const n = normalize(input)
+  return acceptableFocuses(focus).some((f) => normalize(f) === n)
 }
 
 interface Settings {
@@ -52,6 +126,9 @@ interface Settings {
   newCardsToday: number
   todayDate: string
   totalReviewed: number
+  activeLanguage: Language
+  streakDays: number
+  lastReviewDate: string
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -59,9 +136,12 @@ const DEFAULT_SETTINGS: Settings = {
   newCardsToday: 0,
   todayDate: '',
   totalReviewed: 0,
+  activeLanguage: 'de',
+  streakDays: 0,
+  lastReviewDate: '',
 }
 
-function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
+function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
   const now = Date.now()
   const today = todayStr()
   const newToday = s.todayDate === today ? s.newCardsToday : 0
@@ -73,7 +153,7 @@ function buildQueue(pm: Record<string, SRSState>, s: Settings, lv: string): SRSC
 
   const allNew: SRSCard[] = []
 
-  for (const card of CARDS_DATA) {
+  for (const card of cards) {
     if (lv !== 'All' && card.level !== lv) continue
     if (!s.enabledTypes.includes(card.type)) continue
     const srs = pm[card.id] ?? defaultSRS()
@@ -257,6 +337,7 @@ function CardBack({ card }: { card: SRSCard }) {
 }
 
 function Trainer({ onSignOut }: { onSignOut: () => void }) {
+  const [cards, setCards]       = useState<CardDef[]>([])
   const [pm, setPm]             = useState<Record<string, SRSState>>({})
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
   const [lv, setLv]             = useState<'A1' | 'A2' | 'All'>('All')
@@ -270,10 +351,17 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [loading, setLoading]   = useState(true)
   const [showMenu, setShowMenu] = useState(false)
   const [exIdx, setExIdx]       = useState(0)
+  const [reverse, setReverse]   = useState(false)
   const [choices, setChoices]   = useState<string[]>([])
   const inputEl = useRef<HTMLInputElement>(null)
 
   useEffect(() => { loadData() }, [])
+
+  async function fetchCards(language: Language): Promise<CardDef[]> {
+    const res = await fetch(`/api/cards?language=${language}`)
+    const data = await res.json()
+    return Array.isArray(data) ? (data as CardDef[]) : []
+  }
 
   async function loadData() {
     setLoading(true)
@@ -288,6 +376,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           map[row.card_id] = {
             ease: row.ease, interval: row.interval_days, reps: row.reps,
             lapses: row.lapses, due: row.due, state: row.state, step: row.step,
+            exampleMisses: (row.example_misses ?? {}) as Record<string, number>,
+            recentResults: typeof row.recent_results === 'string' ? row.recent_results : '',
           }
         }
       }
@@ -297,68 +387,119 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             newCardsToday: sr.new_cards_today ?? 0,
             todayDate: sr.today_date ?? '',
             totalReviewed: sr.total_reviewed ?? 0,
+            activeLanguage: (sr.active_language ?? 'de') as Language,
+            streakDays: sr.streak_days ?? 0,
+            lastReviewDate: sr.last_review_date ?? '',
           }
         : DEFAULT_SETTINGS
+      const fetched = await fetchCards(loaded.activeLanguage)
+      setCards(fetched)
       setPm(map)
       setSettings(loaded)
-      const q = buildQueue(map, loaded, lv)
+      const q = buildQueue(fetched, map, loaded, lv)
       setQueue(q)
       setIdx(0)
       setPhase('cloze')
       setInput('')
       setChecked(false)
       setCorrect(false)
-      if (q.length > 0) setExIdx(0)
+      if (q.length > 0) {
+        const first = q[0] as SRSCard
+        setExIdx(pickExampleIdx(first))
+        setReverse(pickReverse(first))
+      }
     } finally {
       setLoading(false)
     }
   }
 
-  function applyQueueChange(newPm: Record<string, SRSState>, newSettings: Settings, newLv: string) {
-    const q = buildQueue(newPm, newSettings, newLv)
+  function applyQueueChange(newCards: CardDef[], newPm: Record<string, SRSState>, newSettings: Settings, newLv: string) {
+    const q = buildQueue(newCards, newPm, newSettings, newLv)
     setQueue(q)
     setIdx(0)
     setPhase('cloze')
     setInput('')
     setChecked(false)
     setCorrect(false)
-    if (q.length > 0) setExIdx(0)
+    if (q.length > 0) {
+      const first = q[0] as SRSCard
+      setExIdx(pickExampleIdx(first))
+      setReverse(pickReverse(first))
+    }
     setTimeout(() => inputEl.current?.focus(), 50)
   }
 
   function changeLevel(newLv: 'A1' | 'A2' | 'All') {
     setLv(newLv)
-    applyQueueChange(pm, settings, newLv)
+    applyQueueChange(cards, pm, settings, newLv)
   }
 
   function changeTypes(newTypes: CardType[]) {
     const ns = { ...settings, enabledTypes: newTypes }
     setSettings(ns)
-    applyQueueChange(pm, ns, lv)
+    applyQueueChange(cards, pm, ns, lv)
     fetch('/api/user/settings', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed }),
+      body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed, activeLanguage: ns.activeLanguage }),
     })
   }
 
+  async function changeLanguage(newLang: Language) {
+    if (newLang === settings.activeLanguage) return
+    setLoading(true)
+    try {
+      const ns = { ...settings, activeLanguage: newLang }
+      setSettings(ns)
+      const fetched = await fetchCards(newLang)
+      setCards(fetched)
+      applyQueueChange(fetched, pm, ns, lv)
+      await fetch('/api/user/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed, activeLanguage: ns.activeLanguage }),
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const card = queue[idx] as SRSCard | undefined
-  const ex = card ? card.examples[exIdx % card.examples.length] : undefined
+  const baseEx = card ? card.examples[exIdx % card.examples.length] : undefined
+  const ex = baseEx && card?.type === 'noun' && card.noun ? expandNounFocus(baseEx, card.noun) : baseEx
   const intervals = card ? previewIntervals(card) : null
 
   useEffect(() => {
     if (!card || card.type !== 'prep' || !card.word) { setChoices([]); return }
-    const allWords = [...new Set(CARDS_DATA.filter(c => c.type === 'prep' && c.word && c.word !== card.word).map(c => c.word!))]
+    const allWords = [...new Set(cards.filter(c => c.type === 'prep' && c.word && c.word !== card.word).map(c => c.word!))]
     const shuffled = allWords.sort(() => Math.random() - 0.5).slice(0, 3)
     setChoices([...shuffled, card.word].sort(() => Math.random() - 0.5))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [card?.id, exIdx])
+
+  function recordCheck(ok: boolean) {
+    if (!card) return
+    const cardId = card.id
+    setPm(prev => {
+      const cur = prev[cardId] ?? defaultSRS()
+      const updated: SRSState = {
+        ...cur,
+        exampleMisses: ok ? cur.exampleMisses : {
+          ...cur.exampleMisses,
+          [String(exIdx)]: (cur.exampleMisses[String(exIdx)] ?? 0) + 1,
+        },
+        recentResults: pushResult(cur.recentResults, ok),
+      }
+      return { ...prev, [cardId]: updated }
+    })
+  }
 
   function doCheck() {
     if (!ex || checked) return
     const ok = answerOk(input, ex.focus)
     setCorrect(ok)
     setChecked(true)
+    recordCheck(ok)
     if (ok) setTimeout(() => setPhase('flip'), 800)
   }
 
@@ -368,6 +509,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     setInput(value)
     setCorrect(ok)
     setChecked(true)
+    recordCheck(ok)
     if (ok) setTimeout(() => setPhase('flip'), 800)
   }
 
@@ -375,10 +517,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     if (!card || saving) return
     setSaving(true)
     const wasNew = card.state === 'new'
-    const next = computeNext(card, rating)
+    const latest = pm[card.id] ?? defaultSRS()
+    const next = computeNext({ ...card, ...latest }, rating)
     const newPm = { ...pm, [card.id]: next }
     setPm(newPm)
     const today = todayStr()
+    const streak = nextStreak(settings, today)
     const ns: Settings = {
       ...settings,
       newCardsToday: wasNew
@@ -386,29 +530,46 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         : settings.newCardsToday,
       todayDate: wasNew ? today : settings.todayDate,
       totalReviewed: settings.totalReviewed + 1,
+      streakDays: streak.streakDays,
+      lastReviewDate: streak.lastReviewDate,
     }
     setSettings(ns)
     await Promise.all([
       fetch('/api/user/progress', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardId: card.id, ease: next.ease, interval: next.interval, reps: next.reps, lapses: next.lapses, due: next.due, state: next.state, step: next.step }),
+        body: JSON.stringify({
+          cardId: card.id,
+          ease: next.ease, interval: next.interval, reps: next.reps, lapses: next.lapses,
+          due: next.due, state: next.state, step: next.step,
+          exampleMisses: next.exampleMisses,
+          recentResults: next.recentResults,
+        }),
       }),
       fetch('/api/user/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed }),
+        body: JSON.stringify({
+          enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday,
+          todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
+          activeLanguage: ns.activeLanguage,
+          streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
+        }),
       }),
     ])
     setSaving(false)
     const nextIdx = idx + 1
     if (nextIdx < queue.length) {
+      const nextCard = queue[nextIdx]
+      const nextSrs = newPm[nextCard.id] ?? defaultSRS()
+      const enriched = { ...nextCard, ...nextSrs } as SRSCard
       setIdx(nextIdx)
       setPhase('cloze')
       setInput('')
       setChecked(false)
       setCorrect(false)
-      setExIdx(Math.floor(Math.random() * queue[nextIdx].examples.length))
+      setExIdx(pickExampleIdx(enriched))
+      setReverse(pickReverse(enriched))
       setTimeout(() => inputEl.current?.focus(), 50)
     } else {
       setIdx(queue.length)
@@ -429,6 +590,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         return
       }
       if (phase === 'flip' && !saving) {
+        if (e.key === ' ' && ex) { e.preventDefault(); speak(ex.de, settings.activeLanguage); return }
         const map: Record<string, Rating> = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' }
         const r = map[e.key]
         if (r) doRate(r)
@@ -439,9 +601,16 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, checked, correct, saving, card, input, ex])
 
+  useEffect(() => {
+    if (phase === 'flip' && ex) speak(ex.de, settings.activeLanguage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, card?.id, exIdx])
+
+  useEffect(() => () => cancelSpeech(), [])
+
   const now = Date.now()
   const today = todayStr()
-  const filtered = CARDS_DATA.filter(c =>
+  const filtered = cards.filter(c =>
     (lv === 'All' || c.level === lv) && settings.enabledTypes.includes(c.type)
   )
   const dueN   = filtered.filter(c => { const s = pm[c.id]; return s && (s.state === 'review' || s.state === 'mature') && s.due <= now }).length
@@ -458,19 +627,34 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   if (!card || idx >= queue.length) {
+    const isEmptyDeck = cards.length === 0
     return (
       <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#ededed', gap: 16, padding: 16, textAlign: 'center' }}>
-        <div style={{ fontSize: 48, lineHeight: 1 }}>✓</div>
+        <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : '✓'}</div>
         <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
-          {queue.length === 0 ? 'All caught up!' : 'Session complete!'}
+          {isEmptyDeck
+            ? `No ${LANGUAGE_LABELS[settings.activeLanguage]} cards yet`
+            : queue.length === 0 ? 'All caught up!' : 'Session complete!'}
         </h2>
         <p style={{ color: '#555', margin: 0 }}>
-          {queue.length === 0
-            ? 'No cards due right now.'
-            : `Reviewed ${queue.length} card${queue.length !== 1 ? 's' : ''} · Total: ${settings.totalReviewed}`}
+          {isEmptyDeck
+            ? 'This deck is empty. Switch to another language or seed cards.'
+            : queue.length === 0
+              ? 'No cards due right now.'
+              : `Reviewed ${queue.length} card${queue.length !== 1 ? 's' : ''} · Total: ${settings.totalReviewed}`}
         </p>
+        <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+          {ALL_LANGUAGES.map(l => (
+            <button key={l} onClick={() => changeLanguage(l)} style={{
+              padding: '6px 14px', borderRadius: 6, border: '1px solid #222', cursor: 'pointer',
+              background: settings.activeLanguage === l ? '#222' : 'transparent',
+              color: settings.activeLanguage === l ? '#ededed' : '#666',
+              fontWeight: 600, fontSize: 13,
+            }}>{LANGUAGE_LABELS[l]}</button>
+          ))}
+        </div>
         <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button onClick={loadData} style={sBtnPrimary}>Start New Session</button>
+          {!isEmptyDeck && <button onClick={loadData} style={sBtnPrimary}>Start New Session</button>}
           <button onClick={onSignOut} style={sBtnSecondary}>Sign Out</button>
         </div>
       </div>
@@ -478,10 +662,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   const [before, after] = ex ? blankParts(ex.de, ex.focus) : ['', '']
-  const hint = (card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null)
-  const genderHint = card?.type === 'noun' && card.article
-    ? ({ der: 'm', die: 'f', das: 'n' } as const)[card.article]
-    : null
+  const hint = reverse
+    ? (card?.verb ?? card?.noun ?? card?.word ?? null)
+    : ((card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null))
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }} onClick={() => setShowMenu(false)}>
@@ -493,6 +676,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           <Pill c="#60a5fa">{learnN} learn</Pill>
           <Pill c="#f59e0b">{dueN} due</Pill>
           <Pill c="#34d399">{newN} new</Pill>
+          {settings.streakDays > 0 && (
+            <Pill c="#f97316">🔥 {settings.streakDays}</Pill>
+          )}
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           {(['A1', 'A2', 'All'] as const).map(l => (
@@ -513,6 +699,17 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 background: '#111', border: '1px solid #222', borderRadius: 10,
                 padding: '12px 16px', width: 210, zIndex: 200, boxShadow: '0 8px 32px #000c',
               }}>
+                <div style={{ fontSize: 11, color: '#444', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Language</div>
+                <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
+                  {ALL_LANGUAGES.map(l => (
+                    <button key={l} onClick={() => changeLanguage(l)} style={{
+                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid #222',
+                      background: settings.activeLanguage === l ? '#222' : 'transparent',
+                      color: settings.activeLanguage === l ? '#ededed' : '#666',
+                      fontWeight: 600, fontSize: 12, cursor: 'pointer',
+                    }}>{LANGUAGE_LABELS[l]}</button>
+                  ))}
+                </div>
                 <div style={{ fontSize: 11, color: '#444', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Card Types</div>
                 {ALL_TYPES.map(t => (
                   <label key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', cursor: 'pointer' }}>
@@ -546,58 +743,100 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <span style={{ fontSize: 12, color: '#444', textTransform: 'uppercase', letterSpacing: 1 }}>
-            {TYPE_LABELS[card.type]} · {card.level} · {card.state}
+            {TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
+            {(pm[card.id]?.recentResults ?? '').length > 0 && (
+              <span style={{ marginLeft: 8, letterSpacing: 1 }}>
+                {(pm[card.id]?.recentResults ?? '').split('').map((r, i) => (
+                  <span key={i} style={{ color: r === '1' ? '#34d399' : '#f87171' }}>
+                    {r === '1' ? '✓' : '✗'}
+                  </span>
+                ))}
+              </span>
+            )}
           </span>
           <span style={{ fontSize: 12, color: '#333' }}>{idx + 1} / {queue.length}</span>
         </div>
 
         <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: 14, padding: '24px 20px' }}>
 
-          {/* Phase 1: Cloze — inline input inside the sentence */}
+          {/* Phase 1: Cloze — inline input inside the sentence (or reverse: prompt only) */}
           {phase === 'cloze' && ex && (
             <>
-              <div style={{ fontSize: 22, lineHeight: 2.2 }}>
-                <span>{before}</span>
-                {!checked ? (
-                  <input
-                    ref={inputEl}
-                    type="text"
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
-                    autoFocus
-                    style={{
+              {reverse ? (
+                <div>
+                  <div style={{ fontSize: 11, color: '#444', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    EN → DE · Translate the missing piece
+                  </div>
+                  <div style={{ fontSize: 18, color: '#ccc', marginBottom: 16, lineHeight: 1.5 }}>{ex.en}</div>
+                  {!checked ? (
+                    <input
+                      ref={inputEl}
+                      type="text"
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
+                      autoFocus
+                      placeholder="Type the German…"
+                      style={{
+                        ...sInput,
+                        fontSize: 20,
+                        borderColor: '#3b82f6',
+                      }}
+                    />
+                  ) : (
+                    <div style={{
+                      padding: '10px 12px',
+                      borderRadius: 8,
+                      border: `1px solid ${correct ? '#34d399' : '#f87171'}`,
+                      background: correct ? '#34d39912' : '#f8717112',
+                      color: correct ? '#34d399' : '#f87171',
+                      fontSize: 20, fontWeight: 700, textAlign: 'center',
+                    }}>
+                      {canonicalFocus(ex.focus)}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div style={{ fontSize: 22, lineHeight: 2.2 }}>
+                  <span>{before}</span>
+                  {!checked ? (
+                    <input
+                      ref={inputEl}
+                      type="text"
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
+                      autoFocus
+                      style={{
+                        display: 'inline-block',
+                        width: Math.max(canonicalFocus(ex.focus).length * 14, 80),
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: '2px solid #3b82f6',
+                        color: '#ededed',
+                        fontSize: 22,
+                        fontFamily: 'inherit',
+                        outline: 'none',
+                        padding: '0 4px',
+                        margin: '0 2px',
+                        textAlign: 'center',
+                        verticalAlign: 'baseline',
+                      }}
+                    />
+                  ) : (
+                    <span style={{
                       display: 'inline-block',
-                      width: Math.max(ex.focus.length * 14, 80),
-                      background: 'transparent',
-                      border: 'none',
-                      borderBottom: '2px solid #3b82f6',
-                      color: '#ededed',
-                      fontSize: 22,
-                      fontFamily: 'inherit',
-                      outline: 'none',
-                      padding: '0 4px',
-                      margin: '0 2px',
-                      textAlign: 'center',
-                      verticalAlign: 'baseline',
-                    }}
-                  />
-                ) : (
-                  <span style={{
-                    display: 'inline-block',
-                    minWidth: Math.max(ex.focus.length * 14, 80),
-                    borderBottom: `2px solid ${correct ? '#34d399' : '#f87171'}`,
-                    color: correct ? '#34d399' : '#f87171',
-                    textAlign: 'center', margin: '0 2px', fontWeight: 700, padding: '0 4px',
-                  }}>
-                    {ex.focus}
-                  </span>
-                )}
-                <span>{after}</span>
-                {genderHint && !checked && (
-                  <span style={{ fontSize: 13, color: '#444', marginLeft: 6 }}>({genderHint})</span>
-                )}
-              </div>
+                      minWidth: Math.max(canonicalFocus(ex.focus).length * 14, 80),
+                      borderBottom: `2px solid ${correct ? '#34d399' : '#f87171'}`,
+                      color: correct ? '#34d399' : '#f87171',
+                      textAlign: 'center', margin: '0 2px', fontWeight: 700, padding: '0 4px',
+                    }}>
+                      {canonicalFocus(ex.focus)}
+                    </span>
+                  )}
+                  <span>{after}</span>
+                </div>
+              )}
 
               {card.type === 'prep' && choices.length > 0 && !checked && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
@@ -626,9 +865,14 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
               {checked && !correct && (
                 <div style={{ marginTop: 16 }}>
-                  <p style={{ color: '#f87171', fontWeight: 600, marginBottom: 14 }}>
-                    The answer was <span style={{ color: '#ededed' }}>"{ex.focus}"</span>
+                  <p style={{ color: '#f87171', fontWeight: 600, marginBottom: ex.note ? 6 : 14 }}>
+                    The answer was <span style={{ color: '#ededed' }}>
+                      {'"' + acceptableFocuses(ex.focus).join('" / "') + '"'}
+                    </span>
                   </p>
+                  {ex.note && (
+                    <p style={{ color: '#888', fontSize: 13, marginBottom: 14, fontStyle: 'italic' }}>{ex.note}</p>
+                  )}
                   <button onClick={() => setPhase('flip')} style={sBtnPrimary}>Continue →</button>
                 </div>
               )}
@@ -638,10 +882,24 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           {/* Phase 2: Flip / Rate */}
           {phase === 'flip' && ex && (
             <>
-              <div style={{ fontSize: 22, lineHeight: 1.6, marginBottom: 4 }}>
-                <span>{before}</span>
-                <span style={{ color: '#60a5fa', fontWeight: 700 }}>{ex.focus}</span>
-                <span>{after}</span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
+                <div style={{ fontSize: 22, lineHeight: 1.6, flex: 1 }}>
+                  <span>{before}</span>
+                  <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(ex.focus)}</span>
+                  <span>{after}</span>
+                </div>
+                {ttsAvailable() && (
+                  <button
+                    onClick={() => speak(ex.de, settings.activeLanguage)}
+                    title="Replay (Space)"
+                    aria-label="Replay audio"
+                    style={{
+                      background: 'transparent', border: '1px solid #222', borderRadius: 6,
+                      color: '#777', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
+                      marginTop: 4, lineHeight: 1,
+                    }}
+                  >🔊</button>
+                )}
               </div>
               <div style={{ fontSize: 14, color: '#555', marginBottom: 20 }}>{ex.en}</div>
 

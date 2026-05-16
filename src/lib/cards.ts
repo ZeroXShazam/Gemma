@@ -1,4 +1,5 @@
 import type { CardDef, Conjugations, Example, Level } from './types';
+export { ALL_TYPES } from './types';
 
 function verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
   return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex };
@@ -777,7 +778,3 @@ export const CARDS_DATA: CardDef[] = [
   ...NEGATION, ...COMPARATIVE, ...REFLEXIVE, ...CONJUNCTIONS,
 ];
 
-export const ALL_TYPES: CardDef['type'][] = [
-  'verb','noun','prep','wh','pronoun','possessive','adjective',
-  'modal','perfekt','negation','comparative','reflexive','conjunction',
-];
