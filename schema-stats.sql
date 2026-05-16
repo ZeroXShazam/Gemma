@@ -12,3 +12,7 @@ ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS streak_days INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS last_review_date TEXT NOT NULL DEFAULT '';
+
+-- Optional per-user daily new-card cap. NULL = unlimited.
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS daily_new_limit INTEGER;

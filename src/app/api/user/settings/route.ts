@@ -29,6 +29,9 @@ export async function PUT(req: NextRequest) {
   if (typeof body.activeLanguage === 'string') row.active_language = body.activeLanguage;
   if (typeof body.streakDays === 'number') row.streak_days = body.streakDays;
   if (typeof body.lastReviewDate === 'string') row.last_review_date = body.lastReviewDate;
+  if (body.dailyNewLimit === null || typeof body.dailyNewLimit === 'number') {
+    row.daily_new_limit = body.dailyNewLimit;
+  }
   const { error } = await supabaseAdmin()
     .from('user_settings')
     .upsert(row, { onConflict: 'user_id' });

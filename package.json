@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "build:deck": "tsx scripts/build-deck.ts",
     "seed:de": "tsx --env-file=.env.local scripts/seed-de.ts"
   },
   "dependencies": {

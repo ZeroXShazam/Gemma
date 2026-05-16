@@ -9,7 +9,7 @@ import {
   type SRSState, type SRSCard, type Rating, type CardType, type CardDef, type Language, type Example,
 } from '@/lib/types'
 
-const NEW_DAILY_LIMIT = 20
+const DEFAULT_NEW_LIMIT_SUGGESTION = 20 // shown as placeholder in the limit input
 
 const TYPE_LABELS: Record<CardType, string> = {
   verb: 'Verbs', noun: 'Nouns', prep: 'Prepositions',
@@ -73,6 +73,48 @@ function pickExampleIdx(card: SRSCard): number {
   return len - 1
 }
 
+const MAX_FLIP_EXAMPLES = 5
+
+// Pick at most MAX_FLIP_EXAMPLES examples to show on the flip side.
+// Always include the just-answered example first, then fill remaining
+// slots preferring examples with a different caseLabel for variety.
+function pickFlipExamples(examples: Example[], currentIdx: number): Example[] {
+  if (examples.length <= MAX_FLIP_EXAMPLES) return examples
+  const current = examples[currentIdx % examples.length]
+  const rest = examples.filter((_, i) => i !== (currentIdx % examples.length))
+  const picked: Example[] = [current]
+  const seenCases = new Set<string>()
+  if (current.caseLabel) seenCases.add(current.caseLabel)
+  for (const e of rest) {
+    if (picked.length >= MAX_FLIP_EXAMPLES) break
+    if (e.caseLabel && !seenCases.has(e.caseLabel)) {
+      picked.push(e)
+      seenCases.add(e.caseLabel)
+    }
+  }
+  for (const e of rest) {
+    if (picked.length >= MAX_FLIP_EXAMPLES) break
+    if (!picked.includes(e)) picked.push(e)
+  }
+  return picked
+}
+
+// True when the lemma hint would substantially reveal the answer.
+// Catches exact matches and same-stem declensions (welcher/welchem, mein/meinen, …).
+function lemmaRevealsFocus(hint: string, focuses: string[]): boolean {
+  const nh = normalize(hint)
+  if (nh.length === 0) return true
+  for (const f of focuses) {
+    const nf = normalize(f)
+    if (nh === nf) return true
+    if (nh.length >= 3 && (nf.startsWith(nh) || nh.startsWith(nf))) return true
+    let i = 0
+    while (i < Math.min(nh.length, nf.length) && nh[i] === nf[i]) i++
+    if (i >= 4) return true
+  }
+  return false
+}
+
 function pushResult(s: string, ok: boolean): string {
   const next = s + (ok ? '1' : '0')
   return next.length > RECENT_MAX ? next.slice(-RECENT_MAX) : next
@@ -129,6 +171,7 @@ interface Settings {
   activeLanguage: Language
   streakDays: number
   lastReviewDate: string
+  dailyNewLimit: number | null  // null = unlimited
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -139,13 +182,16 @@ const DEFAULT_SETTINGS: Settings = {
   activeLanguage: 'de',
   streakDays: 0,
   lastReviewDate: '',
+  dailyNewLimit: null,
 }
 
 function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
   const now = Date.now()
   const today = todayStr()
   const newToday = s.todayDate === today ? s.newCardsToday : 0
-  const budget = Math.max(0, NEW_DAILY_LIMIT - newToday)
+  const budget = s.dailyNewLimit === null
+    ? Number.POSITIVE_INFINITY
+    : Math.max(0, s.dailyNewLimit - newToday)
 
   const learning: SRSCard[] = []
   const review: SRSCard[] = []
@@ -390,6 +436,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             activeLanguage: (sr.active_language ?? 'de') as Language,
             streakDays: sr.streak_days ?? 0,
             lastReviewDate: sr.last_review_date ?? '',
+            dailyNewLimit: typeof sr.daily_new_limit === 'number' ? sr.daily_new_limit : null,
           }
         : DEFAULT_SETTINGS
       const fetched = await fetchCards(loaded.activeLanguage)
@@ -434,15 +481,32 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     applyQueueChange(cards, pm, settings, newLv)
   }
 
+  function persistSettings(ns: Settings) {
+    return fetch('/api/user/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday,
+        todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
+        activeLanguage: ns.activeLanguage,
+        streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
+        dailyNewLimit: ns.dailyNewLimit,
+      }),
+    })
+  }
+
   function changeTypes(newTypes: CardType[]) {
     const ns = { ...settings, enabledTypes: newTypes }
     setSettings(ns)
     applyQueueChange(cards, pm, ns, lv)
-    fetch('/api/user/settings', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed, activeLanguage: ns.activeLanguage }),
-    })
+    persistSettings(ns)
+  }
+
+  function changeDailyLimit(limit: number | null) {
+    const ns = { ...settings, dailyNewLimit: limit }
+    setSettings(ns)
+    applyQueueChange(cards, pm, ns, lv)
+    persistSettings(ns)
   }
 
   async function changeLanguage(newLang: Language) {
@@ -454,11 +518,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       const fetched = await fetchCards(newLang)
       setCards(fetched)
       applyQueueChange(fetched, pm, ns, lv)
-      await fetch('/api/user/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday, todayDate: ns.todayDate, totalReviewed: ns.totalReviewed, activeLanguage: ns.activeLanguage }),
-      })
+      await persistSettings(ns)
     } finally {
       setLoading(false)
     }
@@ -546,16 +606,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           recentResults: next.recentResults,
         }),
       }),
-      fetch('/api/user/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday,
-          todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
-          activeLanguage: ns.activeLanguage,
-          streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
-        }),
-      }),
+      persistSettings(ns),
     ])
     setSaving(false)
     const nextIdx = idx + 1
@@ -615,8 +666,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   )
   const dueN   = filtered.filter(c => { const s = pm[c.id]; return s && (s.state === 'review' || s.state === 'mature') && s.due <= now }).length
   const learnN = filtered.filter(c => { const s = pm[c.id]; return s && s.state === 'learning' && s.due <= now }).length
-  const budget = Math.max(0, NEW_DAILY_LIMIT - (settings.todayDate === today ? settings.newCardsToday : 0))
-  const newN   = Math.min(budget, filtered.filter(c => !pm[c.id] || pm[c.id].state === 'new').length)
+  const newToday = settings.todayDate === today ? settings.newCardsToday : 0
+  const budget = settings.dailyNewLimit === null
+    ? Number.POSITIVE_INFINITY
+    : Math.max(0, settings.dailyNewLimit - newToday)
+  const remainingNew = filtered.filter(c => !pm[c.id] || pm[c.id].state === 'new').length
+  const newN   = Math.min(budget, remainingNew)
 
   if (loading) {
     return (
@@ -662,9 +717,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   const [before, after] = ex ? blankParts(ex.de, ex.focus) : ['', '']
-  const hint = reverse
+  const rawHint = reverse
     ? (card?.verb ?? card?.noun ?? card?.word ?? null)
     : ((card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null))
+  const hint = rawHint && ex && lemmaRevealsFocus(rawHint, acceptableFocuses(ex.focus)) ? null : rawHint
 
   return (
     <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#ededed' }} onClick={() => setShowMenu(false)}>
@@ -709,6 +765,38 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       fontWeight: 600, fontSize: 12, cursor: 'pointer',
                     }}>{LANGUAGE_LABELS[l]}</button>
                   ))}
+                </div>
+                <div style={{ fontSize: 11, color: '#444', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>New cards / day</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="unlimited"
+                    value={settings.dailyNewLimit ?? ''}
+                    onChange={e => {
+                      const v = e.target.value.trim()
+                      changeDailyLimit(v === '' ? null : Math.max(1, Number(v) || 0))
+                    }}
+                    style={{
+                      flex: 1, padding: '5px 8px', borderRadius: 6,
+                      background: '#0d0d0d', border: '1px solid #2a2a2a',
+                      color: '#ededed', fontSize: 13, outline: 'none', fontFamily: 'inherit',
+                    }}
+                  />
+                  {settings.dailyNewLimit !== null && (
+                    <button onClick={() => changeDailyLimit(null)} title="Disable cap"
+                      style={{
+                        padding: '5px 8px', borderRadius: 6, border: '1px solid #222',
+                        background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 11,
+                      }}>off</button>
+                  )}
+                  {settings.dailyNewLimit === null && (
+                    <button onClick={() => changeDailyLimit(DEFAULT_NEW_LIMIT_SUGGESTION)} title="Enable cap"
+                      style={{
+                        padding: '5px 8px', borderRadius: 6, border: '1px solid #222',
+                        background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 11,
+                      }}>set</button>
+                  )}
                 </div>
                 <div style={{ fontSize: 11, color: '#444', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Card Types</div>
                 {ALL_TYPES.map(t => (
@@ -850,10 +938,14 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 </div>
               )}
 
-              {(hint || ex.subject === 'sie') && !checked && (
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 6 }}>
+              {!checked && (
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 13, color: '#666', fontStyle: 'italic' }}>
+                    {ex.en}
+                    {ex.caseLabel && <span style={{ color: '#3b3b3b', marginLeft: 6 }}>({ex.caseLabel})</span>}
+                  </span>
                   {hint && (
-                    <span style={{ fontSize: 13, color: '#444', fontStyle: 'italic' }}>{hint}</span>
+                    <span style={{ fontSize: 13, color: '#444', fontStyle: 'italic' }}>· {hint}</span>
                   )}
                   {ex.subject === 'sie' && (
                     <span style={{ fontSize: 11, color: '#3b3b3b', background: '#1a1a1a', padding: '2px 7px', borderRadius: 4 }}>
@@ -908,12 +1000,24 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               </div>
 
               <div style={{ marginBottom: 24 }}>
-                {card.examples.map((e, i) => (
-                  <div key={i} style={{ marginBottom: 8, padding: '8px 10px', background: '#0d0d0d', borderRadius: 8 }}>
-                    <div style={{ fontSize: 14, color: '#bbb' }}>{e.de}</div>
-                    <div style={{ fontSize: 12, color: '#444', marginTop: 2 }}>{e.en}</div>
+                {pickFlipExamples(card.examples, exIdx).map((e, i) => {
+                  const isCurrent = e === ex
+                  return (
+                    <div key={i} style={{
+                      marginBottom: 8, padding: '8px 10px', borderRadius: 8,
+                      background: isCurrent ? '#1a1a1a' : '#0d0d0d',
+                      border: isCurrent ? '1px solid #2a2a2a' : '1px solid transparent',
+                    }}>
+                      <div style={{ fontSize: 14, color: isCurrent ? '#ededed' : '#bbb' }}>{e.de}</div>
+                      <div style={{ fontSize: 12, color: '#555', marginTop: 2 }}>{e.en}</div>
+                    </div>
+                  )
+                })}
+                {card.examples.length > MAX_FLIP_EXAMPLES && (
+                  <div style={{ fontSize: 11, color: '#333', textAlign: 'right', marginTop: 4 }}>
+                    showing {MAX_FLIP_EXAMPLES} of {card.examples.length}
                   </div>
-                ))}
+                )}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>

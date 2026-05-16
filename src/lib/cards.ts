@@ -1,4 +1,5 @@
 import type { CardDef, Conjugations, Example, Level } from './types';
+import { CARDS_GENERATED } from './cards-generated';
 export { ALL_TYPES } from './types';
 
 function verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
@@ -772,9 +773,25 @@ const CONJUNCTIONS: CardDef[] = [
 
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
 
-export const CARDS_DATA: CardDef[] = [
+const HAND_CURATED: CardDef[] = [
   ...VERBS, ...NOUNS, ...PREPS, ...WH, ...PRONOUNS,
   ...POSSESSIVES, ...ADJECTIVES, ...MODALS, ...PERFEKT,
   ...NEGATION, ...COMPARATIVE, ...REFLEXIVE, ...CONJUNCTIONS,
 ];
+
+// De-duplicate generated cards against hand-curated ones (by id and by lemma per type).
+const handIds = new Set(HAND_CURATED.map((c) => c.id));
+const handKeys = new Set(
+  HAND_CURATED.map((c) => `${c.type}::${(c.verb || c.noun || c.word || '').toLowerCase()}`).filter(
+    (k) => !k.endsWith('::'),
+  ),
+);
+const generatedDeduped = CARDS_GENERATED.filter((c) => {
+  if (handIds.has(c.id)) return false;
+  const key = `${c.type}::${(c.verb || c.noun || c.word || '').toLowerCase()}`;
+  if (handKeys.has(key)) return false;
+  return true;
+});
+
+export const CARDS_DATA: CardDef[] = [...HAND_CURATED, ...generatedDeduped];
 
