@@ -1085,23 +1085,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 </div>
               )}
 
-              {!checked && card.type !== 'prep' && (
-                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
-                  <button
-                    onClick={doCheck}
-                    disabled={input.trim() === ''}
-                    style={{
-                      ...sBtnPrimary,
-                      minWidth: 120,
-                      opacity: input.trim() === '' ? 0.4 : 1,
-                      cursor: input.trim() === '' ? 'not-allowed' : 'pointer',
-                    }}
-                  >
-                    Check <span className="kbd-hint" style={{ opacity: 0.5, fontWeight: 500, marginLeft: 6 }}>↵</span>
-                  </button>
-                </div>
-              )}
-
               {checked && !correct && (
                 <div style={{ marginTop: 16 }}>
                   <p style={{ color: '#f87171', fontWeight: 600, marginBottom: ex.note ? 6 : 14 }}>
