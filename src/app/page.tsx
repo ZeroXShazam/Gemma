@@ -230,8 +230,18 @@ function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings,
 const sInput: React.CSSProperties = {
   width: '100%', padding: '10px 12px',
   background: 'var(--input-bg)', border: '1px solid var(--border-strong)', borderRadius: 8,
-  color: 'var(--text)', fontSize: 15, outline: 'none',
+  color: 'var(--text)', fontSize: 16, outline: 'none',
 }
+
+// Common attributes for foreign-language text inputs (no autocorrect / capitalize).
+const langInputProps = (lang: string) => ({
+  autoCapitalize: 'off' as const,
+  autoCorrect: 'off' as const,
+  autoComplete: 'off' as const,
+  spellCheck: false,
+  enterKeyHint: 'done' as const,
+  lang,
+})
 const sBtnPrimary: React.CSSProperties = {
   padding: '10px 20px', background: 'var(--btn-primary-bg)', color: 'var(--btn-primary-text)',
   border: 'none', borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: 'pointer',
@@ -277,8 +287,8 @@ function AuthForm() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div style={{ width: '100%', maxWidth: 360, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 32 }}>
+    <div className="app-shell" style={{ background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div style={{ width: '100%', maxWidth: 360, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 12, padding: 28 }}>
         <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4, color: 'var(--text)', textAlign: 'center' }}>Gemma</h1>
         <p style={{ fontSize: 13, color: 'var(--dim)', textAlign: 'center', marginBottom: 24 }}>German A1–A2 Trainer</p>
 
@@ -577,6 +587,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   function doCheck() {
     if (!ex || checked) return
+    if (input.trim() === '') return
     const ok = answerOk(input, ex.focus)
     setCorrect(ok)
     setChecked(true)
@@ -706,7 +717,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
+      <div className="app-shell" style={{ background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
         Loading your progress…
       </div>
     )
@@ -715,7 +726,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   if (!card || idx >= queue.length) {
     const isEmptyDeck = cards.length === 0
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', gap: 16, padding: 16, textAlign: 'center' }}>
+      <div className="app-shell" style={{ background: 'var(--bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', gap: 16, padding: 16, textAlign: 'center' }}>
         <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : '✓'}</div>
         <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
           {isEmptyDeck
@@ -731,8 +742,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         </p>
         <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
           {ALL_LANGUAGES.map(l => (
-            <button key={l} onClick={() => changeLanguage(l)} style={{
-              padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border)', cursor: 'pointer',
+            <button key={l} onClick={() => changeLanguage(l)} className="tap-sm" style={{
+              padding: '8px 14px', borderRadius: 6, border: '1px solid var(--border)', cursor: 'pointer',
               background: settings.activeLanguage === l ? 'var(--border)' : 'transparent',
               color: settings.activeLanguage === l ? 'var(--text)' : 'var(--muted)',
               fontWeight: 600, fontSize: 13,
@@ -765,7 +776,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const canReviewPrev = !!prevCard && !!prevEx && !saving
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }} onClick={() => setShowMenu(false)}>
+    <div className="app-shell" style={{ background: 'var(--bg)', color: 'var(--text)' }} onClick={() => setShowMenu(false)}>
 
       {/* Header */}
       <div style={{ borderBottom: '1px solid var(--elev)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
@@ -780,42 +791,43 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         </div>
         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
           {(['A1', 'A2', 'All'] as const).map(l => (
-            <button key={l} onClick={e => { e.stopPropagation(); changeLevel(l) }} style={{
+            <button key={l} onClick={e => { e.stopPropagation(); changeLevel(l) }} className="tap-sm" style={{
               padding: '4px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
               background: lv === l ? 'var(--border)' : 'transparent',
               color: lv === l ? 'var(--text)' : 'var(--dim)', fontWeight: 600, fontSize: 13,
             }}>{l}</button>
           ))}
           <div style={{ position: 'relative' }} onClick={e => e.stopPropagation()}>
-            <button onClick={() => setShowMenu(!showMenu)} style={{
+            <button onClick={() => setShowMenu(!showMenu)} className="tap-sm" aria-label="Menu" style={{
               padding: '4px 10px', border: '1px solid var(--border)', borderRadius: 6,
-              background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 14,
+              background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 16,
             }}>⋯</button>
             {showMenu && (
               <div style={{
                 position: 'absolute', right: 0, top: '110%',
                 background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 10,
-                padding: '12px 16px', width: 210, zIndex: 200, boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
+                padding: '12px 16px', width: 220, maxWidth: 'calc(100vw - 24px)',
+                zIndex: 200, boxShadow: '0 8px 32px rgba(0,0,0,0.22)',
               }}>
                 <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Language</div>
                 <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
                   {ALL_LANGUAGES.map(l => (
-                    <button key={l} onClick={() => changeLanguage(l)} style={{
-                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid var(--border)',
+                    <button key={l} onClick={() => changeLanguage(l)} className="tap-sm" style={{
+                      flex: 1, padding: '7px 0', borderRadius: 6, border: '1px solid var(--border)',
                       background: settings.activeLanguage === l ? 'var(--border)' : 'transparent',
                       color: settings.activeLanguage === l ? 'var(--text)' : 'var(--muted)',
-                      fontWeight: 600, fontSize: 12, cursor: 'pointer',
+                      fontWeight: 600, fontSize: 13, cursor: 'pointer',
                     }}>{LANGUAGE_LABELS[l]}</button>
                   ))}
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Theme</div>
                 <div style={{ display: 'flex', gap: 4, marginBottom: 12 }}>
                   {(['dark', 'light'] as const).map(t => (
-                    <button key={t} onClick={() => changeTheme(t)} style={{
-                      flex: 1, padding: '5px 0', borderRadius: 6, border: '1px solid var(--border)',
+                    <button key={t} onClick={() => changeTheme(t)} className="tap-sm" style={{
+                      flex: 1, padding: '7px 0', borderRadius: 6, border: '1px solid var(--border)',
                       background: settings.theme === t ? 'var(--border)' : 'transparent',
                       color: settings.theme === t ? 'var(--text)' : 'var(--muted)',
-                      fontWeight: 600, fontSize: 12, cursor: 'pointer', textTransform: 'capitalize',
+                      fontWeight: 600, fontSize: 13, cursor: 'pointer', textTransform: 'capitalize',
                     }}>{t}</button>
                   ))}
                 </div>
@@ -823,6 +835,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
                   <input
                     type="number"
+                    inputMode="numeric"
                     min={1}
                     placeholder="unlimited"
                     value={settings.dailyNewLimit ?? ''}
@@ -831,23 +844,23 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       changeDailyLimit(v === '' ? null : Math.max(1, Number(v) || 0))
                     }}
                     style={{
-                      flex: 1, padding: '5px 8px', borderRadius: 6,
+                      flex: 1, padding: '7px 8px', borderRadius: 6,
                       background: 'var(--input-bg)', border: '1px solid var(--border-strong)',
-                      color: 'var(--text)', fontSize: 13, outline: 'none', fontFamily: 'inherit',
+                      color: 'var(--text)', fontSize: 16, outline: 'none', fontFamily: 'inherit',
                     }}
                   />
                   {settings.dailyNewLimit !== null && (
-                    <button onClick={() => changeDailyLimit(null)} title="Disable cap"
+                    <button onClick={() => changeDailyLimit(null)} title="Disable cap" className="tap-sm"
                       style={{
-                        padding: '5px 8px', borderRadius: 6, border: '1px solid var(--border)',
-                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 11,
+                        padding: '6px 10px', borderRadius: 6, border: '1px solid var(--border)',
+                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 12,
                       }}>off</button>
                   )}
                   {settings.dailyNewLimit === null && (
-                    <button onClick={() => changeDailyLimit(DEFAULT_NEW_LIMIT_SUGGESTION)} title="Enable cap"
+                    <button onClick={() => changeDailyLimit(DEFAULT_NEW_LIMIT_SUGGESTION)} title="Enable cap" className="tap-sm"
                       style={{
-                        padding: '5px 8px', borderRadius: 6, border: '1px solid var(--border)',
-                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 11,
+                        padding: '6px 10px', borderRadius: 6, border: '1px solid var(--border)',
+                        background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 12,
                       }}>set</button>
                   )}
                 </div>
@@ -898,10 +911,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {canReviewPrev && !reviewingPrev && (
               <button onClick={() => setReviewingPrev(true)} title="Review previous card"
+                aria-label="Review previous card" className="tap-sm"
                 style={{
-                  padding: '2px 8px', borderRadius: 6, border: '1px solid var(--border)',
+                  padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)',
                   background: 'transparent', color: 'var(--muted)', cursor: 'pointer',
-                  fontSize: 11, fontFamily: 'inherit', lineHeight: 1.4,
+                  fontSize: 12, fontFamily: 'inherit', lineHeight: 1.4,
                 }}>↶ last</button>
             )}
             <span style={{ fontSize: 12, color: 'var(--faint)' }}>{idx + 1} / {queue.length}</span>
@@ -938,10 +952,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       onClick={() => speak(prevEx.de, settings.activeLanguage)}
                       title="Replay"
                       aria-label="Replay audio"
+                      className="tap-icon"
                       style={{
                         background: 'transparent', border: '1px solid var(--border)', borderRadius: 6,
-                        color: 'var(--muted)', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
-                        marginTop: 4, lineHeight: 1,
+                        color: 'var(--muted)', cursor: 'pointer', fontSize: 16, padding: '6px 10px',
+                        marginTop: 2, lineHeight: 1,
                       }}
                     >🔊</button>
                   )}
@@ -977,6 +992,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
                       autoFocus
                       placeholder="Type the German…"
+                      {...langInputProps(settings.activeLanguage)}
                       style={{
                         ...sInput,
                         fontSize: 20,
@@ -1007,9 +1023,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       onChange={e => setInput(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
                       autoFocus
+                      {...langInputProps(settings.activeLanguage)}
                       style={{
                         display: 'inline-block',
                         width: Math.max(canonicalFocus(ex.focus).length * 14, 80),
+                        maxWidth: '100%',
                         background: 'transparent',
                         border: 'none',
                         borderBottom: '2px solid #3b82f6',
@@ -1067,6 +1085,23 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 </div>
               )}
 
+              {!checked && card.type !== 'prep' && (
+                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    onClick={doCheck}
+                    disabled={input.trim() === ''}
+                    style={{
+                      ...sBtnPrimary,
+                      minWidth: 120,
+                      opacity: input.trim() === '' ? 0.4 : 1,
+                      cursor: input.trim() === '' ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    Check <span className="kbd-hint" style={{ opacity: 0.5, fontWeight: 500, marginLeft: 6 }}>↵</span>
+                  </button>
+                </div>
+              )}
+
               {checked && !correct && (
                 <div style={{ marginTop: 16 }}>
                   <p style={{ color: '#f87171', fontWeight: 600, marginBottom: ex.note ? 6 : 14 }}>
@@ -1097,10 +1132,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                     onClick={() => speak(ex.de, settings.activeLanguage)}
                     title="Replay (Space)"
                     aria-label="Replay audio"
+                    className="tap-icon"
                     style={{
                       background: 'transparent', border: '1px solid var(--border)', borderRadius: 6,
-                      color: 'var(--muted)', cursor: 'pointer', fontSize: 14, padding: '4px 8px',
-                      marginTop: 4, lineHeight: 1,
+                      color: 'var(--muted)', cursor: 'pointer', fontSize: 16, padding: '6px 10px',
+                      marginTop: 2, lineHeight: 1,
                     }}
                   >🔊</button>
                 )}
@@ -1134,7 +1170,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                 {RATING_CFG.map(({ r, label, color, key }) => (
-                  <button key={r} onClick={() => doRate(r)} disabled={saving} style={{
+                  <button key={r} onClick={() => doRate(r)} disabled={saving} className="tap-rating" style={{
                     padding: '10px 4px', borderRadius: 8,
                     border: `1px solid ${color}44`, background: `${color}12`,
                     color, cursor: saving ? 'not-allowed' : 'pointer',
@@ -1142,7 +1178,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                   }}>
                     <div>{label}</div>
                     <div style={{ fontSize: 11, opacity: 0.6, marginTop: 2 }}>{intervals?.[r]}</div>
-                    <div style={{ fontSize: 10, opacity: 0.4, marginTop: 1 }}>[{key}]</div>
+                    <div className="kbd-hint" style={{ fontSize: 10, opacity: 0.4, marginTop: 1 }}>[{key}]</div>
                   </button>
                 ))}
               </div>
@@ -1167,7 +1203,7 @@ export default function Page() {
 
   if (isPending) {
     return (
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
+      <div className="app-shell" style={{ background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
         Loading…
       </div>
     )
