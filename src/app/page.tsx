@@ -426,16 +426,44 @@ function TrainerShell({
   children: React.ReactNode
 }) {
   const showCurriculum = settings.activeLanguage === 'de'
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+
+  useEffect(() => {
+    try {
+      const v = localStorage.getItem('curriculum-sidebar-collapsed')
+      if (v === '1') setSidebarCollapsed(true)
+    } catch {}
+  }, [])
+
+  function toggleSidebarCollapsed() {
+    setSidebarCollapsed((c) => {
+      const next = !c
+      try { localStorage.setItem('curriculum-sidebar-collapsed', next ? '1' : '0') } catch {}
+      return next
+    })
+  }
+
   return (
     <div className="app-shell trainer-layout" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {showCurriculum && (
-        <div className="curriculum-sidebar-desktop">
-          <CurriculumSidebar
-            cards={cards}
-            pm={pm}
-            enabledSections={settings.enabledSections}
-            onChange={onSectionsChange}
-          />
+        <div className={`curriculum-sidebar-desktop${sidebarCollapsed ? ' is-collapsed' : ''}`}>
+          <div className="curriculum-sidebar-panel">
+            <CurriculumSidebar
+              cards={cards}
+              pm={pm}
+              enabledSections={settings.enabledSections}
+              onChange={onSectionsChange}
+            />
+          </div>
+          <button
+            type="button"
+            className="curriculum-sidebar-toggle tap-sm"
+            onClick={toggleSidebarCollapsed}
+            aria-label={sidebarCollapsed ? 'Expand grammar panel' : 'Collapse grammar panel'}
+            title={sidebarCollapsed ? 'Show grammar sections' : 'Hide grammar sections'}
+          >
+            {sidebarCollapsed ? '›' : '‹'}
+          </button>
         </div>
       )}
       {showCurriculum && showSections && (

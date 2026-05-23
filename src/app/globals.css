@@ -101,6 +101,49 @@ input, textarea, select, button {
   min-height: 100dvh;
 }
 
+.curriculum-sidebar-desktop {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  min-height: 100dvh;
+}
+
+.curriculum-sidebar-panel {
+  width: 260px;
+  overflow: hidden;
+  transition: width 0.22s ease, opacity 0.18s ease;
+  flex-shrink: 0;
+}
+
+.curriculum-sidebar-desktop.is-collapsed .curriculum-sidebar-panel {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.curriculum-sidebar-toggle {
+  flex-shrink: 0;
+  width: 28px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.curriculum-sidebar-toggle:hover {
+  background: var(--elev);
+  color: var(--text-soft);
+}
+
 .curriculum-sidebar {
   width: 260px;
   flex-shrink: 0;
@@ -109,6 +152,7 @@ input, textarea, select, button {
   background: var(--card);
   border-right: 1px solid var(--border);
   height: 100%;
+  min-height: 100dvh;
 }
 
 .curriculum-scroll {
@@ -154,12 +198,17 @@ input, textarea, select, button {
   .curriculum-sidebar-desktop {
     display: none;
   }
+  .curriculum-sidebar-toggle {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
   .curriculum-sidebar-desktop {
     display: flex;
-    flex-shrink: 0;
+  }
+  .curriculum-sidebar-toggle {
+    display: flex;
   }
   .curriculum-mobile-trigger {
     display: none;
