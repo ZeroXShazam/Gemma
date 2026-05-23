@@ -60,7 +60,13 @@ interface WiktCacheEntry {
 type WiktCache = Record<string, WiktCacheEntry>;
 
 interface Parsed {
-  noun?: { plural?: string; genus?: 'm' | 'f' | 'n' };
+  noun?: {
+    plural?: string;
+    genus?: 'm' | 'f' | 'n';
+    akkSg?: string;
+    datSg?: string;
+    uncountable?: boolean;
+  };
   verb?: {
     ich?: string;
     du?: string;
@@ -68,6 +74,8 @@ interface Parsed {
     praeteritum?: string;
     partizip2?: string;
     hilfsverb: 'haben' | 'sein';
+    reflexive?: boolean;
+    impersonal?: boolean;
   };
   enDef?: string;
   enExamples?: { de: string; en: string }[];
@@ -212,15 +220,44 @@ function tplFields(tpl: string): Record<string, string> {
   return fields;
 }
 
-function parseSubstantiv(wt: string): Parsed['noun'] {
+function parseSubstantiv(wt: string): {
+  plural?: string;
+  genus?: 'm' | 'f' | 'n';
+  /** Akk singular form of the noun itself (not the article). For weak / n-nouns
+   * this differs from the nominative, e.g. Mensch → Menschen. */
+  akkSg?: string;
+  /** Dat singular form. */
+  datSg?: string;
+  /** True when wiktionary marks plural-only or plural is absent / "—". */
+  uncountable?: boolean;
+} | undefined {
   const tpl = extractTemplate(wt, 'Deutsch Substantiv Übersicht');
   if (!tpl) return undefined;
   const f = tplFields(tpl);
-  const plural = f['Nominativ Plural'] || f['Nominativ Plural*'];
+  const rawPlural = (f['Nominativ Plural'] || f['Nominativ Plural*'] || '').trim();
+  const uncountable = !rawPlural || rawPlural === '—' || /^-+$/.test(rawPlural);
+  const plural = uncountable ? undefined : rawPlural;
   const g = (f['Genus'] || '').toLowerCase();
   const genus: 'm' | 'f' | 'n' | undefined =
     g.startsWith('m') ? 'm' : g.startsWith('f') ? 'f' : g.startsWith('n') ? 'n' : undefined;
-  return { plural: plural?.replace(/^—$|^-+$/, '').trim() || undefined, genus };
+  const nomSg = (f['Nominativ Singular'] || '').trim();
+  const akkSg = (f['Akkusativ Singular'] || '').trim() || undefined;
+  const datSg = (f['Dativ Singular'] || '').trim() || undefined;
+  return { plural, genus, akkSg, datSg, uncountable };
+}
+
+/** True when wiktionary marks sense [1] as reflexive (sich …). */
+function isPrimaryReflexiveVerb(wt: string): boolean {
+  if (/\{\{Wortart\|reflexives Verb\|Deutsch\}\}/i.test(wt)) return true;
+  const meanings = wt.match(/\{\{Bedeutungen\}\}([\s\S]*?)(?=\n\{\{|\n==|$)/)?.[1] || '';
+  if (!meanings) return false;
+  // Sense [1] line tagged {{K|refl...}} or definition starts with "sich".
+  if (/:\[1\][^\n]*\{\{K\|[^}]*\brefl\b/i.test(meanings)) return true;
+  if (/:\[1\][^\n]*\bsich\b/i.test(meanings)) return true;
+  // Bullet immediately before sense [1], e.g. "* {{K|refl.}}\n:[1] sich …"
+  const chunkBefore2 = meanings.split(/:\[2\]/)[0] || meanings.slice(0, 500);
+  if (/\{\{K\|[^}]*\brefl\b/i.test(chunkBefore2)) return true;
+  return false;
 }
 
 function parseVerb(wt: string): Parsed['verb'] {
@@ -229,33 +266,79 @@ function parseVerb(wt: string): Parsed['verb'] {
   const f = tplFields(tpl);
   const hilfsverbRaw = (f['Hilfsverb'] || '').toLowerCase();
   const hilfsverb: 'haben' | 'sein' = hilfsverbRaw === 'sein' ? 'sein' : 'haben';
+  const ich = (f['Präsens_ich'] || '').trim();
+  const reflexiveFromIch = /\bmich\b/i.test(ich);
+  const reflexive = reflexiveFromIch || isPrimaryReflexiveVerb(wt);
+  // Impersonal verbs only conjugate as "es ..." (regnen, schneien, hageln, dämmern, …).
+  // Detect by Präsens_ich == "—" or by absence of ich/du and presence of "es" template.
+  const impersonal =
+    ich === '—' ||
+    ich === '-' ||
+    (!ich && /\{\{Wortart\|unpersönliches Verb/i.test(wt));
   return {
-    ich: f['Präsens_ich'] || undefined,
+    ich: ich || undefined,
     du: f['Präsens_du'] || undefined,
     er: f['Präsens_er, sie, es'] || undefined,
     praeteritum: f['Präteritum_ich'] || undefined,
     partizip2: f['Partizip II'] || undefined,
     hilfsverb,
+    reflexive,
+    impersonal,
   };
 }
 
 function stripWiki(s: string | undefined | null): string {
   if (!s) return '';
   return s
+    // Strip <style> / <script> blocks INCLUDING their contents BEFORE stripping
+    // generic tags, otherwise the CSS body leaks into the gloss as e.g.
+    // "{font-style:italic}.mw-parser-output .deprecated{color:...}".
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    // Drop <link rel="..."> self-closing meta tags from REST API HTML
+    .replace(/<link\b[^>]*\/?>/gi, '')
     .replace(/<[^>]+>/g, '')
     .replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, '$2')
     .replace(/'''([^']+)'''/g, '$1')
     .replace(/''([^']+)''/g, '$1')
     .replace(/\{\{[^}]*\}\}/g, '')
     .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+interface RichExample {
+  de: string;
+  en: string;
+  focus: string | string[];
+}
+
+/**
+ * Pull a clean focus span out of <b>...</b> markers in an HTML example string.
+ * en.wiktionary marks the lemma's surface form(s) with <b>. We capture them
+ * before stripping all tags so we can use them as the cloze focus.
+ *
+ * Multi-bold (e.g. separable verbs `<b>gibt</b> ... <b>ab</b>`) returns an array.
+ */
+function extractFocus(htmlDe: string): string[] {
+  const matches = Array.from(htmlDe.matchAll(/<b\b[^>]*>([\s\S]*?)<\/b>/gi));
+  const spans: string[] = [];
+  for (const m of matches) {
+    const clean = stripWiki(m[1]).replace(/[.,;:!?„"'»«]/g, '').trim();
+    if (clean) spans.push(clean);
+  }
+  return spans;
 }
 
 function parseEnDef(
   en: unknown,
   preferPos?: string,
-): { def?: string; examples?: { de: string; en: string }[] } {
+): { def?: string; examples?: RichExample[] } {
   if (!en || typeof en !== 'object') return {};
   const de = (en as Record<string, unknown[]>)['de'] || [];
   if (!Array.isArray(de) || de.length === 0) return {};
@@ -288,14 +371,27 @@ function parseEnDef(
     }
   }
   if (!def) def = stripWiki(definitions[0].definition);
-  const examples: { de: string; en: string }[] = [];
+  const examples: RichExample[] = [];
   for (const d of definitions) {
     for (const p of d.parsedExamples || []) {
+      const focusSpans = extractFocus(p.example);
       const exDe = stripWiki(p.example);
       const exEn = stripWiki(p.translation);
-      if (exDe && exEn && exDe.length < 140 && exEn.length < 140) {
-        examples.push({ de: exDe, en: exEn });
-      }
+      if (!exDe || !exEn) continue;
+      if (exDe.length > 140 || exEn.length > 140) continue; // too long for a card
+      // Must be a real sentence (≥3 words on each side). Wiktionary sometimes
+      // includes bare collocations like "Karten spielen" that aren't useful
+      // as standalone learning material.
+      const deWords = exDe.split(/\s+/).filter(Boolean);
+      const enWords = exEn.split(/\s+/).filter(Boolean);
+      if (deWords.length < 3 || enWords.length < 3) continue;
+      const focus =
+        focusSpans.length === 0
+          ? ''
+          : focusSpans.length === 1
+          ? focusSpans[0]
+          : focusSpans;
+      examples.push({ de: exDe, en: exEn, focus });
       if (examples.length >= 3) break;
     }
     if (examples.length >= 3) break;
@@ -353,13 +449,27 @@ interface Emission {
   lemma: string;
 }
 
+type NounExample = { de: string; en: string; focus: string | string[]; caseLabel?: string };
+
+function tsFocus(focus: string | string[]): string {
+  if (Array.isArray(focus)) return '[' + focus.map(ts).join(',') + ']';
+  return ts(focus);
+}
+
+function tsExample(e: NounExample): string {
+  const parts = [`de:${ts(e.de)}`, `en:${ts(e.en)}`, `focus:${tsFocus(e.focus)}`];
+  if (e.caseLabel) parts.push(`caseLabel:${ts(e.caseLabel)}`);
+  return `    {${parts.join(',')}},`;
+}
+
 function emitNoun(
   lemma: string,
   article: Article,
-  plural: string | undefined,
+  parsedNoun: NonNullable<Parsed['noun']>,
   enNoun: string,
   level: Level,
-): Emission {
+  realExamples: RichExample[],
+): Emission | null {
   const id = slugId('gen-noun', lemma);
   const forms =
     article === 'der'
@@ -367,30 +477,47 @@ function emitNoun(
       : article === 'die'
       ? { nom: 'die', akk: 'die', dat: 'der' }
       : { nom: 'das', akk: 'das', dat: 'dem' };
+  // Surface form of the noun across cases. For most nouns the singular is
+  // identical to the lemma in all three cases; weak / n-nouns add -n / -en in
+  // akk/dat (Mensch → Menschen). When wiktionary disagrees with the lemma we
+  // trust wiktionary.
+  const nomForm = lemma;
+  const akkForm = parsedNoun.akkSg && parsedNoun.akkSg !== '—' ? parsedNoun.akkSg : lemma;
+  const datForm = parsedNoun.datSg && parsedNoun.datSg !== '—' ? parsedNoun.datSg : lemma;
   const NOM = forms.nom[0].toUpperCase() + forms.nom.slice(1);
-  const examples = [
-    { de: `${NOM} ${lemma} ist hier.`, en: `The ${enNoun} is here.`, focus: NOM, caseLabel: 'Nom' },
-    { de: `Ich sehe ${forms.akk} ${lemma}.`, en: `I see the ${enNoun}.`, focus: forms.akk, caseLabel: 'Akk' },
-    {
-      de: `Ich spreche von ${forms.dat} ${lemma}.`,
-      en: `I speak about the ${enNoun}.`,
-      focus: forms.dat,
-      caseLabel: 'Dat',
-    },
+
+  // Mix strategy for nouns:
+  //  - Always show the three core cases (Nom / Akk / Dat) so the learner gets
+  //    full article+case practice.
+  //  - When wiktionary has a real-world bilingual example that contains the
+  //    lemma, swap it in for the Nom template — this gives one authentic
+  //    usage alongside the structured case drills.
+  const stemKey = lemma.toLowerCase().slice(0, Math.min(4, lemma.length));
+  const realNomCandidates = realExamples.filter((ex) => {
+    const flat = Array.isArray(ex.focus) ? ex.focus.join(' ') : ex.focus;
+    return flat && flat.toLowerCase().includes(stemKey);
+  });
+  const realFirst = realNomCandidates[0];
+  // Real example deliberately has no caseLabel — the case of the bolded form
+  // in wiktionary's sentence might be Akk or Dat, and a wrong label would
+  // confuse the learner. The two templated drills below still carry case
+  // labels so the user practices den/dem explicitly.
+  const examples: NounExample[] = [
+    realFirst
+      ? { de: realFirst.de, en: realFirst.en, focus: realFirst.focus }
+      : { de: `${NOM} ${nomForm} ist hier.`, en: `The ${enNoun} is here.`, focus: NOM, caseLabel: 'Nom' },
+    { de: `Ich sehe ${forms.akk} ${akkForm}.`, en: `I see the ${enNoun}.`, focus: forms.akk, caseLabel: 'Akk' },
+    { de: `Ich spreche von ${forms.dat} ${datForm}.`, en: `I speak about the ${enNoun}.`, focus: forms.dat, caseLabel: 'Dat' },
   ];
-  const pluralOut = plural && plural !== '—' ? plural : lemma;
+
+  // Plural — emit "—" sentinel for uncountable, never the singular as a fake plural.
+  const pluralOut = parsedNoun.uncountable ? '—' : (parsedNoun.plural || '—');
+
   const src =
     `  _noun(${ts(id)},${ts(level)},${ts(article)},${ts(lemma)},` +
     `{nom:${ts(forms.nom)},akk:${ts(forms.akk)},dat:${ts(forms.dat)}},` +
     `${ts(pluralOut)},${ts(enNoun)},[\n` +
-    examples
-      .map(
-        (e) =>
-          `    {de:${ts(e.de)},en:${ts(e.en)},focus:${ts(e.focus)},caseLabel:${ts(
-            e.caseLabel,
-          )}},`,
-      )
-      .join('\n') +
+    examples.map(tsExample).join('\n') +
     `\n  ]),`;
   return { type: 'noun', level, source: src, id, lemma };
 }
@@ -448,11 +575,32 @@ function deriveConjugations(
   };
 }
 
+type VerbExample = { de: string; en: string; focus: string | string[]; subject?: string };
+
+function tsVerbExample(e: VerbExample): string {
+  const parts = [`de:${ts(e.de)}`, `en:${ts(e.en)}`, `focus:${tsFocus(e.focus)}`];
+  if (e.subject) parts.push(`subject:${ts(e.subject)}`);
+  return `    {${parts.join(',')}},`;
+}
+
+/** Heuristic: does the surface form `f` look like an inflection of `lemma`? */
+function looksLikeInflection(form: string, lemma: string): boolean {
+  if (!form || !lemma) return false;
+  const f = form.toLowerCase();
+  const l = lemma.toLowerCase();
+  // Share at least the first 3 chars of the stem (most German verbs preserve the
+  // initial consonant cluster: gehen → ging, lesen → liest, sprechen → spricht).
+  const stem = l.replace(/en$|n$/, '').slice(0, 3);
+  if (!stem) return false;
+  return f.startsWith(stem) || f.includes(stem);
+}
+
 function emitVerb(
   lemma: string,
   conj: NonNullable<Parsed['verb']>,
   enInf: string,
   level: Level,
+  realExamples: RichExample[],
 ): Emission {
   const id = slugId('gen-verb', lemma);
   const c = deriveConjugations(lemma, conj);
@@ -463,22 +611,35 @@ function emitVerb(
   const auxConj = conj.hilfsverb === 'sein' ? 'ist' : 'hat';
   const perf = `${auxConj} ${partizip2}`;
   const en3 = pluralize3rd(enInf);
-  // Plain conjugation templates — always grammatical, focus stays contiguous.
-  const examples = [
-    { de: `Ich ${ich}.`, en: `I ${enInf}.`, focus: ich, subject: 'ich' },
-    { de: `Du ${du}?`, en: `Do you ${enInf}?`, focus: du, subject: 'du' },
-    { de: `Er ${er}.`, en: `He ${en3}.`, focus: er, subject: 'er' },
-  ];
+
+  // Real-world examples from en.wiktionary where the bolded focus span actually
+  // looks like an inflection of this verb (filters out examples that happened
+  // to bold an unrelated word).
+  const usable = realExamples.filter((ex) => {
+    const spans = Array.isArray(ex.focus) ? ex.focus : [ex.focus];
+    if (spans.length === 0 || !spans[0]) return false;
+    return spans.some((s) => looksLikeInflection(s, lemma));
+  });
+
+  // Mix strategy: lead with a real example when available, then drill du/er
+  // forms so the learner still gets active conjugation practice.
+  const drillDu: VerbExample = { de: `Du ${du}?`, en: `Do you ${enInf}?`, focus: du, subject: 'du' };
+  const drillEr: VerbExample = { de: `Er ${er}.`, en: `He ${en3}.`, focus: er, subject: 'er' };
+  const drillIch: VerbExample = { de: `Ich ${ich}.`, en: `I ${enInf}.`, focus: ich, subject: 'ich' };
+  let examples: VerbExample[];
+  if (usable.length >= 2) {
+    examples = usable.slice(0, 3).map((ex) => ({ de: ex.de, en: ex.en, focus: ex.focus }));
+  } else if (usable.length === 1) {
+    examples = [{ de: usable[0].de, en: usable[0].en, focus: usable[0].focus }, drillDu, drillEr];
+  } else {
+    examples = [drillIch, drillDu, drillEr];
+  }
+
   const src =
     `  _verb(${ts(id)},${ts(level)},${ts(lemma)},` +
     `{ich:${ts(ich)},du:${ts(du)},er:${ts(er)},wir:${ts(wir)},ihr:${ts(ihr)},sie:${ts(sie3)}},` +
     `${ts(praet)},${ts(perf)},[\n` +
-    examples
-      .map(
-        (e) =>
-          `    {de:${ts(e.de)},en:${ts(e.en)},focus:${ts(e.focus)},subject:${ts(e.subject)}},`,
-      )
-      .join('\n') +
+    examples.map(tsVerbExample).join('\n') +
     `\n  ]),`;
   return { type: 'verb', level, source: src, id, lemma };
 }
@@ -488,12 +649,12 @@ function emitGram(
   lemma: string,
   enDef: string,
   level: Level,
-  examples: { de: string; en: string; focus: string }[],
+  examples: { de: string; en: string; focus: string | string[] }[],
 ): Emission {
   const id = slugId(`gen-${type}`, lemma);
   const rule = `<b>${escapeHtml(lemma)}</b> — ${escapeHtml(enDef)}`;
   const exSrc = examples
-    .map((e) => `    {de:${ts(e.de)},en:${ts(e.en)},focus:${ts(e.focus)}},`)
+    .map((e) => `    {de:${ts(e.de)},en:${ts(e.en)},focus:${tsFocus(e.focus)}},`)
     .join('\n');
   const src =
     `  { id:${ts(id)}, type:${ts(type)}, level:${ts(level)}, ` +
@@ -508,6 +669,7 @@ function escapeHtml(s: string): string {
 // ─── Mapping DWDS POS → CardType ─────────────────────────────────────────────
 
 function mapPos(pos: string): string {
+  // Core PoS → card type.
   if (pos === 'Substantiv') return 'noun';
   if (pos === 'Verb') return 'verb';
   if (pos === 'Adjektiv' || pos === 'partizipiales Adjektiv') return 'adjective';
@@ -521,16 +683,20 @@ function mapPos(pos: string): string {
     pos === 'Interrogativpronomen' ||
     pos === 'Relativpronomen' ||
     pos === 'Reflexivpronomen' ||
-    pos === 'reziprokes Pronomen' ||
-    pos === 'Pronominaladverb'
+    pos === 'reziprokes Pronomen'
   )
     return 'pronoun';
   if (pos === 'Possessivpronomen') return 'possessive';
-  if (pos === 'Adverb' || pos === 'partizipiales Adverb') return 'adjective';
-  if (pos === 'Kardinalzahlwort' || pos === 'Ordinalzahlwort' || pos === 'Bruchzahlwort')
-    return 'adjective';
-  if (pos === 'Mehrwortausdruck' || pos === 'Interjektion' || pos === 'Partikel') return 'adjective';
-  return ''; // skip unknown / Symbol / Eigenname / Affix / Imperativ / bestimmter Artikel
+  // Intentionally dropped — no clean fit in current card-type schema, and
+  // generated cards for these were systematically low-quality (audit, May 2026):
+  //   Adverb, partizipiales Adverb, Pronominaladverb  → no 'adverb' type
+  //   Kardinalzahlwort, Ordinalzahlwort, Bruchzahlwort → numbers, learn elsewhere
+  //   Mehrwortausdruck                                → phrases don't fit lemma schema
+  //   Interjektion, Partikel                           → discourse markers, low pedagogical value
+  //   bestimmter Artikel, unbestimmter Artikel         → already covered by hand-curated
+  //   Komparativ, Superlativ                           → forms, not lemmas
+  //   Symbol, Affix, Eigenname, Imperativ              → not real vocab
+  return '';
 }
 
 // ─── Existing card de-duplication ────────────────────────────────────────────
@@ -616,7 +782,10 @@ async function main() {
   // Build cards
   console.log('▶ Generating cards…');
   const emissions: Emission[] = [];
-  let dropped = 0;
+  const dropReasons: Record<string, number> = {};
+  const drop = (reason: string) => {
+    dropReasons[reason] = (dropReasons[reason] || 0) + 1;
+  };
   for (const e of dedup) {
     const lemma = lemmaForLookup(e);
     const cardType = mapPos(e.pos);
@@ -631,48 +800,93 @@ async function main() {
       cardType === 'noun' ? 'Noun' : cardType === 'verb' ? 'Verb' : cardType === 'adjective' ? 'Adjective' : undefined;
     const enInfo = parseEnDef(c?.enDef, preferPos);
     const enDef = enInfo.def || '';
+    const realExamples = enInfo.examples || [];
 
     // Skip multi-word lemmas — phrasal expressions don't fit the noun/verb card schema cleanly.
     if (/\s/.test(lemma)) {
-      dropped++;
+      drop('multi-word lemma');
       continue;
     }
 
     if (cardType === 'noun') {
       const article = pickArticle(e);
       if (!article) {
-        dropped++;
+        drop('noun: no article');
         continue;
       }
-      const plural = parsed.noun?.plural;
-      const enNoun = enDef ? cleanGloss(enDef) : lemma.toLowerCase();
-      emissions.push(emitNoun(lemma, article, plural, enNoun, e.level));
+      if (!parsed.noun) {
+        drop('noun: no wiktionary Übersicht');
+        continue;
+      }
+      // Weak / n-noun (Mensch → den Menschen): when Akk-Sg ≠ Nom-Sg the
+      // mechanical template "Ich sehe den X" would produce wrong output. We
+      // do honor wiktionary's akkSg/datSg in emitNoun, but only when the
+      // forms are present and look sane. Otherwise skip rather than guess.
+      if (parsed.noun.akkSg && parsed.noun.akkSg !== lemma) {
+        // Only skip if we can't trust the form (e.g. contains a slash listing
+        // multiple acceptable forms which the template can't render).
+        if (/[/,]/.test(parsed.noun.akkSg)) {
+          drop('noun: ambiguous akk form');
+          continue;
+        }
+      }
+      let rawGloss = enDef ? cleanGloss(enDef) : '';
+      // Strip leading article so the template "I see the X" doesn't end up as
+      // "I see the a sun" / "I see the the sun".
+      rawGloss = rawGloss.replace(/^(a|an|the)\s+/i, '');
+      if (!rawGloss || isPollutedGloss(rawGloss)) {
+        drop('noun: polluted/empty gloss');
+        continue;
+      }
+      emissions.push(emitNoun(lemma, article, parsed.noun, rawGloss, e.level, realExamples) as Emission);
     } else if (cardType === 'verb') {
       if (!parsed.verb || !parsed.verb.ich) {
-        dropped++;
+        drop('verb: no conjugation');
         continue;
       }
-      const enInf = enDef ? cleanGloss(enDef).replace(/^to\s+/i, '') : lemma;
-      emissions.push(emitVerb(lemma, parsed.verb, enInf, e.level));
+      if (parsed.verb.reflexive) {
+        drop('verb: reflexive (needs sich)');
+        continue;
+      }
+      if (parsed.verb.impersonal) {
+        drop('verb: impersonal');
+        continue;
+      }
+      const rawInf = enDef ? cleanGloss(enDef).replace(/^to\s+/i, '') : '';
+      if (!rawInf || isPollutedGloss(rawInf)) {
+        drop('verb: polluted/empty gloss');
+        continue;
+      }
+      emissions.push(emitVerb(lemma, parsed.verb, rawInf, e.level, realExamples));
     } else {
       // gram-style card (adjective / prep / conjunction / pronoun / possessive)
       const cleanedDef = cleanGloss(enDef);
-      if (!cleanedDef) {
-        dropped++;
+      if (!cleanedDef || isPollutedGloss(cleanedDef)) {
+        drop(`${cardType}: polluted/empty gloss`);
         continue;
       }
-      const examples = (enInfo.examples || []).slice(0, 3).map((ex) => ({
-        de: ex.de,
-        en: ex.en,
-        focus: lemma,
-      }));
+      // Use real examples (with focus markers) where available; otherwise drop
+      // the card. A "Ja." or one-word example has no pedagogical value.
+      const examples = realExamples
+        .filter((ex) => /\s/.test(ex.de) && /\s/.test(ex.en))
+        .slice(0, 3)
+        .map((ex) => ({
+          de: ex.de,
+          en: ex.en,
+          focus: ex.focus || lemma,
+        }));
       if (examples.length === 0) {
-        examples.push({ de: capitalize(lemma) + '.', en: cleanedDef, focus: capitalize(lemma) });
+        drop(`${cardType}: no usable examples`);
+        continue;
       }
       emissions.push(emitGram(cardType, lemma, cleanedDef, e.level, examples));
     }
   }
-  console.log(`  Emitted: ${emissions.length}    Dropped (missing data): ${dropped}`);
+  console.log(`  Emitted: ${emissions.length}`);
+  console.log(`  Dropped by reason:`);
+  for (const [reason, n] of Object.entries(dropReasons).sort((a, b) => b[1] - a[1])) {
+    console.log(`    ${String(n).padStart(4)}  ${reason}`);
+  }
 
   // Write output
   console.log(`▶ Writing ${path.relative(ROOT, OUT_FILE)}`);
@@ -753,8 +967,17 @@ function cleanGloss(def: string): string {
   return (head || s).replace(/\.$/, '').trim();
 }
 
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+// Reject glosses that still smell like Wiktionary scrape pollution after cleanup.
+// (Most CSS leaks are caught by stripWiki now; this is a final safety net.)
+function isPollutedGloss(g: string): boolean {
+  if (!g) return true;
+  if (g.length < 2 || g.length > 80) return true;
+  if (/[{}|;]/.test(g)) return true;           // CSS / template residue
+  if (/mw-parser|mw:|wikt-|deprecat/i.test(g)) return true;
+  if (/^(see|cf\.?|compare|usage)\b/i.test(g)) return true;
+  if (/\b(of|form|sense|participle|alternative|inflection)\s+of\b/i.test(g)) return true;
+  if (/^senses?\s+related/i.test(g)) return true;
+  return false;
 }
 
 main().catch((err) => {

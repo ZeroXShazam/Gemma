@@ -393,6 +393,21 @@ const PREPS: CardDef[] = [
     {de:'Er sitzt an dem Fenster.',en:'He sits at the window.',focus:'an'},
     {de:'Sie wartet an der Haltestelle.',en:'She waits at the bus stop.',focus:'an'},
   ],'an'),
+  gram('prep-in-akk','prep','A2','<b>in</b> + Akkusativ (Wohin? / movement) — "into, to"',[
+    {de:'Ich gehe in die Schule.',en:'I am going to school.',focus:'in',caseLabel:'Akk (movement)'},
+    {de:'Er fährt in die Stadt.',en:'He is driving into the city.',focus:'in',caseLabel:'Akk (movement)'},
+    {de:'Sie legt das Buch in den Rucksack.',en:'She puts the book in the backpack.',focus:'in',caseLabel:'Akk (movement)'},
+  ],'in'),
+  gram('prep-an-akk','prep','A2','<b>an</b> + Akkusativ (Wohin? / movement) — "to, onto"',[
+    {de:'Ich hänge das Bild an die Wand.',en:'I hang the picture on the wall.',focus:'an',caseLabel:'Akk (movement)'},
+    {de:'Er stellt die Flasche an den Tisch.',en:'He puts the bottle on the table.',focus:'an',caseLabel:'Akk (movement)'},
+    {de:'Sie fährt an den See.',en:'She drives to the lake.',focus:'an',caseLabel:'Akk (movement)'},
+  ],'an'),
+  gram('prep-auf-akk','prep','A2','<b>auf</b> + Akkusativ (Wohin? / movement) — "onto, onto"',[
+    {de:'Ich lege das Buch auf den Tisch.',en:'I put the book on the table.',focus:'auf',caseLabel:'Akk (movement)'},
+    {de:'Er setzt sich auf den Stuhl.',en:'He sits down on the chair.',focus:'auf',caseLabel:'Akk (movement)'},
+    {de:'Sie stellt die Tasse auf das Regal.',en:'She puts the cup on the shelf.',focus:'auf',caseLabel:'Akk (movement)'},
+  ],'auf'),
 ];
 
 // ─── WH-WORDS ─────────────────────────────────────────────────────────────────
@@ -679,6 +694,16 @@ const PERFEKT: CardDef[] = [
     {de:'Er ist nach Hause gegangen.',en:'He has gone home.',focus:'ist'},
     {de:'Sie sind spät gekommen.',en:'They came late.',focus:'sind'},
   ],'sein'),
+  gram('perf-word-order','perfekt','A2','Perfekt word order: auxiliary (<b>haben/sein</b>) + Partizip II at the <em>end</em>.',[
+    {de:'Ich habe gestern Fußball gespielt.',en:'I played football yesterday.',focus:'habe'},
+    {de:'Sie ist früh aufgestanden.',en:'She got up early.',focus:'ist'},
+    {de:'Wir haben lange gewartet.',en:'We waited a long time.',focus:'haben'},
+  ]),
+  gram('perf-partizip-sein','perfekt','A2','Common Partizip II with <b>sein</b>: gegangen, gekommen, gefahren, gewesen.',[
+    {de:'Er ist schon gegangen.',en:'He has already left.',focus:'gegangen'},
+    {de:'Sie ist pünktlich gekommen.',en:'She arrived on time.',focus:'gekommen'},
+    {de:'Wir sind mit dem Zug gefahren.',en:'We travelled by train.',focus:'gefahren'},
+  ]),
 ];
 
 // ─── NEGATION ────────────────────────────────────────────────────────────────
@@ -694,6 +719,16 @@ const NEGATION: CardDef[] = [
     {de:'Das ist nicht schwer.',en:'That is not difficult.',focus:'nicht'},
     {de:'Er kommt heute nicht.',en:'He is not coming today.',focus:'nicht'},
   ],'nicht'),
+  gram('neg-noch-nicht','negation','A1','<b>noch nicht</b> — "not yet"',[
+    {de:'Ich habe noch nicht gegessen.',en:'I have not eaten yet.',focus:'noch nicht'},
+    {de:'Er ist noch nicht da.',en:'He is not here yet.',focus:'noch nicht'},
+    {de:'Wir sind noch nicht fertig.',en:'We are not finished yet.',focus:'noch nicht'},
+  ],'noch nicht'),
+  gram('neg-noch-nie','negation','A2','<b>noch nie</b> — "never yet"',[
+    {de:'Ich war noch nie in Berlin.',en:'I have never been to Berlin yet.',focus:'noch nie'},
+    {de:'Er hat noch nie Ski gefahren.',en:'He has never skied before.',focus:'noch nie'},
+    {de:'Sie hat noch nie Sushi gegessen.',en:'She has never eaten sushi.',focus:'noch nie'},
+  ],'noch nie'),
 ];
 
 // ─── COMPARATIVE ──────────────────────────────────────────────────────────────
@@ -739,6 +774,106 @@ const REFLEXIVE: CardDef[] = [
     {de:'Sie erinnert sich an den Tag.',en:'She remembers the day.',focus:'sich'},
     {de:'Sie freuen sich auf den Urlaub.',en:'They look forward to the holiday.',focus:'sich'},
   ],'sich'),
+  gram('refl-freuen-auf','reflexive','A2','<b>sich freuen auf</b> + Akk — look forward to (future event)',[
+    {de:'Ich freue mich auf das Wochenende.',en:'I look forward to the weekend.',focus:'mich'},
+    {de:'Er freut sich auf den Urlaub.',en:'He looks forward to the holiday.',focus:'sich'},
+    {de:'Wir freuen uns auf dich.',en:'We look forward to seeing you.',focus:'uns'},
+  ],'freuen'),
+  gram('refl-interessieren','reflexive','A2','<b>sich interessieren für</b> + Akk — be interested in',[
+    {de:'Ich interessiere mich für Musik.',en:'I am interested in music.',focus:'mich'},
+    {de:'Er interessiert sich für Fußball.',en:'He is interested in football.',focus:'sich'},
+    {de:'Interessierst du dich für Kunst?',en:'Are you interested in art?',focus:'dich'},
+  ],'interessieren'),
+  gram('refl-waschen','reflexive','A2','<b>sich waschen</b> — wash oneself (daily routine)',[
+    {de:'Ich wasche mich jeden Morgen.',en:'I wash myself every morning.',focus:'mich'},
+    {de:'Er wäscht sich die Hände.',en:'He washes his hands.',focus:'sich'},
+    {de:'Wäscht du dich?',en:'Are you washing yourself?',focus:'dich'},
+  ],'waschen'),
+  gram('refl-anziehen','reflexive','A2','<b>sich anziehen</b> — get dressed',[
+    {de:'Ich ziehe mich an.',en:'I get dressed.',focus:'mich'},
+    {de:'Er zieht sich schnell an.',en:'He gets dressed quickly.',focus:'sich'},
+    {de:'Zieh dich warm an!',en:'Dress warmly!',focus:'dich'},
+  ],'anziehen'),
+];
+
+// ─── PRÄTERITUM ───────────────────────────────────────────────────────────────
+
+const PRAETERITUM: CardDef[] = [
+  gram('prat-war-hatte','verb','A2','<b>war / hatte</b> — Präteritum of <em>sein</em> and <em>haben</em> (very common in speech and writing).',[
+    {de:'Ich war gestern müde.',en:'I was tired yesterday.',focus:'war'},
+    {de:'Er hatte keine Zeit.',en:'He had no time.',focus:'hatte'},
+    {de:'Wir waren zu Hause.',en:'We were at home.',focus:'waren'},
+  ]),
+  gram('prat-modals','modal','A2','Modal verbs in Präteritum: <b>konnte, musste, wollte, durfte</b>.',[
+    {de:'Ich konnte nicht kommen.',en:'I could not come.',focus:'konnte'},
+    {de:'Er musste arbeiten.',en:'He had to work.',focus:'musste'},
+    {de:'Sie wollte schlafen.',en:'She wanted to sleep.',focus:'wollte'},
+  ]),
+  gram('prat-ging-kam','verb','A2','Common Präteritum forms: <b>ging, kam, machte, sah</b>.',[
+    {de:'Ich ging nach Hause.',en:'I went home.',focus:'ging'},
+    {de:'Er kam zu spät.',en:'He came too late.',focus:'kam'},
+    {de:'Sie machte Hausaufgaben.',en:'She did homework.',focus:'machte'},
+  ]),
+  gram('prat-wusste-sagte','verb','A2','More high-frequency Präteritum: <b>wusste, sagte, fand, dachte</b>.',[
+    {de:'Ich wusste die Antwort.',en:'I knew the answer.',focus:'wusste'},
+    {de:'Er sagte nichts.',en:'He said nothing.',focus:'sagte'},
+    {de:'Sie fand den Weg.',en:'She found the way.',focus:'fand'},
+  ]),
+];
+
+// ─── FUTURE ───────────────────────────────────────────────────────────────────
+
+const FUTURE: CardDef[] = [
+  gram('fut-werden','verb','A2','<b>werden</b> + Infinitiv — future tense. Conjugation: werde, wirst, wird, werden, werdet, werden.',[
+    {de:'Ich werde morgen arbeiten.',en:'I will work tomorrow.',focus:'werde'},
+    {de:'Er wird Arzt werden.',en:'He will become a doctor.',focus:'wird'},
+    {de:'Wir werden dich anrufen.',en:'We will call you.',focus:'werden'},
+  ],'werden'),
+  gram('fut-present-as-future','verb','A2','Present tense + time word often replaces Futur I in spoken German (<b>morgen gehe ich</b>).',[
+    {de:'Morgen fahre ich nach München.',en:'Tomorrow I am going to Munich.',focus:'fahre'},
+    {de:'Nächste Woche beginnt der Kurs.',en:'Next week the course starts.',focus:'beginnt'},
+    {de:'Heute Abend koche ich.',en:'This evening I am going to cook.',focus:'koche'},
+  ]),
+];
+
+// ─── IMPERATIVE ───────────────────────────────────────────────────────────────
+
+const IMPERATIVE: CardDef[] = [
+  gram('imp-du','verb','A2','Imperative <b>du</b> — stem often without -e: <em>Komm!</em> <em>Lies!</em> <em>Iss!</em>',[
+    {de:'Komm her!',en:'Come here!',focus:'Komm'},
+    {de:'Iss dein Gemüse!',en:'Eat your vegetables!',focus:'Iss'},
+    {de:'Hör mir zu!',en:'Listen to me!',focus:'Hör'},
+  ]),
+  gram('imp-ihr','verb','A2','Imperative <b>ihr</b> — same as ihr-form without pronoun: <em>Kommt!</em> <em>Geht!</em>',[
+    {de:'Kommt bitte herein!',en:'Please come in!',focus:'Kommt'},
+    {de:'Geht nach Hause!',en:'Go home!',focus:'Geht'},
+    {de:'Macht die Hausaufgaben!',en:'Do the homework!',focus:'Macht'},
+  ]),
+  gram('imp-sie','verb','A2','Imperative <b>Sie</b> (formal) — Infinitiv + Sie: <em>Kommen Sie!</em> <em>Warten Sie!</em>',[
+    {de:'Kommen Sie bitte herein!',en:'Please come in!',focus:'Kommen Sie'},
+    {de:'Warten Sie einen Moment!',en:'Wait a moment!',focus:'Warten Sie'},
+    {de:'Nehmen Sie Platz!',en:'Take a seat!',focus:'Nehmen Sie'},
+  ]),
+];
+
+// ─── ACCUSATIVE DRILLS ────────────────────────────────────────────────────────
+
+const ACCUSATIVE: CardDef[] = [
+  gram('acc-einen','pronoun','A1','Masculine Akk. indefinite: <b>einen</b> (+ noun)',[
+    {de:'Ich kaufe einen Apfel.',en:'I buy an apple.',focus:'einen'},
+    {de:'Er liest einen Roman.',en:'He is reading a novel.',focus:'einen'},
+    {de:'Sie hat einen Hund.',en:'She has a dog.',focus:'einen'},
+  ],'einen'),
+  gram('acc-eine','pronoun','A1','Feminine Akk. indefinite: <b>eine</b> (+ noun)',[
+    {de:'Ich habe eine Katze.',en:'I have a cat.',focus:'eine'},
+    {de:'Er sucht eine Wohnung.',en:'He is looking for an apartment.',focus:'eine'},
+    {de:'Sie trinkt eine Tasse Kaffee.',en:'She drinks a cup of coffee.',focus:'eine'},
+  ],'eine'),
+  gram('acc-ein','pronoun','A1','Neuter Akk. indefinite: <b>ein</b> (+ noun)',[
+    {de:'Ich kaufe ein Brot.',en:'I buy a bread roll.',focus:'ein'},
+    {de:'Er braucht ein Ticket.',en:'He needs a ticket.',focus:'ein'},
+    {de:'Sie liest ein Buch.',en:'She is reading a book.',focus:'ein'},
+  ],'ein'),
 ];
 
 // ─── CONJUNCTIONS ─────────────────────────────────────────────────────────────
@@ -776,7 +911,9 @@ const CONJUNCTIONS: CardDef[] = [
 const HAND_CURATED: CardDef[] = [
   ...VERBS, ...NOUNS, ...PREPS, ...WH, ...PRONOUNS,
   ...POSSESSIVES, ...ADJECTIVES, ...MODALS, ...PERFEKT,
-  ...NEGATION, ...COMPARATIVE, ...REFLEXIVE, ...CONJUNCTIONS,
+  ...NEGATION, ...COMPARATIVE, ...REFLEXIVE,
+  ...PRAETERITUM, ...FUTURE, ...IMPERATIVE, ...ACCUSATIVE,
+  ...CONJUNCTIONS,
 ];
 
 // De-duplicate generated cards against hand-curated ones (by id and by lemma per type).

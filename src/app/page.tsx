@@ -8,6 +8,8 @@ import {
   ALL_TYPES, ALL_LANGUAGES, LANGUAGE_LABELS,
   type SRSState, type SRSCard, type Rating, type CardType, type CardDef, type Language, type Example,
 } from '@/lib/types'
+import { ALL_SECTION_IDS, cardSection, sectionTitle, type SectionId } from '@/lib/curriculum-de'
+import { CurriculumSidebar } from '@/components/CurriculumSidebar'
 
 const DEFAULT_NEW_LIMIT_SUGGESTION = 20 // shown as placeholder in the limit input
 
@@ -167,6 +169,7 @@ type Theme = 'dark' | 'light'
 
 interface Settings {
   enabledTypes: CardType[]
+  enabledSections: SectionId[]
   newCardsToday: number
   todayDate: string
   totalReviewed: number
@@ -179,6 +182,7 @@ interface Settings {
 
 const DEFAULT_SETTINGS: Settings = {
   enabledTypes: [...ALL_TYPES],
+  enabledSections: [...ALL_SECTION_IDS],
   newCardsToday: 0,
   todayDate: '',
   totalReviewed: 0,
@@ -187,6 +191,15 @@ const DEFAULT_SETTINGS: Settings = {
   lastReviewDate: '',
   dailyNewLimit: null,
   theme: 'dark',
+}
+
+function cardInQueue(card: CardDef, s: Settings, lv: string): boolean {
+  if (lv !== 'All' && card.level !== lv) return false
+  if (s.activeLanguage === 'de') {
+    if (s.enabledSections.length === 0) return false
+    return s.enabledSections.includes(cardSection(card))
+  }
+  return s.enabledTypes.includes(card.type)
 }
 
 function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings, lv: string): SRSCard[] {
@@ -204,8 +217,7 @@ function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings,
   const allNew: SRSCard[] = []
 
   for (const card of cards) {
-    if (lv !== 'All' && card.level !== lv) continue
-    if (!s.enabledTypes.includes(card.type)) continue
+    if (!cardInQueue(card, s, lv)) continue
     const srs = pm[card.id] ?? defaultSRS()
     const sc = { ...card, ...srs } as SRSCard
     if (srs.state === 'learning' && srs.due <= now) learning.push(sc)
@@ -396,6 +408,55 @@ function CardBack({ card }: { card: SRSCard }) {
   return null
 }
 
+function TrainerShell({
+  settings,
+  cards,
+  pm,
+  onSectionsChange,
+  showSections,
+  setShowSections,
+  children,
+}: {
+  settings: Settings
+  cards: CardDef[]
+  pm: Record<string, SRSState>
+  onSectionsChange: (s: SectionId[]) => void
+  showSections: boolean
+  setShowSections: (v: boolean) => void
+  children: React.ReactNode
+}) {
+  const showCurriculum = settings.activeLanguage === 'de'
+  return (
+    <div className="app-shell trainer-layout" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+      {showCurriculum && (
+        <div className="curriculum-sidebar-desktop">
+          <CurriculumSidebar
+            cards={cards}
+            pm={pm}
+            enabledSections={settings.enabledSections}
+            onChange={onSectionsChange}
+          />
+        </div>
+      )}
+      {showCurriculum && showSections && (
+        <>
+          <div className="curriculum-drawer-scrim" onClick={() => setShowSections(false)} />
+          <div className="curriculum-drawer">
+            <CurriculumSidebar
+              cards={cards}
+              pm={pm}
+              enabledSections={settings.enabledSections}
+              onChange={onSectionsChange}
+              onClose={() => setShowSections(false)}
+            />
+          </div>
+        </>
+      )}
+      <div className="trainer-main">{children}</div>
+    </div>
+  )
+}
+
 function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [cards, setCards]       = useState<CardDef[]>([])
   const [pm, setPm]             = useState<Record<string, SRSState>>({})
@@ -416,6 +477,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [prevExIdx, setPrevExIdx] = useState(0)
   const [prevReverse, setPrevReverse] = useState(false)
   const [reviewingPrev, setReviewingPrev] = useState(false)
+  const [showSections, setShowSections] = useState(false)
   const inputEl = useRef<HTMLInputElement>(null)
 
   useEffect(() => { loadData() }, [])
@@ -447,6 +509,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       const loaded: Settings = sr
         ? {
             enabledTypes: (sr.enabled_types ?? [...ALL_TYPES]) as CardType[],
+            enabledSections: Array.isArray(sr.enabled_sections) && sr.enabled_sections.length > 0
+              ? (sr.enabled_sections as SectionId[])
+              : [...ALL_SECTION_IDS],
             newCardsToday: sr.new_cards_today ?? 0,
             todayDate: sr.today_date ?? '',
             totalReviewed: sr.total_reviewed ?? 0,
@@ -505,7 +570,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        enabledTypes: ns.enabledTypes, newCardsToday: ns.newCardsToday,
+        enabledTypes: ns.enabledTypes, enabledSections: ns.enabledSections,
+        newCardsToday: ns.newCardsToday,
         todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
         activeLanguage: ns.activeLanguage,
         streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
@@ -514,8 +580,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     })
   }
 
-  function changeTypes(newTypes: CardType[]) {
-    const ns = { ...settings, enabledTypes: newTypes }
+  function changeSections(newSections: SectionId[]) {
+    const ns = { ...settings, enabledSections: newSections }
     setSettings(ns)
     applyQueueChange(cards, pm, ns, lv)
     persistSettings(ns)
@@ -703,9 +769,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   const now = Date.now()
   const today = todayStr()
-  const filtered = cards.filter(c =>
-    (lv === 'All' || c.level === lv) && settings.enabledTypes.includes(c.type)
-  )
+  const filtered = cards.filter(c => cardInQueue(c, settings, lv))
   const dueN   = filtered.filter(c => { const s = pm[c.id]; return s && (s.state === 'review' || s.state === 'mature') && s.due <= now }).length
   const learnN = filtered.filter(c => { const s = pm[c.id]; return s && s.state === 'learning' && s.due <= now }).length
   const newToday = settings.todayDate === today ? settings.newCardsToday : 0
@@ -725,21 +789,35 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   if (!card || idx >= queue.length) {
     const isEmptyDeck = cards.length === 0
-    return (
-      <div className="app-shell" style={{ background: 'var(--bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', gap: 16, padding: 16, textAlign: 'center' }}>
-        <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : '✓'}</div>
+    const noSections = settings.activeLanguage === 'de' && settings.enabledSections.length === 0
+    const emptyBody = (
+      <>
+        <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : noSections ? '☐' : '✓'}</div>
         <h2 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
           {isEmptyDeck
             ? `No ${LANGUAGE_LABELS[settings.activeLanguage]} cards yet`
-            : queue.length === 0 ? 'All caught up!' : 'Session complete!'}
+            : noSections
+              ? 'No sections selected'
+              : queue.length === 0 ? 'All caught up!' : 'Session complete!'}
         </h2>
         <p style={{ color: 'var(--dim)', margin: 0 }}>
           {isEmptyDeck
             ? 'This deck is empty. Switch to another language or seed cards.'
-            : queue.length === 0
-              ? 'No cards due right now.'
-              : `Reviewed ${queue.length} card${queue.length !== 1 ? 's' : ''} · Total: ${settings.totalReviewed}`}
+            : noSections
+              ? 'Enable at least one curriculum section to start studying.'
+              : queue.length === 0
+                ? 'No cards due right now.'
+                : `Reviewed ${queue.length} card${queue.length !== 1 ? 's' : ''} · Total: ${settings.totalReviewed}`}
         </p>
+        {noSections && settings.activeLanguage === 'de' && (
+          <button
+            onClick={() => changeSections([...ALL_SECTION_IDS])}
+            style={{ ...sBtnPrimary, marginTop: 8 }}
+            className="curriculum-mobile-trigger"
+          >
+            Enable all sections
+          </button>
+        )}
         <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
           {ALL_LANGUAGES.map(l => (
             <button key={l} onClick={() => changeLanguage(l)} className="tap-sm" style={{
@@ -751,10 +829,24 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {!isEmptyDeck && <button onClick={loadData} style={sBtnPrimary}>Start New Session</button>}
+          {!isEmptyDeck && !noSections && <button onClick={loadData} style={sBtnPrimary}>Start New Session</button>}
           <button onClick={onSignOut} style={sBtnSecondary}>Sign Out</button>
         </div>
-      </div>
+      </>
+    )
+    return (
+      <TrainerShell
+        settings={settings}
+        cards={cards}
+        pm={pm}
+        onSectionsChange={changeSections}
+        showSections={showSections}
+        setShowSections={setShowSections}
+      >
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text)', gap: 16, padding: 16, textAlign: 'center' }}>
+          {emptyBody}
+        </div>
+      </TrainerShell>
     )
   }
 
@@ -776,10 +868,32 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const canReviewPrev = !!prevCard && !!prevEx && !saving
 
   return (
-    <div className="app-shell" style={{ background: 'var(--bg)', color: 'var(--text)' }} onClick={() => setShowMenu(false)}>
+    <TrainerShell
+      settings={settings}
+      cards={cards}
+      pm={pm}
+      onSectionsChange={changeSections}
+      showSections={showSections}
+      setShowSections={setShowSections}
+    >
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }} onClick={() => setShowMenu(false)}>
 
       {/* Header */}
       <div style={{ borderBottom: '1px solid var(--elev)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+        {settings.activeLanguage === 'de' && (
+          <button
+            type="button"
+            className="tap-sm curriculum-mobile-trigger"
+            onClick={e => { e.stopPropagation(); setShowSections(true) }}
+            style={{
+              padding: '4px 10px', borderRadius: 6, border: '1px solid var(--border)',
+              background: 'transparent', color: 'var(--muted)', cursor: 'pointer',
+              fontSize: 12, fontWeight: 600,
+            }}
+          >
+            Sections
+          </button>
+        )}
         <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Gemma</span>
         <div style={{ display: 'flex', gap: 6, flex: 1, flexWrap: 'wrap' }}>
           <Pill c="#60a5fa">{learnN} learn</Pill>
@@ -831,7 +945,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                     }}>{t}</button>
                   ))}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>New cards / day</div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>New cards / day</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
                   <input
                     type="number"
@@ -864,19 +978,6 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       }}>set</button>
                   )}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Card Types</div>
-                {ALL_TYPES.map(t => (
-                  <label key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', cursor: 'pointer' }}>
-                    <input type="checkbox" checked={settings.enabledTypes.includes(t)}
-                      onChange={e => {
-                        const next = e.target.checked
-                          ? [...settings.enabledTypes, t]
-                          : settings.enabledTypes.filter(x => x !== t)
-                        changeTypes(next)
-                      }} />
-                    <span style={{ fontSize: 13, color: 'var(--text-soft)' }}>{TYPE_LABELS[t]}</span>
-                  </label>
-                ))}
                 <div style={{ borderTop: '1px solid var(--border-soft)', marginTop: 12, paddingTop: 12 }}>
                   <button onClick={onSignOut} style={{ ...sBtnSecondary, width: '100%', fontSize: 12, padding: '7px 0' }}>
                     Sign Out
@@ -897,7 +998,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, gap: 8 }}>
           <span style={{ fontSize: 12, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
-            {TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
+            {settings.activeLanguage === 'de' ? sectionTitle(cardSection(card)) : TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
             {(pm[card.id]?.recentResults ?? '').length > 0 && (
               <span style={{ marginLeft: 8, letterSpacing: 1 }}>
                 {(pm[card.id]?.recentResults ?? '').split('').map((r, i) => (
@@ -1170,6 +1271,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         </div>
       </div>
     </div>
+    </TrainerShell>
   )
 }
 

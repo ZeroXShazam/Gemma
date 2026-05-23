@@ -93,3 +93,79 @@ input, textarea, select, button {
     display: none;
   }
 }
+
+/* Trainer layout: curriculum sidebar + main panel */
+.trainer-layout {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.curriculum-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  height: 100%;
+}
+
+.curriculum-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 8px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (hover: hover) {
+  .curriculum-row:hover {
+    background: var(--elev);
+  }
+}
+
+.trainer-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.curriculum-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 300;
+}
+
+.curriculum-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(85vw, 300px);
+  z-index: 301;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 767px) {
+  .curriculum-sidebar-desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .curriculum-sidebar-desktop {
+    display: flex;
+    flex-shrink: 0;
+  }
+  .curriculum-mobile-trigger {
+    display: none;
+  }
+  .curriculum-drawer,
+  .curriculum-drawer-scrim {
+    display: none;
+  }
+}

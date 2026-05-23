@@ -50,6 +50,8 @@ export interface CardDef {
   language?: Language;
   type: CardType;
   level: Level;
+  /** Curriculum section (German deck). Assigned at runtime if omitted. */
+  sectionId?: string;
   examples: Example[];
   rule?: string;
   verb?: string;

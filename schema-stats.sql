@@ -20,3 +20,7 @@ ALTER TABLE user_settings
 -- UI theme preference ('dark' | 'light'). Defaults to 'dark'.
 ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS theme TEXT NOT NULL DEFAULT 'dark';
+
+-- Curriculum sections included in study queue. NULL = all sections enabled.
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS enabled_sections TEXT[];

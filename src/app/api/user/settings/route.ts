@@ -35,6 +35,9 @@ export async function PUT(req: NextRequest) {
   if (body.theme === 'dark' || body.theme === 'light') {
     row.theme = body.theme;
   }
+  if (Array.isArray(body.enabledSections)) {
+    row.enabled_sections = body.enabledSections;
+  }
   const { error } = await supabaseAdmin()
     .from('user_settings')
     .upsert(row, { onConflict: 'user_id' });
