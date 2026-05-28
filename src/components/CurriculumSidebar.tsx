@@ -1,14 +1,15 @@
 'use client';
 
 import {
-  ALL_SECTION_IDS,
-  CURRICULUM_DE,
+  allSectionIds,
+  curriculumFor,
   computeSectionStats,
   type SectionId,
-} from '@/lib/curriculum-de';
-import type { CardDef, SRSState } from '@/lib/types';
+} from '@/lib/curriculum';
+import type { CardDef, Language, SRSState } from '@/lib/types';
 
 interface CurriculumSidebarProps {
+  language: Language;
   cards: CardDef[];
   pm: Record<string, SRSState>;
   enabledSections: SectionId[];
@@ -85,8 +86,17 @@ function SectionRow({
   );
 }
 
-export function CurriculumSidebar({ cards, pm, enabledSections, onChange, onClose }: CurriculumSidebarProps) {
+export function CurriculumSidebar({
+  language,
+  cards,
+  pm,
+  enabledSections,
+  onChange,
+  onClose,
+}: CurriculumSidebarProps) {
   const enabled = new Set(enabledSections);
+  const curriculum = curriculumFor(language);
+  const allIds = allSectionIds(language);
 
   function toggleSection(id: SectionId, on: boolean) {
     if (on) {
@@ -117,7 +127,7 @@ export function CurriculumSidebar({ cards, pm, enabledSections, onChange, onClos
           <button
             type="button"
             className="tap-sm"
-            onClick={() => onChange([...ALL_SECTION_IDS])}
+            onClick={() => onChange([...allIds])}
             style={{
               background: 'none',
               border: 'none',
@@ -167,10 +177,10 @@ export function CurriculumSidebar({ cards, pm, enabledSections, onChange, onClos
       </div>
 
       <div className="curriculum-scroll">
-        {CURRICULUM_DE.map((sec) => {
+        {curriculum.map((sec) => {
           const showHeader = sec.level !== lastLevel;
           lastLevel = sec.level;
-          const stats = computeSectionStats(sec.id, cards, pm);
+          const stats = computeSectionStats(sec.id, cards, pm, language);
           return (
             <div key={sec.id}>
               {showHeader && (

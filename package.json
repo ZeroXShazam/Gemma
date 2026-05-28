@@ -8,9 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "build:deck": "tsx scripts/build-deck.ts",
+    "build:deck:it": "tsx scripts/build-deck-it.ts",
     "audit:deck": "tsx scripts/audit-deck.ts",
     "audit:deck:db": "tsx --env-file=.env.local scripts/audit-deck.ts --db",
-    "seed:de": "tsx --env-file=.env.local scripts/seed-de.ts"
+    "seed:de": "tsx --env-file=.env.local scripts/seed-de.ts",
+    "seed:it": "tsx --env-file=.env.local scripts/seed-it.ts"
   },
   "dependencies": {
     "@better-auth/infra": "^0.2.8",

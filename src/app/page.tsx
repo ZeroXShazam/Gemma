@@ -8,7 +8,8 @@ import {
   ALL_TYPES, ALL_LANGUAGES, LANGUAGE_LABELS,
   type SRSState, type SRSCard, type Rating, type CardType, type CardDef, type Language, type Example,
 } from '@/lib/types'
-import { ALL_SECTION_IDS, cardSection, sectionTitle, type SectionId } from '@/lib/curriculum-de'
+import { ALL_SECTION_IDS, allSectionIds, cardSection, sectionTitle, type SectionId } from '@/lib/curriculum'
+import { ALL_SECTION_IDS_IT } from '@/lib/curriculum-it'
 import { CurriculumSidebar } from '@/components/CurriculumSidebar'
 import { mixQueue, sortNewCardsForBudget } from '@/lib/deck-queue'
 import {
@@ -31,6 +32,13 @@ const TYPE_LABELS: Record<CardType, string> = {
   adjective: 'Adjectives', modal: 'Modals', perfekt: 'Perfekt',
   negation: 'Negation', comparative: 'Comparative',
   reflexive: 'Reflexive', conjunction: 'Conjunctions',
+}
+
+const VERB_EN_IT: Record<string, string> = {
+  essere: 'to be', avere: 'to have', andare: 'to go', venire: 'to come',
+  fare: 'to do / make', mangiare: 'to eat', bere: 'to drink', parlare: 'to speak',
+  leggere: 'to read', scrivere: 'to write', lavorare: 'to work', studiare: 'to study',
+  dovere: 'must', potere: 'can', volere: 'to want',
 }
 
 const VERB_EN: Record<string, string> = {
@@ -144,6 +152,8 @@ type Theme = 'dark' | 'light'
 interface Settings {
   enabledTypes: CardType[]
   enabledSections: SectionId[]
+  enabledSectionsDe: SectionId[]
+  enabledSectionsIt: SectionId[]
   newCardsToday: number
   todayDate: string
   totalReviewed: number
@@ -163,6 +173,8 @@ interface Settings {
 const DEFAULT_SETTINGS: Settings = {
   enabledTypes: [...ALL_TYPES],
   enabledSections: [...ALL_SECTION_IDS],
+  enabledSectionsDe: [...ALL_SECTION_IDS],
+  enabledSectionsIt: [...ALL_SECTION_IDS_IT],
   newCardsToday: 0,
   todayDate: '',
   totalReviewed: 0,
@@ -179,9 +191,10 @@ const DEFAULT_SETTINGS: Settings = {
 function cardInQueue(card: CardDef, s: Settings, lv: string): boolean {
   if (lv !== 'All' && card.level !== lv) return false
   if (s.hideEasyGen && card.source === 'gen' && card.difficulty === 'easy') return false
-  if (s.activeLanguage === 'de') {
-    if (s.enabledSections.length === 0) return false
-    return s.enabledSections.includes(cardSection(card))
+  if (s.activeLanguage === 'de' || s.activeLanguage === 'it') {
+    const sections = s.activeLanguage === 'it' ? s.enabledSectionsIt : s.enabledSectionsDe
+    if (sections.length === 0) return false
+    return sections.includes(cardSection(card))
   }
   return s.enabledTypes.includes(card.type)
 }
@@ -329,19 +342,27 @@ function AuthForm() {
 
 function CardBack({ card }: { card: SRSCard }) {
   const c = card.conjugations
+  const isIt = card.language === 'it'
+  const verbDict = isIt ? VERB_EN_IT : VERB_EN
 
   if ((card.type === 'verb' || card.type === 'modal') && c) {
-    const rows: [string, string][] = [
-      ['ich', c.ich],       ['wir', c.wir],
-      ['du', c.du],         ['ihr', c.ihr],
-      ['er/sie/es', c.er],  ['sie/Sie', c.sie],
-    ]
+    const rows: [string, string][] = isIt
+      ? [
+          ['io', c.ich],       ['noi', c.wir],
+          ['tu', c.du],         ['voi', c.ihr],
+          ['lui/lei', c.er],    ['loro', c.sie],
+        ]
+      : [
+          ['ich', c.ich],       ['wir', c.wir],
+          ['du', c.du],         ['ihr', c.ihr],
+          ['er/sie/es', c.er],  ['sie/Sie', c.sie],
+        ]
     return (
       <div>
         <div style={{ marginBottom: 12 }}>
           <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--text)' }}>{card.verb}</div>
-          {card.verb && VERB_EN[card.verb] && (
-            <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 2 }}>{VERB_EN[card.verb]}</div>
+          {card.verb && verbDict[card.verb] && (
+            <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 2 }}>{verbDict[card.verb]}</div>
           )}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 16px', marginBottom: 12 }}>
@@ -353,8 +374,28 @@ function CardBack({ card }: { card: SRSCard }) {
           ))}
         </div>
         <div style={{ fontSize: 12, color: 'var(--dim)', display: 'flex', gap: 16 }}>
-          <span>Prät.: <span style={{ color: 'var(--muted)' }}>{card.praeteritum}</span></span>
-          <span>Perf.: <span style={{ color: 'var(--muted)' }}>{card.perfekt}</span></span>
+          <span>{isIt ? 'Impf.' : 'Prät.'}: <span style={{ color: 'var(--muted)' }}>{card.praeteritum}</span></span>
+          <span>{isIt ? 'Pass.' : 'Perf.'}: <span style={{ color: 'var(--muted)' }}>{card.perfekt}</span></span>
+        </div>
+      </div>
+    )
+  }
+
+  if (card.type === 'noun' && card.noun) {
+    const art = String(card.article ?? '')
+    const fem = art === 'la' || art === 'le' || art === 'una'
+    const gc = fem ? '#f472b6' : art.startsWith('l') ? '#34d399' : '#60a5fa'
+    const plArt = art === 'la' || art === 'una' ? 'le' : art === 'il' || art === 'lo' ? 'i' : art === 'l\'' ? 'gli' : 'i'
+    return (
+      <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: 'var(--elev)', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6 }}>Singular</div>
+          <div style={{ fontWeight: 700, color: gc, fontSize: 20 }}>{art} {card.noun}</div>
+        </div>
+        <div style={{ color: 'var(--faint)', fontSize: 18 }}>/</div>
+        <div style={{ textAlign: 'center', flex: 1, padding: '12px 8px', background: 'var(--elev)', borderRadius: 8 }}>
+          <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6 }}>Plural</div>
+          <div style={{ fontWeight: 700, color: 'var(--text)', fontSize: 20 }}>{plArt} {card.plural}</div>
         </div>
       </div>
     )
@@ -405,7 +446,7 @@ function TrainerShell({
   setShowSections: (v: boolean) => void
   children: React.ReactNode
 }) {
-  const showCurriculum = settings.activeLanguage === 'de'
+  const showCurriculum = settings.activeLanguage === 'de' || settings.activeLanguage === 'it'
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   useEffect(() => {
@@ -429,6 +470,7 @@ function TrainerShell({
         <div className={`curriculum-sidebar-desktop${sidebarCollapsed ? ' is-collapsed' : ''}`}>
           <div className="curriculum-sidebar-panel">
             <CurriculumSidebar
+              language={settings.activeLanguage}
               cards={cards}
               pm={pm}
               enabledSections={settings.enabledSections}
@@ -451,6 +493,7 @@ function TrainerShell({
           <div className="curriculum-drawer-scrim" onClick={() => setShowSections(false)} />
           <div className="curriculum-drawer">
             <CurriculumSidebar
+              language={settings.activeLanguage}
               cards={cards}
               pm={pm}
               enabledSections={settings.enabledSections}
@@ -516,16 +559,23 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           }
         }
       }
+      const enabledSectionsDe = Array.isArray(sr?.enabled_sections) && sr.enabled_sections.length > 0
+        ? (sr.enabled_sections as SectionId[])
+        : [...ALL_SECTION_IDS]
+      const enabledSectionsIt = Array.isArray(sr?.enabled_sections_it) && sr.enabled_sections_it.length > 0
+        ? (sr.enabled_sections_it as SectionId[])
+        : [...ALL_SECTION_IDS_IT]
+      const activeLanguage = (sr?.active_language ?? 'de') as Language
       const loaded: Settings = sr
         ? {
             enabledTypes: (sr.enabled_types ?? [...ALL_TYPES]) as CardType[],
-            enabledSections: Array.isArray(sr.enabled_sections) && sr.enabled_sections.length > 0
-              ? (sr.enabled_sections as SectionId[])
-              : [...ALL_SECTION_IDS],
+            enabledSectionsDe,
+            enabledSectionsIt,
+            enabledSections: activeLanguage === 'it' ? enabledSectionsIt : enabledSectionsDe,
             newCardsToday: sr.new_cards_today ?? 0,
             todayDate: sr.today_date ?? '',
             totalReviewed: sr.total_reviewed ?? 0,
-            activeLanguage: (sr.active_language ?? 'de') as Language,
+            activeLanguage,
             streakDays: sr.streak_days ?? 0,
             lastReviewDate: sr.last_review_date ?? '',
             dailyNewLimit: typeof sr.daily_new_limit === 'number' ? sr.daily_new_limit : null,
@@ -587,7 +637,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        enabledTypes: ns.enabledTypes, enabledSections: ns.enabledSections,
+        enabledTypes: ns.enabledTypes,
+        enabledSections: ns.enabledSectionsDe,
+        enabledSectionsIt: ns.enabledSectionsIt,
         newCardsToday: ns.newCardsToday,
         todayDate: ns.todayDate, totalReviewed: ns.totalReviewed,
         activeLanguage: ns.activeLanguage,
@@ -601,7 +653,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   function changeSections(newSections: SectionId[]) {
-    const ns = { ...settings, enabledSections: newSections }
+    const ns = settings.activeLanguage === 'it'
+      ? { ...settings, enabledSectionsIt: newSections, enabledSections: newSections }
+      : { ...settings, enabledSectionsDe: newSections, enabledSections: newSections }
     setSettings(ns)
     applyQueueChange(cards, pm, ns, lv)
     persistSettings(ns)
@@ -641,7 +695,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     if (newLang === settings.activeLanguage) return
     setLoading(true)
     try {
-      const ns = { ...settings, activeLanguage: newLang }
+      const ns = {
+        ...settings,
+        activeLanguage: newLang,
+        enabledSections: newLang === 'it' ? settings.enabledSectionsIt : settings.enabledSectionsDe,
+      }
       setSettings(ns)
       const fetched = await fetchCards(newLang)
       setCards(fetched)
@@ -826,7 +884,8 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   if (!card || idx >= queue.length) {
     const isEmptyDeck = cards.length === 0
-    const noSections = settings.activeLanguage === 'de' && settings.enabledSections.length === 0
+    const usesCurriculum = settings.activeLanguage === 'de' || settings.activeLanguage === 'it'
+    const noSections = usesCurriculum && settings.enabledSections.length === 0
     const emptyBody = (
       <>
         <div style={{ fontSize: 48, lineHeight: 1 }}>{isEmptyDeck ? '∅' : noSections ? '☐' : '✓'}</div>
@@ -846,9 +905,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 ? 'No cards due right now.'
                 : `Reviewed ${queue.length} card${queue.length !== 1 ? 's' : ''} · Total: ${settings.totalReviewed}`}
         </p>
-        {noSections && settings.activeLanguage === 'de' && (
+        {noSections && usesCurriculum && (
           <button
-            onClick={() => changeSections([...ALL_SECTION_IDS])}
+            onClick={() => changeSections([...allSectionIds(settings.activeLanguage)])}
             style={{ ...sBtnPrimary, marginTop: 8 }}
             className="curriculum-mobile-trigger"
           >
@@ -915,7 +974,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
       {/* Header */}
       <div style={{ borderBottom: '1px solid var(--elev)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-        {settings.activeLanguage === 'de' && (
+        {settings.activeLanguage === 'de' || settings.activeLanguage === 'it' ? (
           <button
             type="button"
             className="tap-sm curriculum-mobile-trigger"
@@ -928,7 +987,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           >
             Sections
           </button>
-        )}
+        ) : null}
         <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.3px' }}>Gemma</span>
         <div style={{ display: 'flex', gap: 6, flex: 1, flexWrap: 'wrap' }}>
           <Pill c="#60a5fa">{learnN} learn</Pill>
@@ -1053,7 +1112,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, gap: 8 }}>
           <span style={{ fontSize: 12, color: 'var(--dim)', textTransform: 'uppercase', letterSpacing: 1 }}>
-            {settings.activeLanguage === 'de' ? sectionTitle(cardSection(card)) : TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
+            {settings.activeLanguage === 'de' || settings.activeLanguage === 'it'
+              ? sectionTitle(cardSection(card), settings.activeLanguage)
+              : TYPE_LABELS[card.type]} · {card.level} · {card.state}{reverse && phase === 'cloze' ? ' · ⇄ reverse' : ''}
             {(pm[card.id]?.recentResults ?? '').length > 0 && (
               <span style={{ marginLeft: 8, letterSpacing: 1 }}>
                 {(pm[card.id]?.recentResults ?? '').split('').map((r, i) => (

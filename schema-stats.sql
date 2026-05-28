@@ -41,6 +41,10 @@ ALTER TABLE user_settings
 ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS hide_easy_gen BOOLEAN NOT NULL DEFAULT true;
 
+-- Curriculum sections for Italian deck. NULL = all IT sections enabled.
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS enabled_sections_it TEXT[];
+
 -- Last example index shown per card (example cooldown).
 ALTER TABLE user_card_progress
   ADD COLUMN IF NOT EXISTS last_example_idx INTEGER;

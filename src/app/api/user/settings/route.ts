@@ -38,6 +38,9 @@ export async function PUT(req: NextRequest) {
   if (Array.isArray(body.enabledSections)) {
     row.enabled_sections = body.enabledSections;
   }
+  if (Array.isArray(body.enabledSectionsIt)) {
+    row.enabled_sections_it = body.enabledSectionsIt;
+  }
   if (typeof body.nounHardMode === 'boolean') row.noun_hard_mode = body.nounHardMode;
   if (typeof body.hideHintsAfterNew === 'boolean') row.hide_hints_after_new = body.hideHintsAfterNew;
   if (typeof body.reverseRateMature === 'number' && body.reverseRateMature >= 0 && body.reverseRateMature <= 1) {

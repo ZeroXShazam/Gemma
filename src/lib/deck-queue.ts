@@ -1,4 +1,4 @@
-import { cardSection } from './curriculum-de';
+import { cardSection } from './curriculum';
 import { isMechanicalNounTemplate } from './deck-audit';
 import type { CardDef, Example, SRSCard } from './types';
 
