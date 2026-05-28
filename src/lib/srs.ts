@@ -18,6 +18,7 @@ export function defaultSRS(): SRSState {
     step: 0,
     exampleMisses: {},
     recentResults: '',
+    lastExampleIdx: undefined,
   };
 }
 

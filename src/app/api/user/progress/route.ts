@@ -35,6 +35,9 @@ export async function PUT(req: NextRequest) {
   if (typeof body.recentResults === 'string') {
     row.recent_results = body.recentResults;
   }
+  if (typeof body.lastExampleIdx === 'number' && body.lastExampleIdx >= 0) {
+    row.last_example_idx = body.lastExampleIdx;
+  }
   const { error } = await supabaseAdmin()
     .from('user_card_progress')
     .upsert(row, { onConflict: 'user_id,card_id' });

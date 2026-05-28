@@ -24,3 +24,23 @@ ALTER TABLE user_settings
 -- Curriculum sections included in study queue. NULL = all sections enabled.
 ALTER TABLE user_settings
   ADD COLUMN IF NOT EXISTS enabled_sections TEXT[];
+
+-- Trainer difficulty preferences (learning-quality plan Phase 1).
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS noun_hard_mode BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS hide_hints_after_new BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS reverse_rate_mature REAL NOT NULL DEFAULT 0.55;
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS prep_production BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS prefer_grammar_new BOOLEAN NOT NULL DEFAULT false;
+
+-- Hide auto-generated "easy" vocab cards (Phase 6 two-tier deck).
+ALTER TABLE user_settings
+  ADD COLUMN IF NOT EXISTS hide_easy_gen BOOLEAN NOT NULL DEFAULT true;
+
+-- Last example index shown per card (example cooldown).
+ALTER TABLE user_card_progress
+  ADD COLUMN IF NOT EXISTS last_example_idx INTEGER;

@@ -5,4237 +5,1066 @@ import type { CardDef, Conjugations, Example, Level } from './types';
 
 type Art = 'der'|'die'|'das';
 
-function _verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
-  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex };
+function _verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, diff: 'easy'|'standard'|'hard', ex: Example[]): CardDef {
+  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex, source: 'gen', difficulty: diff };
 }
 
-function _noun(id: string, lv: Level, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, _enN: string, ex: Example[]): CardDef {
-  return { id, type: 'noun', level: lv, article: art, noun: n, nounForms: forms, plural: pl, examples: ex };
+function _noun(id: string, lv: Level, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, _enN: string, diff: 'easy'|'standard'|'hard', ex: Example[]): CardDef {
+  return { id, type: 'noun', level: lv, article: art, noun: n, nounForms: forms, plural: pl, examples: ex, source: 'gen', difficulty: diff };
 }
 
 
-// ── verbs (202) ─────────────────────────────────
+// ── verbs (116) ─────────────────────────────────
 
 export const GENERATED_VERBS: CardDef[] = [
-  _verb('gen-verb-abfliegen','A1','abfliegen',{ich:'fliege ab',du:'fliegst ab',er:'fliegt ab',wir:'fliegen ab',ihr:'fliegt ab',sie:'fliegen ab'},'flog ab','ist abgeflogen',[
-    {de:'ein Gelände abfliegen',en:'to fly over an area (i.e. search and rescue)',focus:'abfliegen'},
-    {de:'Du fliegst ab?',en:'Do you take off?',focus:'fliegst ab',subject:'du'},
-    {de:'Er fliegt ab.',en:'He takes off.',focus:'fliegt ab',subject:'er'},
-  ]),
-  _verb('gen-verb-abgeben','A1','abgeben',{ich:'gebe ab',du:'gibst ab',er:'gibt ab',wir:'geben ab',ihr:'gebt ab',sie:'geben ab'},'gab ab','hat abgegeben',[
+  _verb('gen-verb-abgeben','A1','abgeben',{ich:'gebe ab',du:'gibst ab',er:'gibt ab',wir:'geben ab',ihr:'gebt ab',sie:'geben ab'},'gab ab','hat abgegeben','easy',[
     {de:'Ich muss nach dem Auszug aus der Wohnung den Schlüssel abgeben.',en:'I must turn the key in after moving out of the apartment.',focus:'abgeben'},
     {de:'Du gibst ab?',en:'Do you give up?',focus:'gibst ab',subject:'du'},
-    {de:'Er gibt ab.',en:'He gives up.',focus:'gibt ab',subject:'er'},
   ]),
-  _verb('gen-verb-anbieten','A1','anbieten',{ich:'biete an',du:'bietest an',er:'bietet an',wir:'bieten an',ihr:'bietet an',sie:'bieten an'},'bot an','hat angeboten',[
-    {de:'Ich biete an.',en:'I offer.',focus:'biete an',subject:'ich'},
-    {de:'Du bietest an?',en:'Do you offer?',focus:'bietest an',subject:'du'},
-    {de:'Er bietet an.',en:'He offers.',focus:'bietet an',subject:'er'},
-  ]),
-  _verb('gen-verb-anfangen','A1','anfangen',{ich:'fange an',du:'fängst an',er:'fängt an',wir:'fangen an',ihr:'fangt an',sie:'fangen an'},'fing an','hat angefangen',[
-    {de:'Ich fange an.',en:'I begin.',focus:'fange an',subject:'ich'},
-    {de:'Du fängst an?',en:'Do you begin?',focus:'fängst an',subject:'du'},
-    {de:'Er fängt an.',en:'He begins.',focus:'fängt an',subject:'er'},
-  ]),
-  _verb('gen-verb-anklicken','A1','anklicken',{ich:'klicke an',du:'klickst an',er:'klickt an',wir:'klicken an',ihr:'klickt an',sie:'klicken an'},'klickte an','hat angeklickt',[
-    {de:'Ich klicke an.',en:'I click on.',focus:'klicke an',subject:'ich'},
-    {de:'Du klickst an?',en:'Do you click on?',focus:'klickst an',subject:'du'},
-    {de:'Er klickt an.',en:'He clicks on.',focus:'klickt an',subject:'er'},
-  ]),
-  _verb('gen-verb-ankommen','A1','ankommen',{ich:'komme an',du:'kommst an',er:'kommt an',wir:'kommen an',ihr:'kommt an',sie:'kommen an'},'kam an','ist angekommen',[
-    {de:'Ich komme an.',en:'I arrive.',focus:'komme an',subject:'ich'},
-    {de:'Du kommst an?',en:'Do you arrive?',focus:'kommst an',subject:'du'},
-    {de:'Er kommt an.',en:'He arrives.',focus:'kommt an',subject:'er'},
-  ]),
-  _verb('gen-verb-ankreuzen','A1','ankreuzen',{ich:'kreuze an',du:'kreuzt an',er:'kreuzt an',wir:'kreuzen an',ihr:'kreuzt an',sie:'kreuzen an'},'kreuzte an','hat angekreuzt',[
-    {de:'Ich kreuze an.',en:'I cross.',focus:'kreuze an',subject:'ich'},
-    {de:'Du kreuzt an?',en:'Do you cross?',focus:'kreuzt an',subject:'du'},
-    {de:'Er kreuzt an.',en:'He crosses.',focus:'kreuzt an',subject:'er'},
-  ]),
-  _verb('gen-verb-anmachen','A1','anmachen',{ich:'mache an',du:'machst an',er:'macht an',wir:'machen an',ihr:'macht an',sie:'machen an'},'machte an','hat angemacht',[
+  _verb('gen-verb-anmachen','A1','anmachen',{ich:'mache an',du:'machst an',er:'macht an',wir:'machen an',ihr:'macht an',sie:'machen an'},'machte an','hat angemacht','easy',[
     {de:'Könnt ihr bitte eure Kamera anmachen?',en:'Could you all please turn on your camera?',focus:'anmachen'},
     {de:'Du machst an?',en:'Do you switch on?',focus:'machst an',subject:'du'},
-    {de:'Er macht an.',en:'He switches on.',focus:'macht an',subject:'er'},
   ]),
-  _verb('gen-verb-anmelden','A1','anmelden',{ich:'melde an',du:'meldest an',er:'meldet an',wir:'melden an',ihr:'meldet an',sie:'melden an'},'meldete an','hat angemeldet',[
-    {de:'Ich melde an.',en:'I announce.',focus:'melde an',subject:'ich'},
-    {de:'Du meldest an?',en:'Do you announce?',focus:'meldest an',subject:'du'},
-    {de:'Er meldet an.',en:'He announces.',focus:'meldet an',subject:'er'},
-  ]),
-  _verb('gen-verb-antworten','A1','antworten',{ich:'antworte',du:'antwortest',er:'antwortet',wir:'antworten',ihr:'antwortet',sie:'antworten'},'antwortete','hat geantwortet',[
+  _verb('gen-verb-antworten','A1','antworten',{ich:'antworte',du:'antwortest',er:'antwortet',wir:'antworten',ihr:'antwortet',sie:'antworten'},'antwortete','hat geantwortet','standard',[
     {de:'Der König antwortete: „Wenn es einen solchen Menschen gibt, dann muss er verrückt sein.”',en:'The King answered, "If such a man exists, he must be mad."',focus:'antwortete'},
     {de:'Du hast nicht auf meinen Brief geantwortet.',en:'You haven\'t answered my letter.',focus:'geantwortet'},
   ]),
-  _verb('gen-verb-anziehen','A1','anziehen',{ich:'ziehe an',du:'ziehst an',er:'zieht an',wir:'ziehen an',ihr:'zieht an',sie:'ziehen an'},'zog an','hat angezogen',[
-    {de:'Ich ziehe an.',en:'I get dressed.',focus:'ziehe an',subject:'ich'},
-    {de:'Du ziehst an?',en:'Do you get dressed?',focus:'ziehst an',subject:'du'},
-    {de:'Er zieht an.',en:'He gets dressed.',focus:'zieht an',subject:'er'},
-  ]),
-  _verb('gen-verb-aufhoeren','A1','aufhören',{ich:'höre auf',du:'hörst auf',er:'hört auf',wir:'hören auf',ihr:'hört auf',sie:'hören auf'},'hörte auf','hat aufgehört',[
+  _verb('gen-verb-aufhoeren','A1','aufhören',{ich:'höre auf',du:'hörst auf',er:'hört auf',wir:'hören auf',ihr:'hört auf',sie:'hören auf'},'hörte auf','hat aufgehört','standard',[
     {de:'Der Regen hört bestimmt gleich auf.',en:'Surely the rain will stop soon.',focus:['hört','auf']},
     {de:'Hör damit auf und komm her!',en:'Stop that and come here!',focus:['Hör','auf']},
-    {de:'Sie hat aufgehört zu rauchen.',en:'She (has) stopped smoking.',focus:'aufgehört'},
   ]),
-  _verb('gen-verb-ausfuellen','A1','ausfüllen',{ich:'fülle aus',du:'füllst aus',er:'füllt aus',wir:'füllen aus',ihr:'füllt aus',sie:'füllen aus'},'füllte aus','hat ausgefüllt',[
-    {de:'Ich fülle aus.',en:'I fill in.',focus:'fülle aus',subject:'ich'},
-    {de:'Du füllst aus?',en:'Do you fill in?',focus:'füllst aus',subject:'du'},
-    {de:'Er füllt aus.',en:'He fills in.',focus:'füllt aus',subject:'er'},
-  ]),
-  _verb('gen-verb-ausmachen','A1','ausmachen',{ich:'mache aus',du:'machst aus',er:'macht aus',wir:'machen aus',ihr:'macht aus',sie:'machen aus'},'machte aus','hat ausgemacht',[
+  _verb('gen-verb-ausmachen','A1','ausmachen',{ich:'mache aus',du:'machst aus',er:'macht aus',wir:'machen aus',ihr:'macht aus',sie:'machen aus'},'machte aus','hat ausgemacht','standard',[
     {de:'Er macht den Fernseher aus.',en:'He is turning off the TV.',focus:['macht','aus']},
     {de:'Ich mache die Kerze aus.',en:'I am putting out the candle.',focus:['mache','aus']},
     {de:'So war das nicht ausgemacht!',en:'That\'s not what we\'ve agreed to!',focus:'ausgemacht'},
   ]),
-  _verb('gen-verb-aussehen','A1','aussehen',{ich:'sehe aus',du:'siehst aus',er:'sieht aus',wir:'sehen aus',ihr:'seht aus',sie:'sehen aus'},'sah aus','hat ausgesehen',[
-    {de:'Du siehst müde aus.',en:'You look tired.',focus:['siehst','aus']},
+  _verb('gen-verb-aussehen','A1','aussehen',{ich:'sehe aus',du:'siehst aus',er:'sieht aus',wir:'sehen aus',ihr:'seht aus',sie:'sehen aus'},'sah aus','hat ausgesehen','standard',[
     {de:'Findest du nicht, dass der Typ wie Mick Jagger aussieht?',en:'Don\'t you think that guy looks like Mick Jagger?',focus:['wie','aussieht']},
     {de:'Schau dir die dunklen Wolken an! Das sieht nach Regen aus.',en:'Look at those dark clouds! That looks like rain.',focus:['sieht nach','aus']},
   ]),
-  _verb('gen-verb-ausziehen','A1','ausziehen',{ich:'ziehe aus',du:'ziehst aus',er:'zieht aus',wir:'ziehen aus',ihr:'zieht aus',sie:'ziehen aus'},'zog aus','ist ausgezogen',[
+  _verb('gen-verb-ausziehen','A1','ausziehen',{ich:'ziehe aus',du:'ziehst aus',er:'zieht aus',wir:'ziehen aus',ihr:'zieht aus',sie:'ziehen aus'},'zog aus','ist ausgezogen','standard',[
     {de:'Herr Müller ist vor einer Woche ausgezogen.',en:'Mr. Müller moved out a week ago.',focus:'ausgezogen'},
     {de:'Er zog aus, um die Welt zu erkunden.',en:'He set out to explore the world.',focus:'zog aus'},
   ]),
-  _verb('gen-verb-baden','A1','baden',{ich:'bade',du:'badest',er:'badet',wir:'baden',ihr:'badet',sie:'baden'},'badete','hat gebadet',[
-    {de:'Ich bade.',en:'I bathe.',focus:'bade',subject:'ich'},
-    {de:'Du badest?',en:'Do you bathe?',focus:'badest',subject:'du'},
-    {de:'Er badet.',en:'He bathes.',focus:'badet',subject:'er'},
-  ]),
-  _verb('gen-verb-bedeuten','A1','bedeuten',{ich:'bedeute',du:'bedeutest',er:'bedeutet',wir:'bedeuten',ihr:'bedeutet',sie:'bedeuten'},'bedeutete','hat bedeutet',[
+  _verb('gen-verb-bedeuten','A1','bedeuten',{ich:'bedeute',du:'bedeutest',er:'bedeutet',wir:'bedeuten',ihr:'bedeutet',sie:'bedeuten'},'bedeutete','hat bedeutet','standard',[
     {de:'Ein klarer Himmel bedeutet eine kalte Nacht.',en:'A clear sky means a cold night.',focus:'bedeutet'},
-    {de:'Aber was bedeutet das?',en:'But what does it mean?',focus:'bedeutet'},
     {de:'Aber Liebling! Sabina bedeutet mir nichts!',en:'But darling! Sabina means nothing to me!',focus:'bedeutet'},
   ]),
-  _verb('gen-verb-beginnen','A1','beginnen',{ich:'beginne',du:'beginnst',er:'beginnt',wir:'beginnen',ihr:'beginnt',sie:'beginnen'},'begann','hat begonnen',[
-    {de:'Der Vortrag hat begonnen.',en:'The lecture has begun.',focus:'begonnen'},
+  _verb('gen-verb-beginnen','A1','beginnen',{ich:'beginne',du:'beginnst',er:'beginnt',wir:'beginnen',ihr:'beginnt',sie:'beginnen'},'begann','hat begonnen','standard',[
     {de:'Er hat den Vortrag begonnen.',en:'He has started the lecture.',focus:'begonnen'},
     {de:'Er hat mit dem Vortrag begonnen.',en:'He has started the lecture.',focus:'begonnen'},
   ]),
-  _verb('gen-verb-bekommen','A1','bekommen',{ich:'bekomme',du:'bekommst',er:'bekommt',wir:'bekommen',ihr:'bekommt',sie:'bekommen'},'bekam','hat bekommen',[
+  _verb('gen-verb-bekommen','A1','bekommen',{ich:'bekomme',du:'bekommst',er:'bekommt',wir:'bekommen',ihr:'bekommt',sie:'bekommen'},'bekam','hat bekommen','easy',[
     {de:'Wenn du Männchen machst, bekommst du von mir ein Leckerli.',en:'If you stand on your hind legs, you\'ll get a treat from me.',focus:'bekommst'},
-    {de:'ein Kind bekommen',en:'to have a child',focus:'bekommen'},
-    {de:'den Schnupfen bekommen',en:'to catch a cold',focus:'bekommen'},
+    {de:'Du bekommst?',en:'Do you receive?',focus:'bekommst',subject:'du'},
   ]),
-  _verb('gen-verb-benutzen','A1','benutzen',{ich:'benutze',du:'benutzt',er:'benutzt',wir:'benutzen',ihr:'benutzt',sie:'benutzen'},'benutzte','hat benutzt',[
-    {de:'Ich benutze.',en:'I make use.',focus:'benutze',subject:'ich'},
-    {de:'Du benutzt?',en:'Do you make use?',focus:'benutzt',subject:'du'},
-    {de:'Er benutzt.',en:'He makes use.',focus:'benutzt',subject:'er'},
-  ]),
-  _verb('gen-verb-besichtigen','A1','besichtigen',{ich:'besichtige',du:'besichtigst',er:'besichtigt',wir:'besichtigen',ihr:'besichtigt',sie:'besichtigen'},'besichtigte','hat besichtigt',[
-    {de:'Ich besichtige.',en:'I visit.',focus:'besichtige',subject:'ich'},
-    {de:'Du besichtigst?',en:'Do you visit?',focus:'besichtigst',subject:'du'},
-    {de:'Er besichtigt.',en:'He visits.',focus:'besichtigt',subject:'er'},
-  ]),
-  _verb('gen-verb-bestellen','A1','bestellen',{ich:'bestelle',du:'bestellst',er:'bestellt',wir:'bestellen',ihr:'bestellt',sie:'bestellen'},'bestellte','hat bestellt',[
+  _verb('gen-verb-bestellen','A1','bestellen',{ich:'bestelle',du:'bestellst',er:'bestellt',wir:'bestellen',ihr:'bestellt',sie:'bestellen'},'bestellte','hat bestellt','standard',[
     {de:'Ich bestelle Bier für alle.',en:'I\'m ordering beer for everyone.',focus:'bestelle'},
     {de:'Die Kanzlerin bestellte mich in ihr Büro.',en:'The Chancellor summoned me to her office.',focus:'bestellte'},
     {de:'Sie wurde zur neuen Pressesprecherin bestellt.',en:'She was appointed as the new press secretary.',focus:'bestellt'},
   ]),
-  _verb('gen-verb-besuchen','A1','besuchen',{ich:'besuche',du:'besuchst',er:'besucht',wir:'besuchen',ihr:'besucht',sie:'besuchen'},'besuchte','hat besucht',[
+  _verb('gen-verb-besuchen','A1','besuchen',{ich:'besuche',du:'besuchst',er:'besucht',wir:'besuchen',ihr:'besucht',sie:'besuchen'},'besuchte','hat besucht','standard',[
     {de:'Wir haben heute unsere Mama in der Seniorenwohnanlage besucht.',en:'We visited our mom in the retirement home today.',focus:'besucht'},
     {de:'Er besuchte das Düsseldorfer Gymnasium.',en:'He attended the high school of Düsseldorf.',focus:'besuchte'},
   ]),
-  _verb('gen-verb-bezahlen','A1','bezahlen',{ich:'bezahle',du:'bezahlst',er:'bezahlt',wir:'bezahlen',ihr:'bezahlt',sie:'bezahlen'},'bezahlte','hat bezahlt',[
-    {de:'Ich möchte bitte bezahlen.',en:'I want to pay please.',focus:'bezahlen'},
-    {de:'Sie bezahlt 30 Euro.',en:'She pays 30 euro.',focus:'bezahlt'},
+  _verb('gen-verb-bezahlen','A1','bezahlen',{ich:'bezahle',du:'bezahlst',er:'bezahlt',wir:'bezahlen',ihr:'bezahlt',sie:'bezahlen'},'bezahlte','hat bezahlt','easy',[
     {de:'Sie bezahlt mir 30 Euro.',en:'She pays me 30 euro.',focus:'bezahlt'},
+    {de:'Du bezahlst?',en:'Do you pay?',focus:'bezahlst',subject:'du'},
   ]),
-  _verb('gen-verb-brauchen','A1','brauchen',{ich:'brauche',du:'brauchst',er:'braucht',wir:'brauchen',ihr:'braucht',sie:'brauchen'},'brauchte','hat gebraucht',[
-    {de:'Ich brauche deine Hilfe.',en:'I need your help.',focus:'brauche'},
-    {de:'Ich brauche nie lang.',en:'It never takes me long.',focus:'brauche'},
+  _verb('gen-verb-brauchen','A1','brauchen',{ich:'brauche',du:'brauchst',er:'braucht',wir:'brauchen',ihr:'braucht',sie:'brauchen'},'brauchte','hat gebraucht','easy',[
     {de:'Dafür brauchen wir dringend eine politische Lösung.',en:'For this, we urgently need a political solution.',focus:'brauchen'},
+    {de:'Du brauchst?',en:'Do you need?',focus:'brauchst',subject:'du'},
   ]),
-  _verb('gen-verb-buchstabieren','A1','buchstabieren',{ich:'buchstabiere',du:'buchstabierst',er:'buchstabiert',wir:'buchstabieren',ihr:'buchstabiert',sie:'buchstabieren'},'buchstabierte','hat buchstabiert',[
-    {de:'Ich buchstabiere.',en:'I spell.',focus:'buchstabiere',subject:'ich'},
-    {de:'Du buchstabierst?',en:'Do you spell?',focus:'buchstabierst',subject:'du'},
-    {de:'Er buchstabiert.',en:'He spells.',focus:'buchstabiert',subject:'er'},
-  ]),
-  _verb('gen-verb-danken','A1','danken',{ich:'danke',du:'dankst',er:'dankt',wir:'danken',ihr:'dankt',sie:'danken'},'dankte','hat gedankt',[
+  _verb('gen-verb-danken','A1','danken',{ich:'danke',du:'dankst',er:'dankt',wir:'danken',ihr:'dankt',sie:'danken'},'dankte','hat gedankt','easy',[
     {de:'Peter hat Michaela mit einem großen Blumenstrauß gedankt.',en:'Peter thanked Michaela with a big bouquet.',focus:['hat','gedankt']},
     {de:'Du dankst?',en:'Do you thank?',focus:'dankst',subject:'du'},
-    {de:'Er dankt.',en:'He thanks.',focus:'dankt',subject:'er'},
   ]),
-  _verb('gen-verb-dauern','A1','dauern',{ich:'dauere',du:'dauerst',er:'dauert',wir:'dauern',ihr:'dauernt',sie:'dauern'},'dauerte','hat gedauert',[
+  _verb('gen-verb-dauern','A1','dauern',{ich:'dauere',du:'dauerst',er:'dauert',wir:'dauern',ihr:'dauernt',sie:'dauern'},'dauerte','hat gedauert','standard',[
     {de:'Der Film dauert zwei Stunden.',en:'The movie lasts two hours.',focus:'dauert'},
-    {de:'Unsere Liebe wird dauern.',en:'Our love will last.',focus:'dauern'},
     {de:'Es dauert, bis die Medizin wirkt.',en:'It takes time for the medicine to work.',focus:'dauert'},
   ]),
-  _verb('gen-verb-drucken','A1','drucken',{ich:'drucke',du:'druckst',er:'druckt',wir:'drucken',ihr:'druckt',sie:'drucken'},'druckte','hat gedruckt',[
-    {de:'Ich drucke.',en:'I print.',focus:'drucke',subject:'ich'},
-    {de:'Du druckst?',en:'Do you print?',focus:'druckst',subject:'du'},
-    {de:'Er druckt.',en:'He prints.',focus:'druckt',subject:'er'},
-  ]),
-  _verb('gen-verb-druecken','A1','drücken',{ich:'drücke',du:'drückst',er:'drückt',wir:'drücken',ihr:'drückt',sie:'drücken'},'drückte','hat gedrückt',[
-    {de:'Drück diesen Knopf nicht!',en:'Don\'t press that button!',focus:'Drück'},
+  _verb('gen-verb-druecken','A1','drücken',{ich:'drücke',du:'drückst',er:'drückt',wir:'drücken',ihr:'drückt',sie:'drücken'},'drückte','hat gedrückt','standard',[
     {de:'Die Feder drückt den Bolzen in die Kerbe.',en:'The spring pushes the bolt into the notch.',focus:'drückt'},
     {de:'Das Wasser drückt gegen den Deich.',en:'The water is pushing against the dike.',focus:'drückt'},
   ]),
-  _verb('gen-verb-einkaufen','A1','einkaufen',{ich:'kaufe ein',du:'kaufst ein',er:'kauft ein',wir:'kaufen ein',ihr:'kauft ein',sie:'kaufen ein'},'kaufte ein','hat eingekauft',[
-    {de:'Ich kaufe ein.',en:'I shop.',focus:'kaufe ein',subject:'ich'},
-    {de:'Du kaufst ein?',en:'Do you shop?',focus:'kaufst ein',subject:'du'},
-    {de:'Er kauft ein.',en:'He shops.',focus:'kauft ein',subject:'er'},
-  ]),
-  _verb('gen-verb-einladen','A1','einladen',{ich:'lade ein',du:'lädst ein',er:'lädt ein',wir:'laden ein',ihr:'ladet ein',sie:'laden ein'},'lud ein','hat eingeladen',[
+  _verb('gen-verb-einladen','A1','einladen',{ich:'lade ein',du:'lädst ein',er:'lädt ein',wir:'laden ein',ihr:'ladet ein',sie:'laden ein'},'lud ein','hat eingeladen','easy',[
     {de:'Darf ich dich auf einen Drink einladen?',en:'May I buy you a drink?',focus:'einladen'},
     {de:'Du lädst ein?',en:'Do you invite?',focus:'lädst ein',subject:'du'},
-    {de:'Er lädt ein.',en:'He invites.',focus:'lädt ein',subject:'er'},
   ]),
-  _verb('gen-verb-einsteigen','A1','einsteigen',{ich:'steige ein',du:'steigst ein',er:'steigt ein',wir:'steigen ein',ihr:'steigt ein',sie:'steigen ein'},'stieg ein','ist eingestiegen',[
-    {de:'Ich steige ein.',en:'I get in or on.',focus:'steige ein',subject:'ich'},
-    {de:'Du steigst ein?',en:'Do you get in or on?',focus:'steigst ein',subject:'du'},
-    {de:'Er steigt ein.',en:'He gets in or on.',focus:'steigt ein',subject:'er'},
-  ]),
-  _verb('gen-verb-enden','A1','enden',{ich:'ende',du:'endest',er:'endet',wir:'enden',ihr:'endet',sie:'enden'},'endete','hat geendet',[
+  _verb('gen-verb-enden','A1','enden',{ich:'ende',du:'endest',er:'endet',wir:'enden',ihr:'endet',sie:'enden'},'endete','hat geendet','easy',[
     {de:'Die Frist endete gestern um 22 Uhr.',en:'The deadline ended yesterday at 10 p.m.',focus:'endete'},
     {de:'Du endest?',en:'Do you end?',focus:'endest',subject:'du'},
-    {de:'Er endet.',en:'He ends.',focus:'endet',subject:'er'},
   ]),
-  _verb('gen-verb-entschuldigen','A1','entschuldigen',{ich:'entschuldige',du:'entschuldigst',er:'entschuldigt',wir:'entschuldigen',ihr:'entschuldigt',sie:'entschuldigen'},'entschuldigte','hat entschuldigt',[
+  _verb('gen-verb-entschuldigen','A1','entschuldigen',{ich:'entschuldige',du:'entschuldigst',er:'entschuldigt',wir:'entschuldigen',ihr:'entschuldigt',sie:'entschuldigen'},'entschuldigte','hat entschuldigt','standard',[
     {de:'Was du getan hast, kann ich nicht entschuldigen.',en:'I can’t excuse what you did.',focus:'entschuldigen'},
-    {de:'Entschuldigen Sie bitte die Störung.',en:'Please excuse my disturbance.',focus:'Entschuldigen'},
     {de:'Die Umstände entschuldigen die Täter nicht, aber sie erklären zum Teil ihre Taten.',en:'The circumstances do not excuse the perpetrators, but they do explain their deeds to some extent.',focus:'entschuldigen'},
   ]),
-  _verb('gen-verb-erklaeren','A1','erklären',{ich:'erkläre',du:'erklärst',er:'erklärt',wir:'erklären',ihr:'erklärt',sie:'erklären'},'erklärte','hat erklärt',[
+  _verb('gen-verb-erklaeren','A1','erklären',{ich:'erkläre',du:'erklärst',er:'erklärt',wir:'erklären',ihr:'erklärt',sie:'erklären'},'erklärte','hat erklärt','standard',[
     {de:'Der Lehrer erklärte (mir) die quadratische Gleichung sehr gut.',en:'The teacher explained the quadratic equation (to me) very well.',focus:'erklärte'},
     {de:'Der CEO erklärte am Freitag seinen Rücktritt.',en:'The CEO announced his retirement on Friday.',focus:'erklärte'},
     {de:'Die Führer der beiden Kriegsparteien erklärten einen Waffenstillstand.',en:'The leaders of the two warring factions declared a cease-fire.',focus:'erklärten'},
   ]),
-  _verb('gen-verb-erlauben','A1','erlauben',{ich:'erlaube',du:'erlaubst',er:'erlaubt',wir:'erlauben',ihr:'erlaubt',sie:'erlauben'},'erlaubte','hat erlaubt',[
+  _verb('gen-verb-erlauben','A1','erlauben',{ich:'erlaube',du:'erlaubst',er:'erlaubt',wir:'erlauben',ihr:'erlaubt',sie:'erlauben'},'erlaubte','hat erlaubt','standard',[
     {de:'Essen ist in der Bibliothek nicht erlaubt.',en:'Eating is not permitted in the library.',focus:'erlaubt'},
     {de:'Meine Mutter hat mir einfach erlaubt, dass ich Cola trinken darf.',en:'My mother has just allowed me to drink cola.',focus:'erlaubt'},
   ]),
-  _verb('gen-verb-erzaehlen','A1','erzählen',{ich:'erzähle',du:'erzählst',er:'erzählt',wir:'erzählen',ihr:'erzählt',sie:'erzählen'},'erzählte','hat erzählt',[
-    {de:'Erzähl mir ein Märchen.',en:'Tell me a fairytale.',focus:'Erzähl'},
+  _verb('gen-verb-erzaehlen','A1','erzählen',{ich:'erzähle',du:'erzählst',er:'erzählt',wir:'erzählen',ihr:'erzählt',sie:'erzählen'},'erzählte','hat erzählt','standard',[
     {de:'Ich habe dir erzählt, dass meine Mutter gestorben ist.',en:'I told you that my mother had died.',focus:'erzählt'},
     {de:'Die Kollegin erzählt von ihrem Urlaub.',en:'The colleague talked about her vacation.',focus:'erzählt'},
   ]),
-  _verb('gen-verb-fehlen','A1','fehlen',{ich:'fehle',du:'fehlst',er:'fehlt',wir:'fehlen',ihr:'fehlt',sie:'fehlen'},'fehlte','hat gefehlt',[
-    {de:'Der Suppe fehlt es an Geschmack.',en:'The soup lacks flavor.',focus:'fehlt'},
+  _verb('gen-verb-fehlen','A1','fehlen',{ich:'fehle',du:'fehlst',er:'fehlt',wir:'fehlen',ihr:'fehlt',sie:'fehlen'},'fehlte','hat gefehlt','standard',[
     {de:'Ich würde es kaufen, aber mir fehlt das Geld.',en:'I would buy it but I don\'t have the money.',focus:'fehlt'},
     {de:'Seit meinem Umzug fehlen mir meine Freunde.',en:'I\'ve been missing my friends since I moved.',focus:'fehlen'},
   ]),
-  _verb('gen-verb-feiern','A1','feiern',{ich:'feiere',du:'feierst',er:'feiert',wir:'feiern',ihr:'feiernt',sie:'feiern'},'feierte','hat gefeiert',[
+  _verb('gen-verb-feiern','A1','feiern',{ich:'feiere',du:'feierst',er:'feiert',wir:'feiern',ihr:'feiernt',sie:'feiern'},'feierte','hat gefeiert','standard',[
     {de:'In dieser Kirche wird jeden Abend die Heilige Messe gefeiert.',en:'In this church, Holy Mass is celebrated every evening.',focus:'gefeiert'},
     {de:'Die Hochzeitsgäste feierten bis zum frühen Morgen.',en:'The wedding guests partied until the early morning.',focus:'feierten'},
     {de:'Alter, ich feier das Lied voll!',en:'I just love this song, mate!',focus:'feier'},
   ]),
-  _verb('gen-verb-fernsehen','A1','fernsehen',{ich:'sehe fern',du:'siehst fern',er:'sieht fern',wir:'sehen fern',ihr:'seht fern',sie:'sehen fern'},'sah fern','hat ferngesehen',[
-    {de:'Ich sehe fern.',en:'I watch television.',focus:'sehe fern',subject:'ich'},
-    {de:'Du siehst fern?',en:'Do you watch television?',focus:'siehst fern',subject:'du'},
-    {de:'Er sieht fern.',en:'He watches television.',focus:'sieht fern',subject:'er'},
-  ]),
-  _verb('gen-verb-fragen','A1','fragen',{ich:'frage',du:'fragst',er:'fragt',wir:'fragen',ihr:'fragt',sie:'fragen'},'fragte','hat gefragt',[
+  _verb('gen-verb-fragen','A1','fragen',{ich:'frage',du:'fragst',er:'fragt',wir:'fragen',ihr:'fragt',sie:'fragen'},'fragte','hat gefragt','standard',[
     {de:'Darf ich dich etwas fragen?',en:'May I ask you something?',focus:'fragen'},
     {de:'Ich frage mich, wer mir helfen kann.',en:'I wonder who can help me.',focus:'frage'},
   ]),
-  _verb('gen-verb-gefallen','A1','gefallen',{ich:'gefalle',du:'gefällst',er:'gefällt',wir:'gefallen',ihr:'gefallt',sie:'gefallen'},'gefiel','hat gefallen',[
-    {de:'Diese Hose gefällt mir.',en:'I like these trousers.',focus:'gefällt'},
-    {de:'Dir wird es hier gefallen.',en:'You\'ll like it here.',focus:'gefallen'},
-  ]),
-  _verb('gen-verb-gehoeren','A1','gehören',{ich:'gehöre',du:'gehörst',er:'gehört',wir:'gehören',ihr:'gehört',sie:'gehören'},'gehörte','hat gehört',[
-    {de:'Das Buch gehört mir.',en:'The book belongs to me.',focus:'gehört'},
+  _verb('gen-verb-gehoeren','A1','gehören',{ich:'gehöre',du:'gehörst',er:'gehört',wir:'gehören',ihr:'gehört',sie:'gehören'},'gehörte','hat gehört','standard',[
     {de:'Ihm gehört das ganze Land.',en:'He owns the whole country.',focus:'gehört'},
     {de:'Es gehört sehr viel Selbstvertrauen dazu um so etwas zu tun.',en:'It takes a lot of self-confidence to do something like this.',focus:'gehört'},
   ]),
-  _verb('gen-verb-gewinnen','A1','gewinnen',{ich:'gewinne',du:'gewinnst',er:'gewinnt',wir:'gewinnen',ihr:'gewinnt',sie:'gewinnen'},'gewann','hat gewonnen',[
-    {de:'Ich gewinne.',en:'I win.',focus:'gewinne',subject:'ich'},
-    {de:'Du gewinnst?',en:'Do you win?',focus:'gewinnst',subject:'du'},
-    {de:'Er gewinnt.',en:'He wins.',focus:'gewinnt',subject:'er'},
-  ]),
-  _verb('gen-verb-glauben','A1','glauben',{ich:'glaube',du:'glaubst',er:'glaubt',wir:'glauben',ihr:'glaubt',sie:'glauben'},'glaubte','hat geglaubt',[
-    {de:'Glaubst du diese Geschichte?',en:'Do you believe this story?',focus:'Glaubst'},
-    {de:'Glaubst du an Engel?',en:'Do you believe in angels?',focus:'Glaubst'},
-    {de:'Woran glaubst du?',en:'What do you believe in?',focus:'glaubst'},
-  ]),
-  _verb('gen-verb-gratulieren','A1','gratulieren',{ich:'gratuliere',du:'gratulierst',er:'gratuliert',wir:'gratulieren',ihr:'gratuliert',sie:'gratulieren'},'gratulierte','hat gratuliert',[
-    {de:'Ich gratuliere dir.',en:'I congratulate you.',focus:'gratuliere'},
+  _verb('gen-verb-gratulieren','A1','gratulieren',{ich:'gratuliere',du:'gratulierst',er:'gratuliert',wir:'gratulieren',ihr:'gratuliert',sie:'gratulieren'},'gratulierte','hat gratuliert','easy',[
     {de:'Ich gratuliere dir zu deinem Geburtstag.',en:'I congratulate you on your birthday.',focus:'gratuliere'},
+    {de:'Du gratulierst?',en:'Do you congratulate?',focus:'gratulierst',subject:'du'},
   ]),
-  _verb('gen-verb-grillen','A1','grillen',{ich:'grille',du:'grillst',er:'grillt',wir:'grillen',ihr:'grillt',sie:'grillen'},'grillte','hat gegrillt',[
-    {de:'Ich grille.',en:'I grill.',focus:'grille',subject:'ich'},
-    {de:'Du grillst?',en:'Do you grill?',focus:'grillst',subject:'du'},
-    {de:'Er grillt.',en:'He grills.',focus:'grillt',subject:'er'},
-  ]),
-  _verb('gen-verb-halten','A1','halten',{ich:'halte',du:'hältst',er:'hält',wir:'halten',ihr:'haltet',sie:'halten'},'hielt','hat gehalten',[
-    {de:'einen Elfmeter halten',en:'to save a penalty kick',focus:'halten'},
-    {de:'Haltet den Dieb!',en:'Stop the thief!',focus:'Haltet'},
-  ]),
-  _verb('gen-verb-heiraten','A1','heiraten',{ich:'heirate',du:'heiratest',er:'heiratet',wir:'heiraten',ihr:'heiratet',sie:'heiraten'},'heiratete','hat geheiratet',[
+  _verb('gen-verb-heiraten','A1','heiraten',{ich:'heirate',du:'heiratest',er:'heiratet',wir:'heiraten',ihr:'heiratet',sie:'heiraten'},'heiratete','hat geheiratet','easy',[
     {de:'Wer würde solche Leute heiraten wollen?',en:'Who would want to marry such people?',focus:'heiraten'},
     {de:'Du heiratest?',en:'Do you marry?',focus:'heiratest',subject:'du'},
-    {de:'Er heiratet.',en:'He marries.',focus:'heiratet',subject:'er'},
   ]),
-  _verb('gen-verb-holen','A1','holen',{ich:'hole',du:'holst',er:'holt',wir:'holen',ihr:'holt',sie:'holen'},'holte','hat geholt',[
-    {de:'Hol noch einen Stuhl!',en:'Go get another chair!',focus:'Hol'},
+  _verb('gen-verb-holen','A1','holen',{ich:'hole',du:'holst',er:'holt',wir:'holen',ihr:'holt',sie:'holen'},'holte','hat geholt','standard',[
     {de:'Kannst du deine Mutter holen? Ich muss dringend mit ihr sprechen.',en:'Can you go get your mother for me? I\'ve got to talk to her urgently.',focus:'holen'},
     {de:'Kannst du deine Mutter holen? Ich muss dringend mit ihr sprechen.',en:'Can you go get your mother for me? I\'ve got to talk to her urgently.',focus:'holen'},
   ]),
-  _verb('gen-verb-hoeren','A1','hören',{ich:'höre',du:'hörst',er:'hört',wir:'hören',ihr:'hört',sie:'hören'},'hörte','hat gehört',[
-    {de:'Ich hörte ihn rufen.',en:'I heard him call.',focus:'hörte'},
-    {de:'Ich hatte ihn rufen hören.',en:'I heard him call.',focus:['hatte','hören']},
+  _verb('gen-verb-hoeren','A1','hören',{ich:'höre',du:'hörst',er:'hört',wir:'hören',ihr:'hört',sie:'hören'},'hörte','hat gehört','easy',[
     {de:'Du musst auf deine Eltern hören.',en:'You have to listen to your parents.',focus:['auf','hören']},
+    {de:'Du hörst?',en:'Do you hear through the ear)?',focus:'hörst',subject:'du'},
   ]),
-  _verb('gen-verb-kaufen','A1','kaufen',{ich:'kaufe',du:'kaufst',er:'kauft',wir:'kaufen',ihr:'kauft',sie:'kaufen'},'kaufte','hat gekauft',[
-    {de:'Sie kauft ein Auto.',en:'She is buying a car.',focus:'kauft'},
+  _verb('gen-verb-kaufen','A1','kaufen',{ich:'kaufe',du:'kaufst',er:'kauft',wir:'kaufen',ihr:'kauft',sie:'kaufen'},'kaufte','hat gekauft','standard',[
     {de:'Ich glaube, wir haben zu viel gekauft.',en:'I think we bought too much.',focus:['haben','gekauft']},
     {de:'Ich kaufe meinem Sohn einen Computer.',en:'I\'m buying my son a computer.',focus:'kaufe'},
   ]),
-  _verb('gen-verb-kennen','A1','kennen',{ich:'kenne',du:'kennst',er:'kennt',wir:'kennen',ihr:'kennt',sie:'kennen'},'kannte','hat gekannt',[
-    {de:'Ich kenne.',en:'I know.',focus:'kenne',subject:'ich'},
-    {de:'Du kennst?',en:'Do you know?',focus:'kennst',subject:'du'},
-    {de:'Er kennt.',en:'He knows.',focus:'kennt',subject:'er'},
-  ]),
-  _verb('gen-verb-kochen','A1','kochen',{ich:'koche',du:'kochst',er:'kocht',wir:'kochen',ihr:'kocht',sie:'kochen'},'kochte','hat gekocht',[
-    {de:'Ich koche.',en:'I cook.',focus:'koche',subject:'ich'},
-    {de:'Du kochst?',en:'Do you cook?',focus:'kochst',subject:'du'},
-    {de:'Er kocht.',en:'He cooks.',focus:'kocht',subject:'er'},
-  ]),
-  _verb('gen-verb-kriegen','A1','kriegen',{ich:'kriege',du:'kriegst',er:'kriegt',wir:'kriegen',ihr:'kriegt',sie:'kriegen'},'kriegte','hat gekriegt',[
+  _verb('gen-verb-kriegen','A1','kriegen',{ich:'kriege',du:'kriegst',er:'kriegt',wir:'kriegen',ihr:'kriegt',sie:'kriegen'},'kriegte','hat gekriegt','easy',[
     {de:'Wirst du es heute fertig kriegen?',en:'Will you get it ready today?',focus:'kriegen'},
-    {de:'Hab ich geschenkt gekriegt.',en:'I got it as a present.',focus:'gekriegt'},
-    {de:'Ich krieg\'s geschenkt.',en:'I get it for free.',focus:'krieg'},
+    {de:'Du kriegst?',en:'Do you get?',focus:'kriegst',subject:'du'},
   ]),
-  _verb('gen-verb-kuemmern','A1','kümmern',{ich:'kümmere',du:'kümmerst',er:'kümmert',wir:'kümmern',ihr:'kümmernt',sie:'kümmern'},'kümmerte','hat gekümmert',[
+  _verb('gen-verb-kuemmern','A1','kümmern',{ich:'kümmere',du:'kümmerst',er:'kümmert',wir:'kümmern',ihr:'kümmernt',sie:'kümmern'},'kümmerte','hat gekümmert','easy',[
     {de:'Wer kümmert sich um die Ausbildung der Lehrlinge?',en:'Who takes care of training the interns?',focus:'kümmert sich'},
     {de:'Du kümmerst?',en:'Do you take care?',focus:'kümmerst',subject:'du'},
-    {de:'Er kümmert.',en:'He takes care.',focus:'kümmert',subject:'er'},
   ]),
-  _verb('gen-verb-lachen','A1','lachen',{ich:'lache',du:'lachst',er:'lacht',wir:'lachen',ihr:'lacht',sie:'lachen'},'lachte','hat gelacht',[
-    {de:'über einen Witz lachen',en:'to laugh at a joke',focus:'lachen'},
+  _verb('gen-verb-lachen','A1','lachen',{ich:'lache',du:'lachst',er:'lacht',wir:'lachen',ihr:'lacht',sie:'lachen'},'lachte','hat gelacht','easy',[
     {de:'Das Glück hat ihr gelacht',en:'Fortune had smiled upon her',focus:'gelacht'},
+    {de:'Du lachst?',en:'Do you laugh?',focus:'lachst',subject:'du'},
   ]),
-  _verb('gen-verb-leben','A1','leben',{ich:'lebe',du:'lebst',er:'lebt',wir:'leben',ihr:'lebt',sie:'leben'},'lebte','hat gelebt',[
-    {de:'Lebt dein Uropa noch?',en:'Is your great-grandpa still alive?',focus:'Lebt'},
+  _verb('gen-verb-leben','A1','leben',{ich:'lebe',du:'lebst',er:'lebt',wir:'leben',ihr:'lebt',sie:'leben'},'lebte','hat gelebt','standard',[
     {de:'Ich lebe in der Schillerstraße in der Nähe des Stadtzentrums.',en:'I live on Schiller street near the city center.',focus:'lebe'},
     {de:'Die Dinosaurier lebten für Jahrmillionen auf der Erde bevor der Mensch erschien.',en:'The dinosaurs existed on Earth for millions of years prior to the rise of man.',focus:'lebten'},
   ]),
-  _verb('gen-verb-legen','A1','legen',{ich:'lege',du:'legst',er:'legt',wir:'legen',ihr:'legt',sie:'legen'},'legte','hat gelegt',[
-    {de:'ein Feuer legen',en:'to set a fire',focus:'legen'},
+  _verb('gen-verb-legen','A1','legen',{ich:'lege',du:'legst',er:'legt',wir:'legen',ihr:'legt',sie:'legen'},'legte','hat gelegt','standard',[
     {de:'Leg deine Sachen auf den Stuhl!',en:'Put your things on the chair!',focus:'Leg'},
     {de:'Ich lege mich auf das Bett.',en:'I lie down on the bed.',focus:'lege mich'},
   ]),
-  _verb('gen-verb-lieben','A1','lieben',{ich:'liebe',du:'liebst',er:'liebt',wir:'lieben',ihr:'liebt',sie:'lieben'},'liebte','hat geliebt',[
-    {de:'Ich liebe dich.',en:'I love you.',focus:'liebe'},
+  _verb('gen-verb-lieben','A1','lieben',{ich:'liebe',du:'liebst',er:'liebt',wir:'lieben',ihr:'liebt',sie:'lieben'},'liebte','hat geliebt','easy',[
     {de:'Ich liebe die französische Sprache.',en:'I love the French language.',focus:'liebe'},
+    {de:'Du liebst?',en:'Do you love?',focus:'liebst',subject:'du'},
   ]),
-  _verb('gen-verb-liegen','A1','liegen',{ich:'liege',du:'liegst',er:'liegt',wir:'liegen',ihr:'liegt',sie:'liegen'},'lag','hat gelegen',[
+  _verb('gen-verb-liegen','A1','liegen',{ich:'liege',du:'liegst',er:'liegt',wir:'liegen',ihr:'liegt',sie:'liegen'},'lag','hat gelegen','standard',[
     {de:'Woran liegt es, dass er immer wieder scheitert?',en:'Why does he fail time and time again?',focus:'Woran liegt'},
     {de:'Das liegt an seiner Einstellung.',en:'That\'s because of his attitude.',focus:'liegt an'},
   ]),
-  _verb('gen-verb-mieten','A1','mieten',{ich:'miete',du:'mietest',er:'mietet',wir:'mieten',ihr:'mietet',sie:'mieten'},'mietete','hat gemietet',[
-    {de:'Ich miete.',en:'I hire.',focus:'miete',subject:'ich'},
-    {de:'Du mietest?',en:'Do you hire?',focus:'mietest',subject:'du'},
-    {de:'Er mietet.',en:'He hires.',focus:'mietet',subject:'er'},
-  ]),
-  _verb('gen-verb-mitkommen','A1','mitkommen',{ich:'komme mit',du:'kommst mit',er:'kommt mit',wir:'kommen mit',ihr:'kommt mit',sie:'kommen mit'},'kam mit','ist mitgekommen',[
+  _verb('gen-verb-mitkommen','A1','mitkommen',{ich:'komme mit',du:'kommst mit',er:'kommt mit',wir:'kommen mit',ihr:'kommt mit',sie:'kommen mit'},'kam mit','ist mitgekommen','easy',[
     {de:'Er kam (mit uns) mit.',en:'He came along (with us).',focus:['kam','mit']},
     {de:'Du kommst mit?',en:'Do you come with?',focus:'kommst mit',subject:'du'},
-    {de:'Er kommt mit.',en:'He comes with.',focus:'kommt mit',subject:'er'},
   ]),
-  _verb('gen-verb-mitnehmen','A1','mitnehmen',{ich:'nehme mit',du:'nimmst mit',er:'nimmt mit',wir:'nehmen mit',ihr:'nehmt mit',sie:'nehmen mit'},'nahm mit','hat mitgenommen',[
+  _verb('gen-verb-mitnehmen','A1','mitnehmen',{ich:'nehme mit',du:'nimmst mit',er:'nimmt mit',wir:'nehmen mit',ihr:'nehmt mit',sie:'nehmen mit'},'nahm mit','hat mitgenommen','easy',[
     {de:'Meine Frau hat mich verlassen und die Kinder mitgenommen.',en:'My wife left me and took the kids away.',focus:'mitgenommen'},
     {de:'Du nimmst mit?',en:'Do you take with?',focus:'nimmst mit',subject:'du'},
-    {de:'Er nimmt mit.',en:'He takes with.',focus:'nimmt mit',subject:'er'},
   ]),
-  _verb('gen-verb-rauchen','A1','rauchen',{ich:'rauche',du:'rauchst',er:'raucht',wir:'rauchen',ihr:'raucht',sie:'rauchen'},'rauchte','hat geraucht',[
+  _verb('gen-verb-rauchen','A1','rauchen',{ich:'rauche',du:'rauchst',er:'raucht',wir:'rauchen',ihr:'raucht',sie:'rauchen'},'rauchte','hat geraucht','easy',[
     {de:'Das abgebrannte Haus raucht noch immer.',en:'The burned-down house is still smoking.',focus:'raucht'},
-    {de:'Ich rauche nicht.',en:'I don’t smoke.',focus:'rauche'},
-    {de:'Er raucht eine Zigarette.',en:'He’s smoking a cigarette.',focus:'raucht'},
+    {de:'Du rauchst?',en:'Do you smoke?',focus:'rauchst',subject:'du'},
   ]),
-  _verb('gen-verb-reparieren','A1','reparieren',{ich:'repariere',du:'reparierst',er:'repariert',wir:'reparieren',ihr:'repariert',sie:'reparieren'},'reparierte','hat repariert',[
-    {de:'Ich repariere.',en:'I repair.',focus:'repariere',subject:'ich'},
-    {de:'Du reparierst?',en:'Do you repair?',focus:'reparierst',subject:'du'},
-    {de:'Er repariert.',en:'He repairs.',focus:'repariert',subject:'er'},
-  ]),
-  _verb('gen-verb-riechen','A1','riechen',{ich:'rieche',du:'riechst',er:'riecht',wir:'riechen',ihr:'riecht',sie:'riechen'},'roch','hat gerochen',[
-    {de:'Ich rieche dein Parfüm.',en:'I smell your perfume.',focus:'rieche'},
+  _verb('gen-verb-riechen','A1','riechen',{ich:'rieche',du:'riechst',er:'riecht',wir:'riechen',ihr:'riecht',sie:'riechen'},'roch','hat gerochen','easy',[
     {de:'Im Haus riecht es nach gebratenem Fisch.',en:'In the house it smells like fried fish.',focus:'riecht'},
-    {de:'Der Kuchen riecht lecker!',en:'The cake smells delicious!',focus:'riecht'},
+    {de:'Du riechst?',en:'Do you smell?',focus:'riechst',subject:'du'},
   ]),
-  _verb('gen-verb-sagen','A1','sagen',{ich:'sage',du:'sagst',er:'sagt',wir:'sagen',ihr:'sagt',sie:'sagen'},'sagte','hat gesagt',[
+  _verb('gen-verb-sagen','A1','sagen',{ich:'sage',du:'sagst',er:'sagt',wir:'sagen',ihr:'sagt',sie:'sagen'},'sagte','hat gesagt','standard',[
     {de:'Ich habe nicht verstanden, was sie gesagt hat.',en:'I didn\'t understand what she said.',focus:'gesagt'},
     {de:'Sie hat mir gesagt, dass sie später kommt.',en:'She told me that she would be late.',focus:'gesagt'},
     {de:'Schubs mich nicht oder ich sag\'s!',en:'Stop shoving me, or I\'m telling!',focus:'sags'},
   ]),
-  _verb('gen-verb-scheinen','A1','scheinen',{ich:'scheine',du:'scheinst',er:'scheint',wir:'scheinen',ihr:'scheint',sie:'scheinen'},'schien','hat geschienen',[
+  _verb('gen-verb-scheinen','A1','scheinen',{ich:'scheine',du:'scheinst',er:'scheint',wir:'scheinen',ihr:'scheint',sie:'scheinen'},'schien','hat geschienen','easy',[
     {de:'Es scheint mir, dass …',en:'It seems to me that …',focus:'scheint'},
-    {de:'Das scheint zu funktionieren.',en:'This seems to work.',focus:'scheint'},
-    {de:'Du scheinst erschöpft.',en:'You seem exhausted.',focus:'scheinst'},
+    {de:'Du scheinst?',en:'Do you shine?',focus:'scheinst',subject:'du'},
   ]),
-  _verb('gen-verb-schicken','A1','schicken',{ich:'schicke',du:'schickst',er:'schickt',wir:'schicken',ihr:'schickt',sie:'schicken'},'schickte','hat geschickt',[
+  _verb('gen-verb-schicken','A1','schicken',{ich:'schicke',du:'schickst',er:'schickt',wir:'schicken',ihr:'schickt',sie:'schicken'},'schickte','hat geschickt','standard',[
     {de:'Sie hat mir einen Liebesbrief geschickt.',en:'She sent me a love letter.',focus:'geschickt'},
     {de:'Mein Chef will mich nach Frankfurt schicken, um an den Verhandlungen teilzunehmen.',en:'My boss wants to send me to Frankfurt to take part in the negotiations.',focus:'schicken'},
     {de:'Es schickt sich nicht, das zu sagen.',en:'It is not befitting to say such a thing.',focus:'schickt'},
   ]),
-  _verb('gen-verb-schliessen','A1','schließen',{ich:'schließe',du:'schließt',er:'schließt',wir:'schließen',ihr:'schließt',sie:'schließen'},'schloss','hat geschlossen',[
+  _verb('gen-verb-schliessen','A1','schließen',{ich:'schließe',du:'schließt',er:'schließt',wir:'schließen',ihr:'schließt',sie:'schließen'},'schloss','hat geschlossen','easy',[
     {de:'Das Geschäft schließt um 18.00 Uhr.',en:'The store closes at 6 p.m.',focus:'schließt'},
     {de:'Du schließt?',en:'Do you shut?',focus:'schließt',subject:'du'},
-    {de:'Er schließt.',en:'He shuts.',focus:'schließt',subject:'er'},
   ]),
-  _verb('gen-verb-schmecken','A1','schmecken',{ich:'schmecke',du:'schmeckst',er:'schmeckt',wir:'schmecken',ihr:'schmeckt',sie:'schmecken'},'schmeckte','hat geschmeckt',[
+  _verb('gen-verb-schmecken','A1','schmecken',{ich:'schmecke',du:'schmeckst',er:'schmeckt',wir:'schmecken',ihr:'schmeckt',sie:'schmecken'},'schmeckte','hat geschmeckt','easy',[
     {de:'Das Bier schmeckt sehr gut.',en:'The beer tastes very good.',focus:'schmeckt'},
-    {de:'Hat es geschmeckt?',en:'Did you enjoy it (the food)?',focus:'geschmeckt'},
+    {de:'Du schmeckst?',en:'Do you taste?',focus:'schmeckst',subject:'du'},
   ]),
-  _verb('gen-verb-spielen','A1','spielen',{ich:'spiele',du:'spielst',er:'spielt',wir:'spielen',ihr:'spielt',sie:'spielen'},'spielte','hat gespielt',[
-    {de:'Die Kinder spielen draußen.',en:'The children are playing outside.',focus:'spielen'},
+  _verb('gen-verb-spielen','A1','spielen',{ich:'spiele',du:'spielst',er:'spielt',wir:'spielen',ihr:'spielt',sie:'spielen'},'spielte','hat gespielt','easy',[
     {de:'Die Katze spielt mit einer Schnur.',en:'The cat is playing with a string.',focus:'spielt'},
-    {de:'Ich spiele Klavier',en:'I play the piano',focus:'spiele'},
+    {de:'Du spielst?',en:'Do you play?',focus:'spielst',subject:'du'},
   ]),
-  _verb('gen-verb-stellen','A1','stellen',{ich:'stelle',du:'stellst',er:'stellt',wir:'stellen',ihr:'stellt',sie:'stellen'},'stellte','hat gestellt',[
+  _verb('gen-verb-stellen','A1','stellen',{ich:'stelle',du:'stellst',er:'stellt',wir:'stellen',ihr:'stellt',sie:'stellen'},'stellte','hat gestellt','standard',[
     {de:'Stell die Flasche auf den Boden!',en:'Put the bottle on the floor!',focus:'Stell'},
     {de:'Die Beklagte stellte den Antrag, die Klage abzuweisen.',en:'The defendant lodged the application to reject the claim.',focus:'stellte'},
     {de:'Kann ich dir eine Frage stellen?',en:'Can I ask you a question?',focus:'stellen'},
   ]),
-  _verb('gen-verb-studieren','A1','studieren',{ich:'studiere',du:'studierst',er:'studiert',wir:'studieren',ihr:'studiert',sie:'studieren'},'studierte','hat studiert',[
-    {de:'Sie studiert Chemie.',en:'She studies chemistry.',focus:'studiert'},
-    {de:'Seit wann studierst du?',en:'For how long have you been a student?',focus:'studierst'},
+  _verb('gen-verb-studieren','A1','studieren',{ich:'studiere',du:'studierst',er:'studiert',wir:'studieren',ihr:'studiert',sie:'studieren'},'studierte','hat studiert','easy',[
     {de:'Er studiert den Nestbau der Ameisen.',en:'He studies the nest building of ants.',focus:'studiert'},
+    {de:'Du studierst?',en:'Do you study at university or college level?',focus:'studierst',subject:'du'},
   ]),
-  _verb('gen-verb-telefonieren','A1','telefonieren',{ich:'telefoniere',du:'telefonierst',er:'telefoniert',wir:'telefonieren',ihr:'telefoniert',sie:'telefonieren'},'telefonierte','hat telefoniert',[
+  _verb('gen-verb-telefonieren','A1','telefonieren',{ich:'telefoniere',du:'telefonierst',er:'telefoniert',wir:'telefonieren',ihr:'telefoniert',sie:'telefonieren'},'telefonierte','hat telefoniert','standard',[
     {de:'Peter kommt gleich, er telefoniert noch mit seinen Eltern.',en:'Peter is going to be here in a bit, he\'s still on call with his parents.',focus:'telefoniert'},
     {de:'Ich habe mich schon mit Paula abgestimmt, wir haben vorhin telefoniert.',en:'I already coordinated with Paula, we had a phone call earlier.',focus:'telefoniert'},
   ]),
-  _verb('gen-verb-tun','A1','tun',{ich:'tue',du:'tust',er:'tut',wir:'tun',ihr:'tunt',sie:'tun'},'tat','hat getan',[
+  _verb('gen-verb-tun','A1','tun',{ich:'tue',du:'tust',er:'tut',wir:'tun',ihr:'tunt',sie:'tun'},'tat','hat getan','easy',[
     {de:'Man tut, was man kann.',en:'One does what one can.',focus:'tut'},
     {de:'Du tust?',en:'Do you do?',focus:'tust',subject:'du'},
-    {de:'Er tut.',en:'He dos.',focus:'tut',subject:'er'},
   ]),
-  _verb('gen-verb-umziehen','A1','umziehen',{ich:'ziehe um',du:'ziehst um',er:'zieht um',wir:'ziehen um',ihr:'zieht um',sie:'ziehen um'},'zog um','ist umgezogen',[
-    {de:'Ich ziehe um.',en:'I move.',focus:'ziehe um',subject:'ich'},
-    {de:'Du ziehst um?',en:'Do you move?',focus:'ziehst um',subject:'du'},
-    {de:'Er zieht um.',en:'He moves.',focus:'zieht um',subject:'er'},
-  ]),
-  _verb('gen-verb-unterschreiben','A1','unterschreiben',{ich:'unterschreibe',du:'unterschreibst',er:'unterschreibt',wir:'unterschreiben',ihr:'unterschreibt',sie:'unterschreiben'},'unterschrieb','hat unterschrieben',[
+  _verb('gen-verb-unterschreiben','A1','unterschreiben',{ich:'unterschreibe',du:'unterschreibst',er:'unterschreibt',wir:'unterschreiben',ihr:'unterschreibt',sie:'unterschreiben'},'unterschrieb','hat unterschrieben','easy',[
     {de:'Unterschreiben Sie bitte auf der punktierten Linie.',en:'Please sign on the dotted line.',focus:'Unterschreiben'},
     {de:'Du unterschreibst?',en:'Do you sign?',focus:'unterschreibst',subject:'du'},
-    {de:'Er unterschreibt.',en:'He signs.',focus:'unterschreibt',subject:'er'},
   ]),
-  _verb('gen-verb-verdienen','A1','verdienen',{ich:'verdiene',du:'verdienst',er:'verdient',wir:'verdienen',ihr:'verdient',sie:'verdienen'},'verdiente','hat verdient',[
+  _verb('gen-verb-verdienen','A1','verdienen',{ich:'verdiene',du:'verdienst',er:'verdient',wir:'verdienen',ihr:'verdient',sie:'verdienen'},'verdiente','hat verdient','standard',[
     {de:'Ich verdiene viel Geld bei meinem Job.',en:'I make a lot of money at my job.',focus:'verdiene'},
     {de:'Die Bank verdient an diesen Zinsen üppig.',en:'The bank earns lavishly on these interest rates.',focus:'verdient an'},
     {de:'Jemand hat kräftig daran verdient.',en:'Someone made some big money on it.',focus:'daran verdient'},
   ]),
-  _verb('gen-verb-verkaufen','A1','verkaufen',{ich:'verkaufe',du:'verkaufst',er:'verkauft',wir:'verkaufen',ihr:'verkauft',sie:'verkaufen'},'verkaufte','hat verkauft',[
+  _verb('gen-verb-verkaufen','A1','verkaufen',{ich:'verkaufe',du:'verkaufst',er:'verkauft',wir:'verkaufen',ihr:'verkauft',sie:'verkaufen'},'verkaufte','hat verkauft','standard',[
     {de:'Ich möchte mein Auto verkaufen, willst du es kaufen?',en:'I want to sell my car, do you want to buy it?',focus:'verkaufen'},
     {de:'Diese Spielzeuge verkaufen sich im Dezember gut.',en:'These toys sell well in December.',focus:'verkaufen'},
   ]),
-  _verb('gen-verb-vermieten','A1','vermieten',{ich:'vermiete',du:'vermietest',er:'vermietet',wir:'vermieten',ihr:'vermietet',sie:'vermieten'},'vermietete','hat vermietet',[
-    {de:'Ich vermiete.',en:'I rent.',focus:'vermiete',subject:'ich'},
-    {de:'Du vermietest?',en:'Do you rent?',focus:'vermietest',subject:'du'},
-    {de:'Er vermietet.',en:'He rents.',focus:'vermietet',subject:'er'},
-  ]),
-  _verb('gen-verb-vorstellen','A1','vorstellen',{ich:'stelle vor',du:'stellst vor',er:'stellt vor',wir:'stellen vor',ihr:'stellt vor',sie:'stellen vor'},'stellte vor','hat vorgestellt',[
-    {de:'Ich kann\'s mir nicht vorstellen!',en:'I can\'t imagine this!',focus:['mir','vorstellen']},
+  _verb('gen-verb-vorstellen','A1','vorstellen',{ich:'stelle vor',du:'stellst vor',er:'stellt vor',wir:'stellen vor',ihr:'stellt vor',sie:'stellen vor'},'stellte vor','hat vorgestellt','standard',[
     {de:'Ehrlich gesagt, habe ich es mir schlimmer vorgestellt.',en:'Honestly, I imagined it would be worse.',focus:['mir','vorgestellt']},
     {de:'als du dir vorstellen kannst.',en:'(more) than you can imagine.',focus:'dir vorstellen'},
   ]),
-  _verb('gen-verb-wandern','A1','wandern',{ich:'wandere',du:'wanderst',er:'wandert',wir:'wandern',ihr:'wandernt',sie:'wandern'},'wanderte','ist gewandert',[
+  _verb('gen-verb-wandern','A1','wandern',{ich:'wandere',du:'wanderst',er:'wandert',wir:'wandern',ihr:'wandernt',sie:'wandern'},'wanderte','ist gewandert','standard',[
     {de:'Ich war im Wald wandern, als ich das Reh sah.',en:'I was hiking in the woods when I saw the deer.',focus:'wandern'},
     {de:'Lassen Sie Ihren Gedanken einfach wandern.',en:'Just let your thoughts wander.',focus:'wandern'},
     {de:'Die Elektronen wandern zur Anode.',en:'The electrons migrate to the anode.',focus:'wandern'},
   ]),
-  _verb('gen-verb-warten','A1','warten',{ich:'warte',du:'wartest',er:'wartet',wir:'warten',ihr:'wartet',sie:'warten'},'wartete','hat gewartet',[
-    {de:'Ich warte.',en:'I wait.',focus:'warte',subject:'ich'},
-    {de:'Du wartest?',en:'Do you wait?',focus:'wartest',subject:'du'},
-    {de:'Er wartet.',en:'He waits.',focus:'wartet',subject:'er'},
-  ]),
-  _verb('gen-verb-wehtun','A1','wehtun',{ich:'tu weh',du:'tust weh',er:'tut weh',wir:'tun weh',ihr:'tunt weh',sie:'tun weh'},'tat weh','hat wehgetan',[
-    {de:'Ich tue dir weh.',en:'I hurt you.',focus:['tue','weh']},
-    {de:'Außerdem tut ihr der Arm weh.',en:'Besides, her arm hurts.',focus:['tut','weh']},
-    {de:'Das hat nicht wirklich wehgetan.',en:'That didn\'t hurt.',focus:'wehgetan'},
-  ]),
-  _verb('gen-verb-werden','A1','werden',{ich:'werde',du:'wirst',er:'wird',wir:'werden',ihr:'werdet',sie:'werden'},'wurde','ist geworden',[
-    {de:'Ich werde nach Hause gehen.',en:'I will go home.',focus:'werde'},
-    {de:'Du wirst?',en:'Do you will?',focus:'wirst',subject:'du'},
-    {de:'Er wird.',en:'He wills.',focus:'wird',subject:'er'},
-  ]),
-  _verb('gen-verb-wiederholen','A1','wiederholen',{ich:'wiederhole',du:'wiederholst',er:'wiederholt',wir:'wiederholen',ihr:'wiederholt',sie:'wiederholen'},'wiederholte','hat wiederholt',[
-    {de:'Ich wiederhole.',en:'I repeat.',focus:'wiederhole',subject:'ich'},
-    {de:'Du wiederholst?',en:'Do you repeat?',focus:'wiederholst',subject:'du'},
-    {de:'Er wiederholt.',en:'He repeats.',focus:'wiederholt',subject:'er'},
-  ]),
-  _verb('gen-verb-zahlen','A1','zahlen',{ich:'zahle',du:'zahlst',er:'zahlt',wir:'zahlen',ihr:'zahlt',sie:'zahlen'},'zahlte','hat gezahlt',[
+  _verb('gen-verb-zahlen','A1','zahlen',{ich:'zahle',du:'zahlst',er:'zahlt',wir:'zahlen',ihr:'zahlt',sie:'zahlen'},'zahlte','hat gezahlt','standard',[
     {de:'Ich muss meine Steuern zahlen.',en:'I have to pay my taxes.',focus:'zahlen'},
     {de:'Er muss noch die Gebühr an die Verwaltung zahlen.',en:'He still has to pay the fee to the administration.',focus:['an','zahlen']},
     {de:'Ich will keinen Fehler machen, für den ich später zahlen muss.',en:'I don\'t want to make a mistake that I\'ll have to pay for later.',focus:['für','zahlen']},
   ]),
-  _verb('gen-verb-oeffnen','A1','öffnen',{ich:'öffne',du:'öffnest',er:'öffnet',wir:'öffnen',ihr:'öffnet',sie:'öffnen'},'öffnete','hat geöffnet',[
+  _verb('gen-verb-oeffnen','A1','öffnen',{ich:'öffne',du:'öffnest',er:'öffnet',wir:'öffnen',ihr:'öffnet',sie:'öffnen'},'öffnete','hat geöffnet','easy',[
     {de:'Das Kind öffnete die Fenster.',en:'The child opened the windows.',focus:'öffnete'},
     {de:'Du öffnest?',en:'Do you open?',focus:'öffnest',subject:'du'},
-    {de:'Er öffnet.',en:'He opens.',focus:'öffnet',subject:'er'},
   ]),
-  _verb('gen-verb-uebernachten','A1','übernachten',{ich:'übernachte',du:'übernachtest',er:'übernachtet',wir:'übernachten',ihr:'übernachtet',sie:'übernachten'},'übernachtete','hat übernachtet',[
+  _verb('gen-verb-uebernachten','A1','übernachten',{ich:'übernachte',du:'übernachtest',er:'übernachtet',wir:'übernachten',ihr:'übernachtet',sie:'übernachten'},'übernachtete','hat übernachtet','easy',[
     {de:'Mama? Kann ich heute bei der Sarah übernachten?',en:'Mum? May I sleep over at Sarah’s tonight?',focus:'übernachten'},
     {de:'Du übernachtest?',en:'Do you stay overnight?',focus:'übernachtest',subject:'du'},
-    {de:'Er übernachtet.',en:'He stays overnight.',focus:'übernachtet',subject:'er'},
   ]),
-  _verb('gen-verb-ueberweisen','A1','überweisen',{ich:'überweise',du:'überweist',er:'überweist',wir:'überweisen',ihr:'überweist',sie:'überweisen'},'überwies','hat überwiesen',[
+  _verb('gen-verb-ueberweisen','A1','überweisen',{ich:'überweise',du:'überweist',er:'überweist',wir:'überweisen',ihr:'überweist',sie:'überweisen'},'überwies','hat überwiesen','standard',[
     {de:'Sie müssen den Betrag sofort überweisen.',en:'You have to transfer the amount immediately.',focus:'überweisen'},
     {de:'Können Sie das Geld auf mein Konto überweisen?',en:'Can you transfer the money to my account?',focus:['auf','überweisen']},
   ]),
-  _verb('gen-verb-abschliessen','A2','abschließen',{ich:'schließe ab',du:'schließt ab',er:'schließt ab',wir:'schließen ab',ihr:'schließt ab',sie:'schließen ab'},'schloss ab','hat abgeschlossen',[
+  _verb('gen-verb-abschliessen','A2','abschließen',{ich:'schließe ab',du:'schließt ab',er:'schließt ab',wir:'schließen ab',ihr:'schließt ab',sie:'schließen ab'},'schloss ab','hat abgeschlossen','easy',[
     {de:'Ich muss mein Projekt bis Sonntag abschließen.',en:'I have to complete my project by Sunday.',focus:'abschließen'},
     {de:'Du schließt ab?',en:'Do you end?',focus:'schließt ab',subject:'du'},
-    {de:'Er schließt ab.',en:'He ends.',focus:'schließt ab',subject:'er'},
   ]),
-  _verb('gen-verb-ansehen','A2','ansehen',{ich:'sehe an',du:'siehst an',er:'sieht an',wir:'sehen an',ihr:'seht an',sie:'sehen an'},'sah an','hat angesehen',[
-    {de:'Ich sehe an.',en:'I look at.',focus:'sehe an',subject:'ich'},
-    {de:'Du siehst an?',en:'Do you look at?',focus:'siehst an',subject:'du'},
-    {de:'Er sieht an.',en:'He looks at.',focus:'sieht an',subject:'er'},
-  ]),
-  _verb('gen-verb-aufmachen','A2','aufmachen',{ich:'mache auf',du:'machst auf',er:'macht auf',wir:'machen auf',ihr:'macht auf',sie:'machen auf'},'machte auf','hat aufgemacht',[
-    {de:'Mach mir auf!',en:'Open [the door] for me.',focus:['Mach','auf']},
+  _verb('gen-verb-aufmachen','A2','aufmachen',{ich:'mache auf',du:'machst auf',er:'macht auf',wir:'machen auf',ihr:'macht auf',sie:'machen auf'},'machte auf','hat aufgemacht','standard',[
     {de:'Kannst du dieses Glas aufmachen?',en:'Can you open this jar?',focus:'aufmachen'},
     {de:'Ich liebe den neuen Laden, der kürzlich aufgemacht hat.',en:'I love the new store that opened recently.',focus:'aufgemacht'},
   ]),
-  _verb('gen-verb-aufpassen','A2','aufpassen',{ich:'passe auf',du:'passt auf',er:'passt auf',wir:'passen auf',ihr:'passt auf',sie:'passen auf'},'passte auf','hat aufgepasst',[
+  _verb('gen-verb-aufpassen','A2','aufpassen',{ich:'passe auf',du:'passt auf',er:'passt auf',wir:'passen auf',ihr:'passt auf',sie:'passen auf'},'passte auf','hat aufgepasst','standard',[
     {de:'Könntest du kurz auf meinen Hund aufpassen?',en:'Could you look after my dog for a moment?',focus:'aufpassen'},
     {de:'Er soll mit seinem Geld aufpassen.',en:'He should be careful with his money.',focus:'aufpassen'},
   ]),
-  _verb('gen-verb-aufregen','A2','aufregen',{ich:'rege auf',du:'regst auf',er:'regt auf',wir:'regen auf',ihr:'regt auf',sie:'regen auf'},'regte auf','hat aufgeregt',[
-    {de:'Ich rege auf.',en:'I excite.',focus:'rege auf',subject:'ich'},
-    {de:'Du regst auf?',en:'Do you excite?',focus:'regst auf',subject:'du'},
-    {de:'Er regt auf.',en:'He excites.',focus:'regt auf',subject:'er'},
-  ]),
-  _verb('gen-verb-aufraeumen','A2','aufräumen',{ich:'räume auf',du:'räumst auf',er:'räumt auf',wir:'räumen auf',ihr:'räumt auf',sie:'räumen auf'},'räumte auf','hat aufgeräumt',[
-    {de:'Ich räume auf.',en:'I tidy up.',focus:'räume auf',subject:'ich'},
-    {de:'Du räumst auf?',en:'Do you tidy up?',focus:'räumst auf',subject:'du'},
-    {de:'Er räumt auf.',en:'He tidies up.',focus:'räumt auf',subject:'er'},
-  ]),
-  _verb('gen-verb-ausgeben','A2','ausgeben',{ich:'gebe aus',du:'gibst aus',er:'gibt aus',wir:'geben aus',ihr:'gebt aus',sie:'geben aus'},'gab aus','hat ausgegeben',[
+  _verb('gen-verb-ausgeben','A2','ausgeben',{ich:'gebe aus',du:'gibst aus',er:'gibt aus',wir:'geben aus',ihr:'gebt aus',sie:'geben aus'},'gab aus','hat ausgegeben','easy',[
     {de:'Rezeptpflichtige Medikamente dürfen nur in Apotheken ausgegeben werden.',en:'Prescription drugs may only be dispensed in pharmacies.',focus:'ausgegeben'},
     {de:'Du gibst aus?',en:'Do you spend?',focus:'gibst aus',subject:'du'},
-    {de:'Er gibt aus.',en:'He spends.',focus:'gibt aus',subject:'er'},
   ]),
-  _verb('gen-verb-ausgehen','A2','ausgehen',{ich:'gehe aus',du:'gehst aus',er:'geht aus',wir:'gehen aus',ihr:'geht aus',sie:'gehen aus'},'ging aus','ist ausgegangen',[
+  _verb('gen-verb-ausgehen','A2','ausgehen',{ich:'gehe aus',du:'gehst aus',er:'geht aus',wir:'gehen aus',ihr:'geht aus',sie:'gehen aus'},'ging aus','ist ausgegangen','standard',[
     {de:'Ich gehe nicht in die Disko, weil ich tanzen will, sondern weil ich ausgehen will.',en:'I am not going to the nightclub because I want to dance, but because I want to go out.',focus:'ausgehen'},
     {de:'Das Geld für den Hausbau ist ausgegangen.',en:'The money for building the house has run out.',focus:'ausgegangen'},
     {de:'Meine Haare sind mir schon ausgegangen.',en:'My hair has already fallen out.',focus:'ausgegangen'},
   ]),
-  _verb('gen-verb-auspacken','A2','auspacken',{ich:'packe aus',du:'packst aus',er:'packt aus',wir:'packen aus',ihr:'packt aus',sie:'packen aus'},'packte aus','hat ausgepackt',[
-    {de:'Ich packe aus.',en:'I unbox.',focus:'packe aus',subject:'ich'},
-    {de:'Du packst aus?',en:'Do you unbox?',focus:'packst aus',subject:'du'},
-    {de:'Er packt aus.',en:'He unboxes.',focus:'packt aus',subject:'er'},
-  ]),
-  _verb('gen-verb-aussprechen','A2','aussprechen',{ich:'spreche aus',du:'sprichst aus',er:'spricht aus',wir:'sprechen aus',ihr:'sprecht aus',sie:'sprechen aus'},'sprach aus','hat ausgesprochen',[
+  _verb('gen-verb-aussprechen','A2','aussprechen',{ich:'spreche aus',du:'sprichst aus',er:'spricht aus',wir:'sprechen aus',ihr:'sprecht aus',sie:'sprechen aus'},'sprach aus','hat ausgesprochen','standard',[
     {de:'Die Süddeutschen sprechen die Buchstaben b, d, g stimmlos aus.',en:'Southern Germans [incl. Austrians, Swiss, etc.] pronounce the letters b, d, g voicelessly.',focus:['sprechen','aus']},
     {de:'Wie spricht sich das aus?',en:'How is this pronounced? / How do you say this?',focus:['spricht','aus']},
     {de:'Das Gericht hat eine sehr milde Strafe ausgesprochen.',en:'The court has pronounced a very lenient sentence.',focus:'ausgesprochen'},
   ]),
-  _verb('gen-verb-austragen','A2','austragen',{ich:'trage aus',du:'trägst aus',er:'trägt aus',wir:'tragen aus',ihr:'tragt aus',sie:'tragen aus'},'trug aus','hat ausgetragen',[
-    {de:'Ich trage aus.',en:'I deliver sth.',focus:'trage aus',subject:'ich'},
-    {de:'Du trägst aus?',en:'Do you deliver sth?',focus:'trägst aus',subject:'du'},
-    {de:'Er trägt aus.',en:'He delivers sth.',focus:'trägt aus',subject:'er'},
-  ]),
-  _verb('gen-verb-backen','A2','backen',{ich:'backe',du:'bäckst',er:'bäckt',wir:'backen',ihr:'backt',sie:'backen'},'buk','hat gebacken',[
+  _verb('gen-verb-backen','A2','backen',{ich:'backe',du:'bäckst',er:'bäckt',wir:'backen',ihr:'backt',sie:'backen'},'buk','hat gebacken','standard',[
     {de:'Der Bäcker backt jeden Morgen 30 Laib Brot.',en:'The baker bakes 30 loaves of bread every morning.',focus:'backt'},
     {de:'Ist der Kuchen schon gebacken?',en:'Is the cake baked yet?',focus:'gebacken'},
     {de:'Die Tonfigur muss mindestens zwei Stunden im Ofen backen.',en:'The clay piece must be fired in the oven for at least two hours.',focus:'backen'},
   ]),
-  _verb('gen-verb-bauen','A2','bauen',{ich:'baue',du:'baust',er:'baut',wir:'bauen',ihr:'baut',sie:'bauen'},'baute','hat gebaut',[
-    {de:'ein Haus bauen',en:'to build a house',focus:'bauen'},
+  _verb('gen-verb-bauen','A2','bauen',{ich:'baue',du:'baust',er:'baut',wir:'bauen',ihr:'baut',sie:'bauen'},'baute','hat gebaut','standard',[
     {de:'Du kannst auf mich bauen.',en:'You can rely on me.',focus:'bauen'},
     {de:'Baust du einen? Ich kann grad nicht mehr.',en:'Can you roll one? I just can\'t anymore.',focus:'Baust'},
   ]),
-  _verb('gen-verb-beantworten','A2','beantworten',{ich:'beantworte',du:'beantwortest',er:'beantwortet',wir:'beantworten',ihr:'beantwortet',sie:'beantworten'},'beantwortete','hat beantwortet',[
-    {de:'Ich beantworte.',en:'I answer.',focus:'beantworte',subject:'ich'},
-    {de:'Du beantwortest?',en:'Do you answer?',focus:'beantwortest',subject:'du'},
-    {de:'Er beantwortet.',en:'He answers.',focus:'beantwortet',subject:'er'},
-  ]),
-  _verb('gen-verb-beenden','A2','beenden',{ich:'beende',du:'beendest',er:'beendet',wir:'beenden',ihr:'beendet',sie:'beenden'},'beendete','hat beendet',[
+  _verb('gen-verb-beenden','A2','beenden',{ich:'beende',du:'beendest',er:'beendet',wir:'beenden',ihr:'beendet',sie:'beenden'},'beendete','hat beendet','easy',[
     {de:'Die Ankündigung beendete die Spekulationen über die Zukunft des Unternehmens.',en:'The announcement put an end to speculation about the company\'s future.',focus:'beendete'},
     {de:'Du beendest?',en:'Do you finish?',focus:'beendest',subject:'du'},
-    {de:'Er beendet.',en:'He finishes.',focus:'beendet',subject:'er'},
   ]),
-  _verb('gen-verb-begruenden','A2','begründen',{ich:'begründe',du:'begründest',er:'begründet',wir:'begründen',ihr:'begründet',sie:'begründen'},'begründete','hat begründet',[
-    {de:'Ich begründe.',en:'I justify.',focus:'begründe',subject:'ich'},
-    {de:'Du begründest?',en:'Do you justify?',focus:'begründest',subject:'du'},
-    {de:'Er begründet.',en:'He justifies.',focus:'begründet',subject:'er'},
-  ]),
-  _verb('gen-verb-beraten','A2','beraten',{ich:'berate',du:'berätst',er:'berät',wir:'beraten',ihr:'beratet',sie:'beraten'},'beriet','hat beraten',[
-    {de:'Ich berate.',en:'I discuss.',focus:'berate',subject:'ich'},
-    {de:'Du berätst?',en:'Do you discuss?',focus:'berätst',subject:'du'},
-    {de:'Er berät.',en:'He discusses.',focus:'berät',subject:'er'},
-  ]),
-  _verb('gen-verb-berichten','A2','berichten',{ich:'berichte',du:'berichtest',er:'berichtet',wir:'berichten',ihr:'berichtet',sie:'berichten'},'berichtete','hat berichtet',[
+  _verb('gen-verb-berichten','A2','berichten',{ich:'berichte',du:'berichtest',er:'berichtet',wir:'berichten',ihr:'berichtet',sie:'berichten'},'berichtete','hat berichtet','standard',[
     {de:'Die Zeitungen berichteten der Welt gestern die ganze Geschichte.',en:'The newspapers reported the whole story to the world yesterday.',focus:'berichteten'},
     {de:'Nachdem ich meinem Bruder davon erzählte, berichtete er mir von einer ähnlichen Erfahrung.',en:'After I told my brother about it he told me of a similar experience.',focus:'berichtete'},
   ]),
-  _verb('gen-verb-beschreiben','A2','beschreiben',{ich:'beschreibe',du:'beschreibst',er:'beschreibt',wir:'beschreiben',ihr:'beschreibt',sie:'beschreiben'},'beschrieb','hat beschrieben',[
-    {de:'Ich beschreibe.',en:'I describe.',focus:'beschreibe',subject:'ich'},
-    {de:'Du beschreibst?',en:'Do you describe?',focus:'beschreibst',subject:'du'},
-    {de:'Er beschreibt.',en:'He describes.',focus:'beschreibt',subject:'er'},
-  ]),
-  _verb('gen-verb-beschweren','A2','beschweren',{ich:'beschwere',du:'beschwerst',er:'beschwert',wir:'beschweren',ihr:'beschwert',sie:'beschweren'},'beschwerte','hat beschwert',[
-    {de:'Ich beschwere.',en:'I weight.',focus:'beschwere',subject:'ich'},
-    {de:'Du beschwerst?',en:'Do you weight?',focus:'beschwerst',subject:'du'},
-    {de:'Er beschwert.',en:'He weights.',focus:'beschwert',subject:'er'},
-  ]),
-  _verb('gen-verb-bestehen','A2','bestehen',{ich:'bestehe',du:'bestehst',er:'besteht',wir:'bestehen',ihr:'besteht',sie:'bestehen'},'bestand','hat bestanden',[
+  _verb('gen-verb-bestehen','A2','bestehen',{ich:'bestehe',du:'bestehst',er:'besteht',wir:'bestehen',ihr:'besteht',sie:'bestehen'},'bestand','hat bestanden','standard',[
     {de:'Er hat die Prüfung bestanden.',en:'He has passed the exam.',focus:'bestanden'},
     {de:'Durch geschicktes Management blieb die Firma auch im starken Wettbewerb bestehen.',en:'By smart management the company survived in the strong competition.',focus:'bestehen'},
     {de:'Er besteht darauf, dass dem Druck nicht nachgegeben wird.',en:'He insists on not giving in to the pressure.',focus:'besteht'},
   ]),
-  _verb('gen-verb-bestaetigen','A2','bestätigen',{ich:'bestätige',du:'bestätigst',er:'bestätigt',wir:'bestätigen',ihr:'bestätigt',sie:'bestätigen'},'bestätigte','hat bestätigt',[
-    {de:'Ich bestätige.',en:'I confirm.',focus:'bestätige',subject:'ich'},
-    {de:'Du bestätigst?',en:'Do you confirm?',focus:'bestätigst',subject:'du'},
-    {de:'Er bestätigt.',en:'He confirms.',focus:'bestätigt',subject:'er'},
-  ]),
-  _verb('gen-verb-braten','A2','braten',{ich:'brate',du:'brätst',er:'brät',wir:'braten',ihr:'bratet',sie:'braten'},'briet','hat gebraten',[
-    {de:'Ich brate.',en:'I pan-fry.',focus:'brate',subject:'ich'},
-    {de:'Du brätst?',en:'Do you pan-fry?',focus:'brätst',subject:'du'},
-    {de:'Er brät.',en:'He pan-fries.',focus:'brät',subject:'er'},
-  ]),
-  _verb('gen-verb-buchen','A2','buchen',{ich:'buche',du:'buchst',er:'bucht',wir:'buchen',ihr:'bucht',sie:'buchen'},'buchte','hat gebucht',[
-    {de:'Ich buche.',en:'I book.',focus:'buche',subject:'ich'},
-    {de:'Du buchst?',en:'Do you book?',focus:'buchst',subject:'du'},
-    {de:'Er bucht.',en:'He books.',focus:'bucht',subject:'er'},
-  ]),
-  _verb('gen-verb-chatten','A2','chatten',{ich:'chatte',du:'chattest',er:'chattet',wir:'chatten',ihr:'chattet',sie:'chatten'},'chattete','hat gechattet',[
-    {de:'Ich chatte.',en:'I chat.',focus:'chatte',subject:'ich'},
-    {de:'Du chattest?',en:'Do you chat?',focus:'chattest',subject:'du'},
-    {de:'Er chattet.',en:'He chats.',focus:'chattet',subject:'er'},
-  ]),
-  _verb('gen-verb-diskutieren','A2','diskutieren',{ich:'diskutiere',du:'diskutierst',er:'diskutiert',wir:'diskutieren',ihr:'diskutiert',sie:'diskutieren'},'diskutierte','hat diskutiert',[
+  _verb('gen-verb-diskutieren','A2','diskutieren',{ich:'diskutiere',du:'diskutierst',er:'diskutiert',wir:'diskutieren',ihr:'diskutiert',sie:'diskutieren'},'diskutierte','hat diskutiert','easy',[
     {de:'Über dieses Thema müssen wir diskutieren.',en:'We need to discuss this issue.',focus:'diskutieren'},
     {de:'Du diskutierst?',en:'Do you discuss?',focus:'diskutierst',subject:'du'},
-    {de:'Er diskutiert.',en:'He discusses.',focus:'diskutiert',subject:'er'},
   ]),
-  _verb('gen-verb-einpacken','A2','einpacken',{ich:'packe ein',du:'packst ein',er:'packt ein',wir:'packen ein',ihr:'packt ein',sie:'packen ein'},'packte ein','hat eingepackt',[
+  _verb('gen-verb-einpacken','A2','einpacken',{ich:'packe ein',du:'packst ein',er:'packt ein',wir:'packen ein',ihr:'packt ein',sie:'packen ein'},'packte ein','hat eingepackt','easy',[
     {de:'Es schneit, also pack dich ein.',en:'It\'s snowing so bundle up.',focus:['pack','ein']},
     {de:'Du packst ein?',en:'Do you wrap up?',focus:'packst ein',subject:'du'},
-    {de:'Er packt ein.',en:'He wraps up.',focus:'packt ein',subject:'er'},
   ]),
-  _verb('gen-verb-eintragen','A2','eintragen',{ich:'trage ein',du:'trägst ein',er:'trägt ein',wir:'tragen ein',ihr:'tragt ein',sie:'tragen ein'},'trug ein','hat eingetragen',[
-    {de:'Ich trage ein.',en:'I endorse.',focus:'trage ein',subject:'ich'},
-    {de:'Du trägst ein?',en:'Do you endorse?',focus:'trägst ein',subject:'du'},
-    {de:'Er trägt ein.',en:'He endorses.',focus:'trägt ein',subject:'er'},
-  ]),
-  _verb('gen-verb-erreichen','A2','erreichen',{ich:'erreiche',du:'erreichst',er:'erreicht',wir:'erreichen',ihr:'erreicht',sie:'erreichen'},'erreichte','hat erreicht',[
+  _verb('gen-verb-erreichen','A2','erreichen',{ich:'erreiche',du:'erreichst',er:'erreicht',wir:'erreichen',ihr:'erreicht',sie:'erreichen'},'erreichte','hat erreicht','standard',[
     {de:'Sie kann das Regal nicht erreichen.',en:'She can\'t reach the shelf.',focus:'erreichen'},
     {de:'Wie kann ich ihn erreichen?',en:'How can I reach him?',focus:'erreichen'},
   ]),
-  _verb('gen-verb-fotografieren','A2','fotografieren',{ich:'fotografiere',du:'fotografierst',er:'fotografiert',wir:'fotografieren',ihr:'fotografiert',sie:'fotografieren'},'fotografierte','hat fotografiert',[
-    {de:'Ich fotografiere.',en:'I photograph.',focus:'fotografiere',subject:'ich'},
-    {de:'Du fotografierst?',en:'Do you photograph?',focus:'fotografierst',subject:'du'},
-    {de:'Er fotografiert.',en:'He photographs.',focus:'fotografiert',subject:'er'},
-  ]),
-  _verb('gen-verb-fuehlen','A2','fühlen',{ich:'fühle',du:'fühlst',er:'fühlt',wir:'fühlen',ihr:'fühlt',sie:'fühlen'},'fühlte','hat gefühlt',[
+  _verb('gen-verb-fuehlen','A2','fühlen',{ich:'fühle',du:'fühlst',er:'fühlt',wir:'fühlen',ihr:'fühlt',sie:'fühlen'},'fühlte','hat gefühlt','easy',[
     {de:'Ich fühle den Sonnenschein auf meinem Gesicht.',en:'I feel the sunshine on my face.',focus:'fühle'},
-    {de:'Ich fühle reines Glück.',en:'I feel sheer happiness.',focus:'fühle'},
-    {de:'Ich fühle mich verschwitzt.',en:'I feel sweaty.',focus:'fühle'},
+    {de:'Du fühlst?',en:'Do you feel?',focus:'fühlst',subject:'du'},
   ]),
-  _verb('gen-verb-herstellen','A2','herstellen',{ich:'stelle her',du:'stellst her',er:'stellt her',wir:'stellen her',ihr:'stellt her',sie:'stellen her'},'stellte her','hat hergestellt',[
-    {de:'Ich stelle her.',en:'I produce.',focus:'stelle her',subject:'ich'},
-    {de:'Du stellst her?',en:'Do you produce?',focus:'stellst her',subject:'du'},
-    {de:'Er stellt her.',en:'He produces.',focus:'stellt her',subject:'er'},
-  ]),
-  _verb('gen-verb-herunterladen','A2','herunterladen',{ich:'lade herunter',du:'lädst herunter',er:'lädt herunter',wir:'laden herunter',ihr:'ladet herunter',sie:'laden herunter'},'lud herunter','hat heruntergeladen',[
-    {de:'Ich lade herunter.',en:'I download.',focus:'lade herunter',subject:'ich'},
-    {de:'Du lädst herunter?',en:'Do you download?',focus:'lädst herunter',subject:'du'},
-    {de:'Er lädt herunter.',en:'He downloads.',focus:'lädt herunter',subject:'er'},
-  ]),
-  _verb('gen-verb-hoffen','A2','hoffen',{ich:'hoffe',du:'hoffst',er:'hofft',wir:'hoffen',ihr:'hofft',sie:'hoffen'},'hoffte','hat gehofft',[
+  _verb('gen-verb-hoffen','A2','hoffen',{ich:'hoffe',du:'hoffst',er:'hofft',wir:'hoffen',ihr:'hofft',sie:'hoffen'},'hoffte','hat gehofft','easy',[
     {de:'Ich hoffe auf eine vollständige Heilung.',en:'I hope for a complete cure.',focus:'hoffe auf'},
     {de:'Du hoffst?',en:'Do you hope?',focus:'hoffst',subject:'du'},
-    {de:'Er hofft.',en:'He hopes.',focus:'hofft',subject:'er'},
   ]),
-  _verb('gen-verb-husten','A2','husten',{ich:'huste',du:'hustest',er:'hustet',wir:'husten',ihr:'hustet',sie:'husten'},'hustete','hat gehustet',[
-    {de:'Ich huste.',en:'I cough.',focus:'huste',subject:'ich'},
-    {de:'Du hustest?',en:'Do you cough?',focus:'hustest',subject:'du'},
-    {de:'Er hustet.',en:'He coughs.',focus:'hustet',subject:'er'},
-  ]),
-  _verb('gen-verb-haengen','A2','hängen',{ich:'hänge',du:'hängst',er:'hängt',wir:'hängen',ihr:'hängt',sie:'hängen'},'hängte','hat gehängt',[
+  _verb('gen-verb-haengen','A2','hängen',{ich:'hänge',du:'hängst',er:'hängt',wir:'hängen',ihr:'hängt',sie:'hängen'},'hängte','hat gehängt','standard',[
     {de:'Der Apfel hängt am Baum.',en:'The apple hangs on the tree.',focus:'hängt'},
     {de:'Er hängt sehr an seiner Schwester.',en:'He is very attached to his sister.',focus:'hängt'},
     {de:'Es hängt alles daran, wie du dich entscheidest.',en:'It all depends on what decision you take.',focus:'hängt'},
   ]),
-  _verb('gen-verb-informieren','A2','informieren',{ich:'informiere',du:'informierst',er:'informiert',wir:'informieren',ihr:'informiert',sie:'informieren'},'informierte','hat informiert',[
+  _verb('gen-verb-informieren','A2','informieren',{ich:'informiere',du:'informierst',er:'informiert',wir:'informieren',ihr:'informiert',sie:'informieren'},'informierte','hat informiert','standard',[
     {de:'Er informierte uns über das bevorstehende Unwetter.',en:'He informed us about the upcoming storm.',focus:'informierte'},
     {de:'Ich informiere mich in Zeitungen über die neuesten Trends',en:'I read up on the latest trends in newspapers.',focus:'informiere mich'},
     {de:'Sie informierte sich gründlich, bevor sie eine Entscheidung traf.',en:'She looked into it thoroughly before making a decision.',focus:'informierte sich'},
   ]),
-  _verb('gen-verb-joggen','A2','joggen',{ich:'jogge',du:'joggst',er:'joggt',wir:'joggen',ihr:'joggt',sie:'joggen'},'joggte','ist gejoggt',[
+  _verb('gen-verb-joggen','A2','joggen',{ich:'jogge',du:'joggst',er:'joggt',wir:'joggen',ihr:'joggt',sie:'joggen'},'joggte','ist gejoggt','standard',[
     {de:'Gestern bin ich 30 Minuten gejoggt.',en:'Yesterday I jogged for 30 minutes.',focus:'gejoggt'},
     {de:'Sie hat sich wieder in Form gejoggt.',en:'She jogged herself back into shape.',focus:'gejoggt'},
   ]),
-  _verb('gen-verb-klappen','A2','klappen',{ich:'klappe',du:'klappst',er:'klappt',wir:'klappen',ihr:'klappt',sie:'klappen'},'klappte','hat geklappt',[
+  _verb('gen-verb-klappen','A2','klappen',{ich:'klappe',du:'klappst',er:'klappt',wir:'klappen',ihr:'klappt',sie:'klappen'},'klappte','hat geklappt','standard',[
     {de:'Zum Transport muss diese Liege geklappt werden.',en:'In order to be transportable, this deckchair needs to be folded.',focus:'geklappt'},
     {de:'Wenn alles klappt, bin ich um sieben zu Hause.',en:'If everything works out, I’ll be home by seven.',focus:'klappt'},
   ]),
-  _verb('gen-verb-kontrollieren','A2','kontrollieren',{ich:'kontrolliere',du:'kontrollierst',er:'kontrolliert',wir:'kontrollieren',ihr:'kontrolliert',sie:'kontrollieren'},'kontrollierte','hat kontrolliert',[
+  _verb('gen-verb-kontrollieren','A2','kontrollieren',{ich:'kontrolliere',du:'kontrollierst',er:'kontrolliert',wir:'kontrollieren',ihr:'kontrolliert',sie:'kontrollieren'},'kontrollierte','hat kontrolliert','standard',[
     {de:'Kannst du mal kontrollieren, ob ich alles richtig gemacht habe?',en:'Can you check whether I\'ve done everything correctly?',focus:'kontrollieren'},
     {de:'Er kontrolliert den Spielzeuglaster mit diesem Gerät.',en:'He controls the toy truck with that device.',focus:'kontrolliert'},
   ]),
-  _verb('gen-verb-kuendigen','A2','kündigen',{ich:'kündige',du:'kündigst',er:'kündigt',wir:'kündigen',ihr:'kündigt',sie:'kündigen'},'kündigte','hat gekündigt',[
-    {de:'Ich kündige.',en:'I cancel.',focus:'kündige',subject:'ich'},
-    {de:'Du kündigst?',en:'Do you cancel?',focus:'kündigst',subject:'du'},
-    {de:'Er kündigt.',en:'He cancels.',focus:'kündigt',subject:'er'},
-  ]),
-  _verb('gen-verb-lassen','A2','lassen',{ich:'lasse',du:'lässt',er:'lässt',wir:'lassen',ihr:'lasst',sie:'lassen'},'ließ','hat gelassen',[
+  _verb('gen-verb-lassen','A2','lassen',{ich:'lasse',du:'lässt',er:'lässt',wir:'lassen',ihr:'lasst',sie:'lassen'},'ließ','hat gelassen','standard',[
     {de:'Die anderen lassen mich nicht mitmachen!',en:'The others won\'t let me join in!',focus:'lassen'},
-    {de:'lasset alle Hoffnung fahren',en:'abandon all hope',focus:'lasset'},
     {de:'Wir haben neue Schränke für die Küche machen lassen.',en:'We had new cabinets made for the kitchen.',focus:'lassen'},
   ]),
-  _verb('gen-verb-leidtun','A2','leidtun',{ich:'tu leid',du:'tust leid',er:'tut leid',wir:'tun leid',ihr:'tunt leid',sie:'tun leid'},'tat leid','hat leidgetan',[
-    {de:'Ich tu leid.',en:'I regret.',focus:'tu leid',subject:'ich'},
-    {de:'Du tust leid?',en:'Do you regret?',focus:'tust leid',subject:'du'},
-    {de:'Er tut leid.',en:'He regrets.',focus:'tut leid',subject:'er'},
-  ]),
-  _verb('gen-verb-leihen','A2','leihen',{ich:'leihe',du:'leihst',er:'leiht',wir:'leihen',ihr:'leiht',sie:'leihen'},'lieh','hat geliehen',[
-    {de:'Ich leihe.',en:'I borrow.',focus:'leihe',subject:'ich'},
-    {de:'Du leihst?',en:'Do you borrow?',focus:'leihst',subject:'du'},
-    {de:'Er leiht.',en:'He borrows.',focus:'leiht',subject:'er'},
-  ]),
-  _verb('gen-verb-liefern','A2','liefern',{ich:'liefere',du:'lieferst',er:'liefert',wir:'liefern',ihr:'liefernt',sie:'liefern'},'lieferte','hat geliefert',[
-    {de:'Ich liefere.',en:'I supply.',focus:'liefere',subject:'ich'},
-    {de:'Du lieferst?',en:'Do you supply?',focus:'lieferst',subject:'du'},
-    {de:'Er liefert.',en:'He supplies.',focus:'liefert',subject:'er'},
-  ]),
-  _verb('gen-verb-luegen','A2','lügen',{ich:'lüge',du:'lügst',er:'lügt',wir:'lügen',ihr:'lügt',sie:'lügen'},'log','hat gelogen',[
+  _verb('gen-verb-luegen','A2','lügen',{ich:'lüge',du:'lügst',er:'lügt',wir:'lügen',ihr:'lügt',sie:'lügen'},'log','hat gelogen','easy',[
     {de:'Wie alt sind Sie? — Ehm... lassen Sie mich nicht lügen... Zweiunddreißig.',en:'How old are you? — Er... don’t let me tell you something wrong... Thirty-two.',focus:'lügen'},
     {de:'Du lügst?',en:'Do you tell a lie?',focus:'lügst',subject:'du'},
-    {de:'Er lügt.',en:'He tells a lie.',focus:'lügt',subject:'er'},
   ]),
-  _verb('gen-verb-meinen','A2','meinen',{ich:'meine',du:'meinst',er:'meint',wir:'meinen',ihr:'meint',sie:'meinen'},'meinte','hat gemeint',[
+  _verb('gen-verb-meinen','A2','meinen',{ich:'meine',du:'meinst',er:'meint',wir:'meinen',ihr:'meint',sie:'meinen'},'meinte','hat gemeint','standard',[
     {de:'Ich meine, das war letztes oder vorletztes Jahr.',en:'I think it was last year or the year before.',focus:'meine'},
     {de:'Entschuldige, was meintest du gerade?',en:'Sorry, what did you just say?',focus:'meintest'},
     {de:'Das sagt er nicht nur, das meint er auch.',en:'He doesn’t just say it, he means it.',focus:'meint'},
   ]),
-  _verb('gen-verb-nennen','A2','nennen',{ich:'nenne',du:'nennst',er:'nennt',wir:'nennen',ihr:'nennt',sie:'nennen'},'nannte','hat genannt',[
+  _verb('gen-verb-nennen','A2','nennen',{ich:'nenne',du:'nennst',er:'nennt',wir:'nennen',ihr:'nennt',sie:'nennen'},'nannte','hat genannt','standard',[
     {de:'Nennst du mich einen Dummkopf?',en:'Are you calling me an idiot?',focus:'Nennst'},
     {de:'Wir nennen den Hund Leo.',en:'We call the dog Leo.',focus:'nennen'},
     {de:'Nennen Sie mir den Ort des Treffens.',en:'Tell me the location of the meeting.',focus:'Nennen'},
   ]),
-  _verb('gen-verb-notieren','A2','notieren',{ich:'notiere',du:'notierst',er:'notiert',wir:'notieren',ihr:'notiert',sie:'notieren'},'notierte','hat notiert',[
-    {de:'Ich notiere.',en:'I note.',focus:'notiere',subject:'ich'},
-    {de:'Du notierst?',en:'Do you note?',focus:'notierst',subject:'du'},
-    {de:'Er notiert.',en:'He notes.',focus:'notiert',subject:'er'},
-  ]),
-  _verb('gen-verb-organisieren','A2','organisieren',{ich:'organisiere',du:'organisierst',er:'organisiert',wir:'organisieren',ihr:'organisiert',sie:'organisieren'},'organisierte','hat organisiert',[
-    {de:'Ich organisiere.',en:'I organize.',focus:'organisiere',subject:'ich'},
-    {de:'Du organisierst?',en:'Do you organize?',focus:'organisierst',subject:'du'},
-    {de:'Er organisiert.',en:'He organizes.',focus:'organisiert',subject:'er'},
-  ]),
-  _verb('gen-verb-packen','A2','packen',{ich:'packe',du:'packst',er:'packt',wir:'packen',ihr:'packt',sie:'packen'},'packte','hat gepackt',[
+  _verb('gen-verb-packen','A2','packen',{ich:'packe',du:'packst',er:'packt',wir:'packen',ihr:'packt',sie:'packen'},'packte','hat gepackt','standard',[
     {de:'Du musst deine Sachen packen.',en:'You need to pack your stuff.',focus:'packen'},
-    {de:'Du musst packen.',en:'You need to get packed.',focus:'packen'},
     {de:'Er packte mich am Arm.',en:'He grabbed me by the arm.',focus:'packte'},
   ]),
-  _verb('gen-verb-parken','A2','parken',{ich:'parke',du:'parkst',er:'parkt',wir:'parken',ihr:'parkt',sie:'parken'},'parkte','hat geparkt',[
-    {de:'Ich parke.',en:'I park.',focus:'parke',subject:'ich'},
-    {de:'Du parkst?',en:'Do you park?',focus:'parkst',subject:'du'},
-    {de:'Er parkt.',en:'He parks.',focus:'parkt',subject:'er'},
-  ]),
-  _verb('gen-verb-passieren','A2','passieren',{ich:'passiere',du:'passierst',er:'passiert',wir:'passieren',ihr:'passiert',sie:'passieren'},'passierte','hat passiert',[
+  _verb('gen-verb-passieren','A2','passieren',{ich:'passiere',du:'passierst',er:'passiert',wir:'passieren',ihr:'passiert',sie:'passieren'},'passierte','hat passiert','standard',[
     {de:'Wie konnte das nur passieren?',en:'How could that have happened?',focus:'passieren'},
     {de:'Die Gruppe hat soeben die Grenze passiert.',en:'The group has just passed the border.',focus:'passiert'},
     {de:'Als nächstes muss die Brühe durch das Sieb passiert werden.',en:'Next, the broth needs to be passed through the sieve.',focus:'passiert'},
   ]),
-  _verb('gen-verb-probieren','A2','probieren',{ich:'probiere',du:'probierst',er:'probiert',wir:'probieren',ihr:'probiert',sie:'probieren'},'probierte','hat probiert',[
-    {de:'Ich probiere.',en:'I try.',focus:'probiere',subject:'ich'},
-    {de:'Du probierst?',en:'Do you try?',focus:'probierst',subject:'du'},
-    {de:'Er probiert.',en:'He tries.',focus:'probiert',subject:'er'},
-  ]),
-  _verb('gen-verb-pruefen','A2','prüfen',{ich:'prüfe',du:'prüfst',er:'prüft',wir:'prüfen',ihr:'prüft',sie:'prüfen'},'prüfte','hat geprüft',[
-    {de:'Ich prüfe.',en:'I check.',focus:'prüfe',subject:'ich'},
-    {de:'Du prüfst?',en:'Do you check?',focus:'prüfst',subject:'du'},
-    {de:'Er prüft.',en:'He checks.',focus:'prüft',subject:'er'},
-  ]),
-  _verb('gen-verb-putzen','A2','putzen',{ich:'putze',du:'putzt',er:'putzt',wir:'putzen',ihr:'putzt',sie:'putzen'},'putzte','hat geputzt',[
-    {de:'Ich putze.',en:'I clean.',focus:'putze',subject:'ich'},
-    {de:'Du putzt?',en:'Do you clean?',focus:'putzt',subject:'du'},
-    {de:'Er putzt.',en:'He cleans.',focus:'putzt',subject:'er'},
-  ]),
-  _verb('gen-verb-raten','A2','raten',{ich:'rate',du:'rätst',er:'rät',wir:'raten',ihr:'ratet',sie:'raten'},'riet','hat geraten',[
+  _verb('gen-verb-raten','A2','raten',{ich:'rate',du:'rätst',er:'rät',wir:'raten',ihr:'ratet',sie:'raten'},'riet','hat geraten','standard',[
     {de:'jemandem etwas zu tun raten',en:'to advise someone to do something',focus:'raten'},
     {de:'Ich rate dir dazu, die Chance zu ergreifen.',en:'I advise you to take the chance.',focus:'rate'},
   ]),
-  _verb('gen-verb-rechnen','A2','rechnen',{ich:'rechne',du:'rechnest',er:'rechnet',wir:'rechnen',ihr:'rechnt',sie:'rechnen'},'rechnete','hat gerechnet',[
+  _verb('gen-verb-rechnen','A2','rechnen',{ich:'rechne',du:'rechnest',er:'rechnet',wir:'rechnen',ihr:'rechnt',sie:'rechnen'},'rechnete','hat gerechnet','standard',[
     {de:'Damit haben die Fans nicht gerechnet.',en:'Here\'s something fans never thought they\'d see.',focus:['Damit','gerechnet']},
     {de:'Damit habe ich nicht gerechnet.',en:'I really wasn\'t expecting this.',focus:['Damit','gerechnet']},
   ]),
-  _verb('gen-verb-renovieren','A2','renovieren',{ich:'renoviere',du:'renovierst',er:'renoviert',wir:'renovieren',ihr:'renoviert',sie:'renovieren'},'renovierte','hat renoviert',[
-    {de:'Ich renoviere.',en:'I renovate.',focus:'renoviere',subject:'ich'},
-    {de:'Du renovierst?',en:'Do you renovate?',focus:'renovierst',subject:'du'},
-    {de:'Er renoviert.',en:'He renovates.',focus:'renoviert',subject:'er'},
-  ]),
-  _verb('gen-verb-reservieren','A2','reservieren',{ich:'reserviere',du:'reservierst',er:'reserviert',wir:'reservieren',ihr:'reserviert',sie:'reservieren'},'reservierte','hat reserviert',[
-    {de:'Ich reserviere.',en:'I reserve.',focus:'reserviere',subject:'ich'},
-    {de:'Du reservierst?',en:'Do you reserve?',focus:'reservierst',subject:'du'},
-    {de:'Er reserviert.',en:'He reserves.',focus:'reserviert',subject:'er'},
-  ]),
-  _verb('gen-verb-rufen','A2','rufen',{ich:'rufe',du:'rufst',er:'ruft',wir:'rufen',ihr:'ruft',sie:'rufen'},'rief','hat gerufen',[
-    {de:'um Hilfe rufen',en:'to cry for help',focus:'rufen'},
+  _verb('gen-verb-rufen','A2','rufen',{ich:'rufe',du:'rufst',er:'ruft',wir:'rufen',ihr:'ruft',sie:'rufen'},'rief','hat gerufen','easy',[
     {de:'Das Küken ruft nach seiner Mutter.',en:'The chick is calling for its mother.',focus:'ruft'},
-    {de:'einen Krankenwagen rufen',en:'to call an ambulance',focus:'rufen'},
+    {de:'Du rufst?',en:'Do you call out?',focus:'rufst',subject:'du'},
   ]),
-  _verb('gen-verb-sammeln','A2','sammeln',{ich:'sammle',du:'sammelst',er:'sammelt',wir:'sammeln',ihr:'sammelnt',sie:'sammeln'},'sammelte','hat gesammelt',[
-    {de:'Ich sammle.',en:'I gather.',focus:'sammle',subject:'ich'},
-    {de:'Du sammelst?',en:'Do you gather?',focus:'sammelst',subject:'du'},
-    {de:'Er sammelt.',en:'He gathers.',focus:'sammelt',subject:'er'},
-  ]),
-  _verb('gen-verb-schaffen','A2','schaffen',{ich:'schaffe',du:'schaffst',er:'schafft',wir:'schaffen',ihr:'schafft',sie:'schaffen'},'schuf','hat geschaffen',[
+  _verb('gen-verb-schaffen','A2','schaffen',{ich:'schaffe',du:'schaffst',er:'schafft',wir:'schaffen',ihr:'schafft',sie:'schaffen'},'schuf','hat geschaffen','standard',[
     {de:'Warum hat Gott die Welt geschaffen?',en:'Why did God create the world?',focus:'geschaffen'},
     {de:'Wer schuf die Mona Lisa?',en:'Who created the Mona Lisa?',focus:'schuf'},
     {de:'Durch diese Maßnahmen haben wir die Voraussetzungen für weitere Fortschritte geschaffen.',en:'By these measures we have created the conditions for further progress.',focus:'geschaffen'},
   ]),
-  _verb('gen-verb-schenken','A2','schenken',{ich:'schenke',du:'schenkst',er:'schenkt',wir:'schenken',ihr:'schenkt',sie:'schenken'},'schenkte','hat geschenkt',[
+  _verb('gen-verb-schenken','A2','schenken',{ich:'schenke',du:'schenkst',er:'schenkt',wir:'schenken',ihr:'schenkt',sie:'schenken'},'schenkte','hat geschenkt','standard',[
     {de:'Ich schenke meiner Tochter ein Kätzchen zum Geburtstag.',en:'I’m giving my daughter a kitten for her birthday.',focus:'schenke'},
     {de:'Joseph hätte sich die beschwerliche weite Reise gern geschenkt, doch er wagte es nicht, ungehorsam zu sein.',en:'Joseph would have gladly spared himself the long, onerous journey, but he didn\'t dare to be disobedient.',focus:'geschenkt'},
     {de:'Sie schenkte den Wein in zwei Gläser.',en:'She poured the wine in two glasses.',focus:'schenkte'},
   ]),
-  _verb('gen-verb-schimpfen','A2','schimpfen',{ich:'schimpfe',du:'schimpfst',er:'schimpft',wir:'schimpfen',ihr:'schimpft',sie:'schimpfen'},'schimpfte','hat geschimpft',[
+  _verb('gen-verb-schimpfen','A2','schimpfen',{ich:'schimpfe',du:'schimpfst',er:'schimpft',wir:'schimpfen',ihr:'schimpft',sie:'schimpfen'},'schimpfte','hat geschimpft','easy',[
     {de:'Er hat keine Ahnung von der Materie - und so jemand schimpft sich Experte!',en:'He is clueless in that field - and someone like that calls himself an expert!',focus:'schimpft sich'},
     {de:'Du schimpfst?',en:'Do you tell off?',focus:'schimpfst',subject:'du'},
-    {de:'Er schimpft.',en:'He tells off.',focus:'schimpft',subject:'er'},
   ]),
-  _verb('gen-verb-schneiden','A2','schneiden',{ich:'schneide',du:'schneidest',er:'schneidet',wir:'schneiden',ihr:'schneidet',sie:'schneiden'},'schnitt','hat geschnitten',[
+  _verb('gen-verb-schneiden','A2','schneiden',{ich:'schneide',du:'schneidest',er:'schneidet',wir:'schneiden',ihr:'schneidet',sie:'schneiden'},'schnitt','hat geschnitten','easy',[
     {de:'Das Messer schneidet nicht mehr.',en:'The knife won’t cut anymore.',focus:'schneidet'},
-    {de:'Die beiden Straßen schneiden sich.',en:'Both streets intersect.',focus:'schneiden'},
+    {de:'Du schneidest?',en:'Do you cut?',focus:'schneidest',subject:'du'},
   ]),
-  _verb('gen-verb-schneien','A2','schneien',{ich:'schneie',du:'schneist',er:'schneit',wir:'schneien',ihr:'schneit',sie:'schneien'},'schneite','hat geschneit',[
+  _verb('gen-verb-schneien','A2','schneien',{ich:'schneie',du:'schneist',er:'schneit',wir:'schneien',ihr:'schneit',sie:'schneien'},'schneite','hat geschneit','easy',[
     {de:'Die Herbstblätter schneiten auf den Waldboden.',en:'The autumn leaves fell like snow upon the forest floor.',focus:'schneiten'},
     {de:'Du schneist?',en:'Do you snow?',focus:'schneist',subject:'du'},
-    {de:'Er schneit.',en:'He snows.',focus:'schneit',subject:'er'},
   ]),
-  _verb('gen-verb-setzen','A2','setzen',{ich:'setze',du:'setzt',er:'setzt',wir:'setzen',ihr:'setzt',sie:'setzen'},'setzte','hat gesetzt',[
-    {de:'Ich setze.',en:'I causative of sitzen.',focus:'setze',subject:'ich'},
-    {de:'Du setzt?',en:'Do you causative of sitzen?',focus:'setzt',subject:'du'},
-    {de:'Er setzt.',en:'He causatives of sitzen.',focus:'setzt',subject:'er'},
-  ]),
-  _verb('gen-verb-singen','A2','singen',{ich:'singe',du:'singst',er:'singt',wir:'singen',ihr:'singt',sie:'singen'},'sang','hat gesungen',[
-    {de:'Ich singe.',en:'I sing.',focus:'singe',subject:'ich'},
-    {de:'Du singst?',en:'Do you sing?',focus:'singst',subject:'du'},
-    {de:'Er singt.',en:'He sings.',focus:'singt',subject:'er'},
-  ]),
-  _verb('gen-verb-sparen','A2','sparen',{ich:'spare',du:'sparst',er:'spart',wir:'sparen',ihr:'spart',sie:'sparen'},'sparte','hat gespart',[
+  _verb('gen-verb-sparen','A2','sparen',{ich:'spare',du:'sparst',er:'spart',wir:'sparen',ihr:'spart',sie:'sparen'},'sparte','hat gespart','standard',[
     {de:'Ich spare mein Geld für ein neues Auto.',en:'I\'m saving my money for a new car.',focus:'spare'},
     {de:'Die Heizung herunterdrehen, um Energie zu sparen.',en:'Turn the heat down to save energy.',focus:'sparen'},
     {de:'Du kannst dir den Atem sparen, er hört nicht auf dich.',en:'You can save your breath, he\'s not listening to you.',focus:'sparen'},
   ]),
-  _verb('gen-verb-spazieren','A2','spazieren',{ich:'spaziere',du:'spazierst',er:'spaziert',wir:'spazieren',ihr:'spaziert',sie:'spazieren'},'spazierte','ist spaziert',[
-    {de:'Ich spaziere.',en:'I take a walk.',focus:'spaziere',subject:'ich'},
-    {de:'Du spazierst?',en:'Do you take a walk?',focus:'spazierst',subject:'du'},
-    {de:'Er spaziert.',en:'He takes a walk.',focus:'spaziert',subject:'er'},
-  ]),
-  _verb('gen-verb-sterben','A2','sterben',{ich:'sterbe',du:'stirbst',er:'stirbt',wir:'sterben',ihr:'sterbt',sie:'sterben'},'starb','ist gestorben',[
-    {de:'Ich sterbe.',en:'I die.',focus:'sterbe',subject:'ich'},
-    {de:'Du stirbst?',en:'Do you die?',focus:'stirbst',subject:'du'},
-    {de:'Er stirbt.',en:'He dies.',focus:'stirbt',subject:'er'},
-  ]),
-  _verb('gen-verb-stoeren','A2','stören',{ich:'störe',du:'störst',er:'stört',wir:'stören',ihr:'stört',sie:'stören'},'störte','hat gestört',[
+  _verb('gen-verb-stoeren','A2','stören',{ich:'störe',du:'störst',er:'stört',wir:'stören',ihr:'stört',sie:'stören'},'störte','hat gestört','easy',[
     {de:'Es stört mich, dass …',en:'It bothers me that …',focus:'stört'},
     {de:'Du störst?',en:'Do you disturb?',focus:'störst',subject:'du'},
-    {de:'Er stört.',en:'He disturbs.',focus:'stört',subject:'er'},
   ]),
-  _verb('gen-verb-tauschen','A2','tauschen',{ich:'tausche',du:'tauschst',er:'tauscht',wir:'tauschen',ihr:'tauscht',sie:'tauschen'},'tauschte','hat getauscht',[
+  _verb('gen-verb-tauschen','A2','tauschen',{ich:'tausche',du:'tauschst',er:'tauscht',wir:'tauschen',ihr:'tauscht',sie:'tauschen'},'tauschte','hat getauscht','easy',[
     {de:'Er tauschte die Büroklammer gegen einen Stift.',en:'He exchanged the paper clip for a pen.',focus:'tauschte'},
-    {de:'die Plätze tauschen',en:'to trade places',focus:'tauschen'},
+    {de:'Du tauschst?',en:'Do you trade?',focus:'tauschst',subject:'du'},
   ]),
-  _verb('gen-verb-teilen','A2','teilen',{ich:'teile',du:'teilst',er:'teilt',wir:'teilen',ihr:'teilt',sie:'teilen'},'teilte','hat geteilt',[
-    {de:'Ich teile.',en:'I split.',focus:'teile',subject:'ich'},
-    {de:'Du teilst?',en:'Do you split?',focus:'teilst',subject:'du'},
-    {de:'Er teilt.',en:'He splits.',focus:'teilt',subject:'er'},
-  ]),
-  _verb('gen-verb-teilnehmen','A2','teilnehmen',{ich:'nehme teil',du:'nimmst teil',er:'nimmt teil',wir:'nehmen teil',ihr:'nehmt teil',sie:'nehmen teil'},'nahm teil','hat teilgenommen',[
-    {de:'Ich nehme teil.',en:'I participate.',focus:'nehme teil',subject:'ich'},
-    {de:'Du nimmst teil?',en:'Do you participate?',focus:'nimmst teil',subject:'du'},
-    {de:'Er nimmt teil.',en:'He participates.',focus:'nimmt teil',subject:'er'},
-  ]),
-  _verb('gen-verb-tragen','A2','tragen',{ich:'trage',du:'trägst',er:'trägt',wir:'tragen',ihr:'tragt',sie:'tragen'},'trug','hat getragen',[
+  _verb('gen-verb-tragen','A2','tragen',{ich:'trage',du:'trägst',er:'trägt',wir:'tragen',ihr:'tragt',sie:'tragen'},'trug','hat getragen','standard',[
     {de:'Sie konnten die Kiste nicht mehr tragen und mussten sie abstellen.',en:'They couldn\'t carry the box any longer and had to put it down.',focus:'tragen'},
     {de:'Ärzte tragen eine große Verantwortung für ihr Handeln.',en:'Doctors carry a great responsibility for their actions.',focus:'tragen'},
   ]),
-  _verb('gen-verb-trainieren','A2','trainieren',{ich:'trainiere',du:'trainierst',er:'trainiert',wir:'trainieren',ihr:'trainiert',sie:'trainieren'},'trainierte','hat trainiert',[
-    {de:'Ich trainiere.',en:'I work out.',focus:'trainiere',subject:'ich'},
-    {de:'Du trainierst?',en:'Do you work out?',focus:'trainierst',subject:'du'},
-    {de:'Er trainiert.',en:'He works out.',focus:'trainiert',subject:'er'},
-  ]),
-  _verb('gen-verb-traeumen','A2','träumen',{ich:'träume',du:'träumst',er:'träumt',wir:'träumen',ihr:'träumt',sie:'träumen'},'träumte','hat geträumt',[
-    {de:'Ich träume.',en:'I dream.',focus:'träume',subject:'ich'},
-    {de:'Du träumst?',en:'Do you dream?',focus:'träumst',subject:'du'},
-    {de:'Er träumt.',en:'He dreams.',focus:'träumt',subject:'er'},
-  ]),
-  _verb('gen-verb-umsteigen','A2','umsteigen',{ich:'steige um',du:'steigst um',er:'steigt um',wir:'steigen um',ihr:'steigt um',sie:'steigen um'},'stieg um','ist umgestiegen',[
+  _verb('gen-verb-umsteigen','A2','umsteigen',{ich:'steige um',du:'steigst um',er:'steigt um',wir:'steigen um',ihr:'steigt um',sie:'steigen um'},'stieg um','ist umgestiegen','easy',[
     {de:'Am Hauptbahnhof Zürich kann man umsteigen.',en:'One can change trains at the Zurich train station.',focus:'umsteigen'},
     {de:'Du steigst um?',en:'Do you change?',focus:'steigst um',subject:'du'},
-    {de:'Er steigt um.',en:'He changes.',focus:'steigt um',subject:'er'},
   ]),
-  _verb('gen-verb-unterhalten','A2','unterhalten',{ich:'unterhalte',du:'unterhältst',er:'unterhält',wir:'unterhalten',ihr:'unterhaltet',sie:'unterhalten'},'unterhielt','hat unterhalten',[
+  _verb('gen-verb-unterhalten','A2','unterhalten',{ich:'unterhalte',du:'unterhältst',er:'unterhält',wir:'unterhalten',ihr:'unterhaltet',sie:'unterhalten'},'unterhielt','hat unterhalten','easy',[
     {de:'Er hat sich mit einem Mitarbeiter über die Arbeit unterhalten.',en:'He had a conversation about work with an employee.',focus:['sich','über','unterhalten']},
     {de:'Du unterhältst?',en:'Do you maintain?',focus:'unterhältst',subject:'du'},
-    {de:'Er unterhält.',en:'He maintains.',focus:'unterhält',subject:'er'},
   ]),
-  _verb('gen-verb-unternehmen','A2','unternehmen',{ich:'unternehme',du:'unternimmst',er:'unternimmt',wir:'unternehmen',ihr:'unternehmt',sie:'unternehmen'},'unternahm','hat unternommen',[
-    {de:'Ich unternehme.',en:'I undertake.',focus:'unternehme',subject:'ich'},
-    {de:'Du unternimmst?',en:'Do you undertake?',focus:'unternimmst',subject:'du'},
-    {de:'Er unternimmt.',en:'He undertakes.',focus:'unternimmt',subject:'er'},
-  ]),
-  _verb('gen-verb-verabreden','A2','verabreden',{ich:'verabrede',du:'verabredest',er:'verabredet',wir:'verabreden',ihr:'verabredet',sie:'verabreden'},'verabredete','hat verabredet',[
-    {de:'Ich verabrede.',en:'I arrange.',focus:'verabrede',subject:'ich'},
-    {de:'Du verabredest?',en:'Do you arrange?',focus:'verabredest',subject:'du'},
-    {de:'Er verabredet.',en:'He arranges.',focus:'verabredet',subject:'er'},
-  ]),
-  _verb('gen-verb-verbieten','A2','verbieten',{ich:'verbiete',du:'verbietest',er:'verbietet',wir:'verbieten',ihr:'verbietet',sie:'verbieten'},'verbot','hat verboten',[
+  _verb('gen-verb-verbieten','A2','verbieten',{ich:'verbiete',du:'verbietest',er:'verbietet',wir:'verbieten',ihr:'verbietet',sie:'verbieten'},'verbot','hat verboten','standard',[
     {de:'Ich verbiete Ihnen, in diesem Ton mit meiner Frau zu sprechen.',en:'I forbid you to talk in that tone of voice with my wife.',focus:'verbiete'},
     {de:'Das neue Gesetz verbietet das Rauchen in Restaurants.',en:'The new law prohibits smoking in restaurants.',focus:'verbietet'},
   ]),
-  _verb('gen-verb-vereinbaren','A2','vereinbaren',{ich:'vereinbare',du:'vereinbarst',er:'vereinbart',wir:'vereinbaren',ihr:'vereinbart',sie:'vereinbaren'},'vereinbarte','hat vereinbart',[
-    {de:'Ich vereinbare.',en:'I agree upon.',focus:'vereinbare',subject:'ich'},
-    {de:'Du vereinbarst?',en:'Do you agree upon?',focus:'vereinbarst',subject:'du'},
-    {de:'Er vereinbart.',en:'He agrees upon.',focus:'vereinbart',subject:'er'},
-  ]),
-  _verb('gen-verb-vergessen','A2','vergessen',{ich:'vergesse',du:'vergisst',er:'vergisst',wir:'vergessen',ihr:'vergesst',sie:'vergessen'},'vergaß','hat vergessen',[
+  _verb('gen-verb-vergessen','A2','vergessen',{ich:'vergesse',du:'vergisst',er:'vergisst',wir:'vergessen',ihr:'vergesst',sie:'vergessen'},'vergaß','hat vergessen','standard',[
     {de:'Diese ganzen Geschichten hatte ich ja ganz vergessen.',en:'I\'d completely forgotten all these stories.',focus:'vergessen'},
     {de:'Ich habe vergessen, den Brief abzuschicken.',en:'I forgot to send off the letter.',focus:'vergessen'},
     {de:'Ich habe meinen Schlüssel bei dir vergessen.',en:'I left my key at your place.',focus:'vergessen'},
   ]),
-  _verb('gen-verb-verletzen','A2','verletzen',{ich:'verletze',du:'verletzt',er:'verletzt',wir:'verletzen',ihr:'verletzt',sie:'verletzen'},'verletzte','hat verletzt',[
+  _verb('gen-verb-verletzen','A2','verletzen',{ich:'verletze',du:'verletzt',er:'verletzt',wir:'verletzen',ihr:'verletzt',sie:'verletzen'},'verletzte','hat verletzt','easy',[
     {de:'Er hat sich bei einem Sturz verletzt.',en:'He had a tumble and hurt himself.',focus:'verletzt'},
     {de:'Du verletzt?',en:'Do you hurt?',focus:'verletzt',subject:'du'},
-    {de:'Er verletzt.',en:'He hurts.',focus:'verletzt',subject:'er'},
   ]),
-  _verb('gen-verb-verlieben','A2','verlieben',{ich:'verliebe',du:'verliebst',er:'verliebt',wir:'verlieben',ihr:'verliebt',sie:'verlieben'},'verliebte','hat verliebt',[
-    {de:'Wir haben uns verliebt.',en:'We fell in love.',focus:'verliebt'},
+  _verb('gen-verb-verlieben','A2','verlieben',{ich:'verliebe',du:'verliebst',er:'verliebt',wir:'verlieben',ihr:'verliebt',sie:'verlieben'},'verliebte','hat verliebt','easy',[
     {de:'Ich verliebte mich Hals über Kopf in sie.',en:'I fell head over heels in love with her.',focus:'verliebte'},
+    {de:'Du verliebst?',en:'Do you fall in love?',focus:'verliebst',subject:'du'},
   ]),
-  _verb('gen-verb-verlieren','A2','verlieren',{ich:'verliere',du:'verlierst',er:'verliert',wir:'verlieren',ihr:'verliert',sie:'verlieren'},'verlor','hat verloren',[
+  _verb('gen-verb-verlieren','A2','verlieren',{ich:'verliere',du:'verlierst',er:'verliert',wir:'verlieren',ihr:'verliert',sie:'verlieren'},'verlor','hat verloren','standard',[
     {de:'Ich hab\' meinen Pass wieder verloren. Weißt du wo er ist?',en:'I lost my passport again. Do you know where it is?',focus:'verloren'},
     {de:'Ich habe mich in der Menge verloren.',en:'I got lost in the crowd.',focus:'verloren'},
   ]),
-  _verb('gen-verb-verpassen','A2','verpassen',{ich:'verpasse',du:'verpasst',er:'verpasst',wir:'verpassen',ihr:'verpasst',sie:'verpassen'},'verpasste','hat verpasst',[
-    {de:'Ich verpasse.',en:'I miss.',focus:'verpasse',subject:'ich'},
-    {de:'Du verpasst?',en:'Do you miss?',focus:'verpasst',subject:'du'},
-    {de:'Er verpasst.',en:'He misses.',focus:'verpasst',subject:'er'},
-  ]),
-  _verb('gen-verb-verreisen','A2','verreisen',{ich:'verreise',du:'verreist',er:'verreist',wir:'verreisen',ihr:'verreist',sie:'verreisen'},'verreiste','ist verreist',[
-    {de:'Ich verreise.',en:'I take a trip.',focus:'verreise',subject:'ich'},
-    {de:'Du verreist?',en:'Do you take a trip?',focus:'verreist',subject:'du'},
-    {de:'Er verreist.',en:'He takes a trip.',focus:'verreist',subject:'er'},
-  ]),
-  _verb('gen-verb-verschieben','A2','verschieben',{ich:'verschiebe',du:'verschiebst',er:'verschiebt',wir:'verschieben',ihr:'verschiebt',sie:'verschieben'},'verschob','hat verschoben',[
-    {de:'Ich verschiebe.',en:'I move.',focus:'verschiebe',subject:'ich'},
-    {de:'Du verschiebst?',en:'Do you move?',focus:'verschiebst',subject:'du'},
-    {de:'Er verschiebt.',en:'He moves.',focus:'verschiebt',subject:'er'},
-  ]),
-  _verb('gen-verb-versuchen','A2','versuchen',{ich:'versuche',du:'versuchst',er:'versucht',wir:'versuchen',ihr:'versucht',sie:'versuchen'},'versuchte','hat versucht',[
+  _verb('gen-verb-versuchen','A2','versuchen',{ich:'versuche',du:'versuchst',er:'versucht',wir:'versuchen',ihr:'versucht',sie:'versuchen'},'versuchte','hat versucht','easy',[
     {de:'Bitte sei still, ich versuche zu schlafen.',en:'Please be quiet, I\'m trying to sleep.',focus:'versuche'},
     {de:'Du versuchst?',en:'Do you try?',focus:'versuchst',subject:'du'},
-    {de:'Er versucht.',en:'He tries.',focus:'versucht',subject:'er'},
   ]),
-  _verb('gen-verb-wechseln','A2','wechseln',{ich:'wechsle',du:'wechselst',er:'wechselt',wir:'wechseln',ihr:'wechselnt',sie:'wechseln'},'wechselte','hat gewechselt',[
-    {de:'Ich wechsle.',en:'I change.',focus:'wechsle',subject:'ich'},
-    {de:'Du wechselst?',en:'Do you change?',focus:'wechselst',subject:'du'},
-    {de:'Er wechselt.',en:'He changes.',focus:'wechselt',subject:'er'},
-  ]),
-  _verb('gen-verb-wecken','A2','wecken',{ich:'wecke',du:'weckst',er:'weckt',wir:'wecken',ihr:'weckt',sie:'wecken'},'weckte','hat geweckt',[
+  _verb('gen-verb-wecken','A2','wecken',{ich:'wecke',du:'weckst',er:'weckt',wir:'wecken',ihr:'weckt',sie:'wecken'},'weckte','hat geweckt','easy',[
     {de:'Meine Katze ist zu mir ins Bett geklettert und hat mich aufgeweckt.',en:'My cat crawled into my bed and woke me up.',focus:'aufgeweckt'},
     {de:'Du weckst?',en:'Do you wake?',focus:'weckst',subject:'du'},
-    {de:'Er weckt.',en:'He wakes.',focus:'weckt',subject:'er'},
   ]),
-  _verb('gen-verb-weinen','A2','weinen',{ich:'weine',du:'weinst',er:'weint',wir:'weinen',ihr:'weint',sie:'weinen'},'weinte','hat geweint',[
-    {de:'Ich weine.',en:'I weep.',focus:'weine',subject:'ich'},
-    {de:'Du weinst?',en:'Do you weep?',focus:'weinst',subject:'du'},
-    {de:'Er weint.',en:'He weeps.',focus:'weint',subject:'er'},
-  ]),
-  _verb('gen-verb-wuenschen','A2','wünschen',{ich:'wünsche',du:'wünschst',er:'wünscht',wir:'wünschen',ihr:'wünscht',sie:'wünschen'},'wünschte','hat gewünscht',[
+  _verb('gen-verb-wuenschen','A2','wünschen',{ich:'wünsche',du:'wünschst',er:'wünscht',wir:'wünschen',ihr:'wünscht',sie:'wünschen'},'wünschte','hat gewünscht','standard',[
     {de:'Ich wünsche mir ein Meerschweinchen.',en:'I want a guinea pig.',focus:'wünsche'},
     {de:'Ich wünsche dir alles Gute.',en:'I wish you all the best.',focus:'wünsche'},
-    {de:'Ich wünsche eine Erklärung!',en:'I demand an explanation!',focus:'wünsche'},
   ]),
-  _verb('gen-verb-zeigen','A2','zeigen',{ich:'zeige',du:'zeigst',er:'zeigt',wir:'zeigen',ihr:'zeigt',sie:'zeigen'},'zeigte','hat gezeigt',[
+  _verb('gen-verb-zeigen','A2','zeigen',{ich:'zeige',du:'zeigst',er:'zeigt',wir:'zeigen',ihr:'zeigt',sie:'zeigen'},'zeigte','hat gezeigt','standard',[
     {de:'Man zeigt nicht mit dem Finger auf die Leute!',en:'You don’t point your finger at people!',focus:'zeigt'},
     {de:'Zeig mir mal deine Briefmarkensammlung!',en:'Please show me your stamp collection!',focus:'Zeig'},
     {de:'Wenn dieser Kanal die 100.000 Abos knackt, zeige ich mich.',en:'When this channel reaches 100,000 subscribers, I\'ll do a face reveal.',focus:['zeige','mich']},
   ]),
-  _verb('gen-verb-zuhoeren','A2','zuhören',{ich:'höre zu',du:'hörst zu',er:'hört zu',wir:'hören zu',ihr:'hört zu',sie:'hören zu'},'hörte zu','hat zugehört',[
-    {de:'Ich höre zu.',en:'I listen.',focus:'höre zu',subject:'ich'},
-    {de:'Du hörst zu?',en:'Do you listen?',focus:'hörst zu',subject:'du'},
-    {de:'Er hört zu.',en:'He listens.',focus:'hört zu',subject:'er'},
-  ]),
-  _verb('gen-verb-zumachen','A2','zumachen',{ich:'mache zu',du:'machst zu',er:'macht zu',wir:'machen zu',ihr:'macht zu',sie:'machen zu'},'machte zu','hat zugemacht',[
-    {de:'Ich mache zu.',en:'I close.',focus:'mache zu',subject:'ich'},
-    {de:'Du machst zu?',en:'Do you close?',focus:'machst zu',subject:'du'},
-    {de:'Er macht zu.',en:'He closes.',focus:'macht zu',subject:'er'},
-  ]),
-  _verb('gen-verb-zurueckgeben','A2','zurückgeben',{ich:'gebe zurück',du:'gibst zurück',er:'gibt zurück',wir:'geben zurück',ihr:'gebt zurück',sie:'geben zurück'},'gab zurück','hat zurückgegeben',[
-    {de:'Ich gebe zurück.',en:'I give back.',focus:'gebe zurück',subject:'ich'},
-    {de:'Du gibst zurück?',en:'Do you give back?',focus:'gibst zurück',subject:'du'},
-    {de:'Er gibt zurück.',en:'He gives back.',focus:'gibt zurück',subject:'er'},
-  ]),
-  _verb('gen-verb-zurueckgehen','A2','zurückgehen',{ich:'gehe zurück',du:'gehst zurück',er:'geht zurück',wir:'gehen zurück',ihr:'geht zurück',sie:'gehen zurück'},'ging zurück','ist zurückgegangen',[
-    {de:'Ich gehe zurück.',en:'I go back.',focus:'gehe zurück',subject:'ich'},
-    {de:'Du gehst zurück?',en:'Do you go back?',focus:'gehst zurück',subject:'du'},
-    {de:'Er geht zurück.',en:'He gos back.',focus:'geht zurück',subject:'er'},
-  ]),
-  _verb('gen-verb-zurueckkommen','A2','zurückkommen',{ich:'komme zurück',du:'kommst zurück',er:'kommt zurück',wir:'kommen zurück',ihr:'kommt zurück',sie:'kommen zurück'},'kam zurück','ist zurückgekommen',[
-    {de:'Ich komme zurück.',en:'I return.',focus:'komme zurück',subject:'ich'},
-    {de:'Du kommst zurück?',en:'Do you return?',focus:'kommst zurück',subject:'du'},
-    {de:'Er kommt zurück.',en:'He returns.',focus:'kommt zurück',subject:'er'},
-  ]),
-  _verb('gen-verb-zuruecklaufen','A2','zurücklaufen',{ich:'laufe zurück',du:'läufst zurück',er:'läuft zurück',wir:'laufen zurück',ihr:'lauft zurück',sie:'laufen zurück'},'lief zurück','ist zurückgelaufen',[
-    {de:'ein Band zurücklaufen lassen',en:'to rewind/run back a tape',focus:'zurücklaufen'},
-    {de:'Du läufst zurück?',en:'Do you go back to walk back?',focus:'läufst zurück',subject:'du'},
-    {de:'Er läuft zurück.',en:'He gos back to walk back.',focus:'läuft zurück',subject:'er'},
-  ]),
-  _verb('gen-verb-aendern','A2','ändern',{ich:'ändere',du:'änderst',er:'ändert',wir:'ändern',ihr:'ändernt',sie:'ändern'},'änderte','hat geändert',[
+  _verb('gen-verb-aendern','A2','ändern',{ich:'ändere',du:'änderst',er:'ändert',wir:'ändern',ihr:'ändernt',sie:'ändern'},'änderte','hat geändert','standard',[
     {de:'Früher dachte ich, Botanik sei langweilig, aber ich habe meine Meinung geändert.',en:'I used to think Botany was boring, but I\'ve changed my opinion.',focus:'geändert'},
     {de:'Hoffentlich wird sich diese unglückliche Situation bald ändern.',en:'Hopefully this unfortunate situation will change soon.',focus:'ändern'},
   ]),
-  _verb('gen-verb-aergern','A2','ärgern',{ich:'ärgere',du:'ärgerst',er:'ärgert',wir:'ärgern',ihr:'ärgernt',sie:'ärgern'},'ärgerte','hat geärgert',[
+  _verb('gen-verb-aergern','A2','ärgern',{ich:'ärgere',du:'ärgerst',er:'ärgert',wir:'ärgern',ihr:'ärgernt',sie:'ärgern'},'ärgerte','hat geärgert','easy',[
     {de:'Die anderen Kinder ärgern ihn immer.',en:'The other kids keep annoying him.',focus:'ärgern'},
     {de:'Du ärgerst?',en:'Do you annoy?',focus:'ärgerst',subject:'du'},
-    {de:'Er ärgert.',en:'He annoys.',focus:'ärgert',subject:'er'},
   ]),
-  _verb('gen-verb-ueben','A2','üben',{ich:'übe',du:'übst',er:'übt',wir:'üben',ihr:'übt',sie:'üben'},'übte','hat geübt',[
-    {de:'Meine Tochter übt Klavier.',en:'My daughter is practicing piano.',focus:'übt'},
+  _verb('gen-verb-ueben','A2','üben',{ich:'übe',du:'übst',er:'übt',wir:'üben',ihr:'übt',sie:'üben'},'übte','hat geübt','standard',[
     {de:'Du musst mehr üben, sonst wirst du nie besser.',en:'You\'ve got to practice more, otherwise you\'ll never get better.',focus:'üben'},
     {de:'Wenn wir fortfahren, müssen wir Vorsicht üben.',en:'If we proceed, we must exercise caution.',focus:'üben'},
   ]),
-  _verb('gen-verb-uebersetzen','A2','übersetzen',{ich:'übersetze',du:'übersetzt',er:'übersetzt',wir:'übersetzen',ihr:'übersetzt',sie:'übersetzen'},'übersetzte','hat übersetzt',[
+  _verb('gen-verb-uebersetzen','A2','übersetzen',{ich:'übersetze',du:'übersetzt',er:'übersetzt',wir:'übersetzen',ihr:'übersetzt',sie:'übersetzen'},'übersetzte','hat übersetzt','easy',[
     {de:'Sie übersetzt Lyrik ins Deutsche.',en:'She translates poetry into German.',focus:'übersetzt'},
     {de:'Du übersetzt?',en:'Do you translate?',focus:'übersetzt',subject:'du'},
-    {de:'Er übersetzt.',en:'He translates.',focus:'übersetzt',subject:'er'},
   ]),
 ];
 
-// ── nouns (647) ─────────────────────────────────
+// ── nouns (124) ─────────────────────────────────
 
 export const GENERATED_NOUNS: CardDef[] = [
-  _noun('gen-noun-abend','A1','der','Abend',{nom:'der',akk:'den',dat:'dem'},'Abende','evening',[
-    {de:'Der Abend ist hier.',en:'The evening is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Abend.',en:'I see the evening.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Abend.',en:'I speak about the evening.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-abfahrt','A1','die','Abfahrt',{nom:'die',akk:'die',dat:'der'},'Abfahrten','departure',[
+  _noun('gen-noun-abfahrt','A1','die','Abfahrt',{nom:'die',akk:'die',dat:'der'},'Abfahrten','departure','easy',[
     {de:'fünf Minuten vor Abfahrt des Zuges',en:'five minutes before departure of the train',focus:'Abfahrt'},
     {de:'Ich sehe die Abfahrt.',en:'I see the departure.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Abfahrt.',en:'I speak about the departure.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-abflug','A1','der','Abflug',{nom:'der',akk:'den',dat:'dem'},'Abflüge','take-off',[
+  _noun('gen-noun-abflug','A1','der','Abflug',{nom:'der',akk:'den',dat:'dem'},'Abflüge','take-off','easy',[
     {de:'Der Abflug verzögert sich um eine Stunde.',en:'The departure is delayed for an hour.',focus:'Abflug'},
     {de:'Ich sehe den Abflug.',en:'I see the take-off.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Abflug.',en:'I speak about the take-off.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-absender','A1','der','Absender',{nom:'der',akk:'den',dat:'dem'},'Absender','sender',[
-    {de:'Der Absender ist hier.',en:'The sender is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Absender.',en:'I see the sender.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Absender.',en:'I speak about the sender.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-achtung','A1','die','Achtung',{nom:'die',akk:'die',dat:'der'},'—','attention',[
-    {de:'Die Achtung ist hier.',en:'The attention is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Achtung.',en:'I see the attention.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Achtung.',en:'I speak about the attention.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-adresse','A1','die','Adresse',{nom:'die',akk:'die',dat:'der'},'Adressen','address',[
-    {de:'Die Adresse ist hier.',en:'The address is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Adresse.',en:'I see the address.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Adresse.',en:'I speak about the address.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-alter','A1','das','Alter',{nom:'das',akk:'das',dat:'dem'},'Alter','age',[
-    {de:'Das Alter ist hier.',en:'The age is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Alter.',en:'I see the age.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Alter.',en:'I speak about the age.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anfang','A1','der','Anfang',{nom:'der',akk:'den',dat:'dem'},'Anfänge','start',[
+  _noun('gen-noun-anfang','A1','der','Anfang',{nom:'der',akk:'den',dat:'dem'},'Anfänge','start','easy',[
     {de:'Es ist ein guter Anfang.',en:'It\'s a good place to start.',focus:'Anfang'},
+    {de:'Es war ein guter Anfang.',en:'It was a good start.',focus:'Anfang'},
     {de:'Ich sehe den Anfang.',en:'I see the start.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Anfang.',en:'I speak about the start.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-angebot','A1','das','Angebot',{nom:'das',akk:'das',dat:'dem'},'Angebote','offer',[
+  _noun('gen-noun-angebot','A1','das','Angebot',{nom:'das',akk:'das',dat:'dem'},'Angebote','offer','easy',[
     {de:'Es liegt ein neues Angebot auf dem Tisch.',en:'There is a new offer on the table.',focus:'Angebot'},
+    {de:'Er hat mir ein Angebot für mein Motorrad gemacht.',en:'He made me an offer on my motorcycle.',focus:'Angebot'},
     {de:'Ich sehe das Angebot.',en:'I see the offer.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Angebot.',en:'I speak about the offer.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-ankunft','A1','die','Ankunft',{nom:'die',akk:'die',dat:'der'},'Ankünfte','arrival',[
-    {de:'Die Ankunft ist hier.',en:'The arrival is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ankunft.',en:'I see the arrival.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ankunft.',en:'I speak about the arrival.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anmeldung','A1','die','Anmeldung',{nom:'die',akk:'die',dat:'der'},'Anmeldungen','application',[
-    {de:'Die Anmeldung ist hier.',en:'The application is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Anmeldung.',en:'I see the application.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Anmeldung.',en:'I speak about the application.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anrede','A1','die','Anrede',{nom:'die',akk:'die',dat:'der'},'Anreden','salutation',[
-    {de:'Die Anrede ist hier.',en:'The salutation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Anrede.',en:'I see the salutation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Anrede.',en:'I speak about the salutation.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anruf','A1','der','Anruf',{nom:'der',akk:'den',dat:'dem'},'Anrufe','call upon',[
-    {de:'Der Anruf ist hier.',en:'The call upon is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Anruf.',en:'I see the call upon.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Anruf.',en:'I speak about the call upon.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anrufbeantworter','A1','der','Anrufbeantworter',{nom:'der',akk:'den',dat:'dem'},'Anrufbeantworter','answering machine',[
-    {de:'Der Anrufbeantworter ist hier.',en:'The answering machine is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Anrufbeantworter.',en:'I see the answering machine.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Anrufbeantworter.',en:'I speak about the answering machine.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ansage','A1','die','Ansage',{nom:'die',akk:'die',dat:'der'},'Ansagen','announcement',[
-    {de:'Die Ansage ist hier.',en:'The announcement is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ansage.',en:'I see the announcement.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ansage.',en:'I speak about the announcement.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anschluss','A1','der','Anschluss',{nom:'der',akk:'den',dat:'dem'},'Anschlüsse','connection',[
-    {de:'Der Anschluss ist hier.',en:'The connection is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Anschluss.',en:'I see the connection.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Anschluss.',en:'I speak about the connection.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-antwort','A1','die','Antwort',{nom:'die',akk:'die',dat:'der'},'Antworten','answer',[
-    {de:'Die Antwort ist hier.',en:'The answer is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Antwort.',en:'I see the answer.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Antwort.',en:'I speak about the answer.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anzeige','A1','die','Anzeige',{nom:'die',akk:'die',dat:'der'},'Anzeigen','advertisement',[
+  _noun('gen-noun-anzeige','A1','die','Anzeige',{nom:'die',akk:'die',dat:'der'},'Anzeigen','advertisement','easy',[
     {de:'Ich habe eine Anzeige im Internet gelesen.',en:'I have read an advertisement on the Internet.',focus:'Anzeige'},
     {de:'Ich sehe die Anzeige.',en:'I see the advertisement.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Anzeige.',en:'I speak about the advertisement.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-apartment','A1','das','Apartment',{nom:'das',akk:'das',dat:'dem'},'Apartments','apartment',[
-    {de:'Das Apartment ist hier.',en:'The apartment is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Apartment.',en:'I see the apartment.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Apartment.',en:'I speak about the apartment.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-appartement','A1','das','Appartement',{nom:'das',akk:'das',dat:'dem'},'Appartements','suite in a hotel',[
-    {de:'Das Appartement ist hier.',en:'The suite in a hotel is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Appartement.',en:'I see the suite in a hotel.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Appartement.',en:'I speak about the suite in a hotel.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-appetit','A1','der','Appetit',{nom:'der',akk:'den',dat:'dem'},'—','appetite',[
-    {de:'Der Appetit ist hier.',en:'The appetite is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Appetit.',en:'I see the appetite.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Appetit.',en:'I speak about the appetite.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-april','A1','der','April',{nom:'der',akk:'den',dat:'dem'},'Aprile','April',[
-    {de:'Der April ist hier.',en:'The April is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den April.',en:'I see the April.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem April.',en:'I speak about the April.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-arbeitsplatz','A1','der','Arbeitsplatz',{nom:'der',akk:'den',dat:'dem'},'Arbeitsplätze','workplace',[
-    {de:'Der Arbeitsplatz ist hier.',en:'The workplace is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Arbeitsplatz.',en:'I see the workplace.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Arbeitsplatz.',en:'I speak about the workplace.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-arm','A1','der','Arm',{nom:'der',akk:'den',dat:'dem'},'Arme','arm',[
-    {de:'sich die Arme hochkrempeln',en:'to roll up one\'s sleeves (informal)',focus:'Arme'},
-    {de:'Ich sehe den Arm.',en:'I see the arm.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Arm.',en:'I speak about the arm.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-arzt','A1','der','Arzt',{nom:'der',akk:'den',dat:'dem'},'Ärzte','doctor',[
-    {de:'Der Arzt ist hier.',en:'The doctor is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Arzt.',en:'I see the doctor.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Arzt.',en:'I speak about the doctor.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-aufgabe','A1','die','Aufgabe',{nom:'die',akk:'die',dat:'der'},'Aufgaben','task',[
+  _noun('gen-noun-aufgabe','A1','die','Aufgabe',{nom:'die',akk:'die',dat:'der'},'Aufgaben','task','easy',[
     {de:'Sie hat es sich zur Aufgabe gemacht, ihren Garten insektenfreundlich zu gestalten.',en:'She’s made it her mission to shape her garden in an insect-friendly way.',focus:'Aufgabe'},
+    {de:'Für heute habe ich all meine Aufgaben erledigt.',en:'I’ve completed all my tasks for the day.',focus:'Aufgaben'},
     {de:'Ich sehe die Aufgabe.',en:'I see the task.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Aufgabe.',en:'I speak about the task.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-aufzug','A1','der','Aufzug',{nom:'der',akk:'den',dat:'dem'},'Aufzüge','Clipping of Aufzugsanlage',[
+  _noun('gen-noun-aufzug','A1','der','Aufzug',{nom:'der',akk:'den',dat:'dem'},'Aufzüge','Clipping of Aufzugsanlage','easy',[
     {de:'Es gibt keinen Aufzug, also musst du die Treppe nehmen.',en:'There\'s no elevator so you have take the stairs.',focus:'Aufzug'},
+    {de:'Der Aufzug dieser Uhr ist defekt.',en:'The winding of this watch is broken.',focus:'Aufzug'},
     {de:'Ich sehe den Aufzug.',en:'I see the Clipping of Aufzugsanlage.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Aufzug.',en:'I speak about the Clipping of Aufzugsanlage.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-auge','A1','das','Auge',{nom:'das',akk:'das',dat:'dem'},'Augen','eye',[
-    {de:'Das Auge ist hier.',en:'The eye is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Auge.',en:'I see the eye.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Auge.',en:'I speak about the eye.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-august','A1','der','August',{nom:'der',akk:'den',dat:'dem'},'Auguste','August',[
-    {de:'Der August ist hier.',en:'The August is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den August.',en:'I see the August.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem August.',en:'I speak about the August.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausflug','A1','der','Ausflug',{nom:'der',akk:'den',dat:'dem'},'Ausflüge','excursion',[
-    {de:'Der Ausflug ist hier.',en:'The excursion is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ausflug.',en:'I see the excursion.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ausflug.',en:'I speak about the excursion.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausgang','A1','der','Ausgang',{nom:'der',akk:'den',dat:'dem'},'Ausgänge','exit',[
-    {de:'Der Ausgang ist hier.',en:'The exit is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ausgang.',en:'I see the exit.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ausgang.',en:'I speak about the exit.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-auskunft','A1','die','Auskunft',{nom:'die',akk:'die',dat:'der'},'Auskünfte','enquiry',[
-    {de:'Die Auskunft ist hier.',en:'The enquiry is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Auskunft.',en:'I see the enquiry.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Auskunft.',en:'I speak about the enquiry.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausland','A1','das','Ausland',{nom:'das',akk:'das',dat:'dem'},'—','foreign countries',[
-    {de:'Das Ausland ist hier.',en:'The foreign countries is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Ausland.',en:'I see the foreign countries.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ausland.',en:'I speak about the foreign countries.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-auslaender','A1','der','Ausländer',{nom:'der',akk:'den',dat:'dem'},'Ausländer','foreigner',[
-    {de:'Der Ausländer ist hier.',en:'The foreigner is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ausländer.',en:'I see the foreigner.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ausländer.',en:'I speak about the foreigner.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-aussage','A1','die','Aussage',{nom:'die',akk:'die',dat:'der'},'Aussagen','proposition',[
-    {de:'Die Aussage ist hier.',en:'The proposition is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Aussage.',en:'I see the proposition.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Aussage.',en:'I speak about the proposition.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausweis','A1','der','Ausweis',{nom:'der',akk:'den',dat:'dem'},'Ausweise','identity document',[
-    {de:'Der Ausweis ist hier.',en:'The identity document is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ausweis.',en:'I see the identity document.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ausweis.',en:'I speak about the identity document.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-autobahn','A1','die','Autobahn',{nom:'die',akk:'die',dat:'der'},'Autobahnen','motorway',[
-    {de:'Die Autobahn ist hier.',en:'The motorway is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Autobahn.',en:'I see the motorway.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Autobahn.',en:'I speak about the motorway.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-automat','A1','der','Automat',{nom:'der',akk:'den',dat:'dem'},'Automaten','automaton',[
-    {de:'Der Automat ist hier.',en:'The automaton is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Automaten.',en:'I see the automaton.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Automaten.',en:'I speak about the automaton.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-baby','A1','das','Baby',{nom:'das',akk:'das',dat:'dem'},'Babys','baby',[
-    {de:'Das Baby ist hier.',en:'The baby is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Baby.',en:'I see the baby.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Baby.',en:'I speak about the baby.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bad','A1','das','Bad',{nom:'das',akk:'das',dat:'dem'},'Bäder','bath',[
-    {de:'ein Bad nehmen',en:'to take a bath',focus:'Bad'},
-    {de:'Ich sehe das Bad.',en:'I see the bath.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bad.',en:'I speak about the bath.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bahn','A1','die','Bahn',{nom:'die',akk:'die',dat:'der'},'Bahnen','route',[
+  _noun('gen-noun-bahn','A1','die','Bahn',{nom:'die',akk:'die',dat:'der'},'Bahnen','route','easy',[
     {de:'Sie bricht sich ihre eigene Bahn.',en:'She blazes her own trail.',focus:'Bahn'},
+    {de:'Ich habe eine Tageskarte für Bus und Bahn.',en:'I\'ve got a day ticket for bus and rail.',focus:'Bahn'},
     {de:'Ich sehe die Bahn.',en:'I see the route.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bahn.',en:'I speak about the route.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-bahnhof','A1','der','Bahnhof',{nom:'der',akk:'den',dat:'dem'},'Bahnhöfe','railway depot',[
-    {de:'Der Bahnhof ist hier.',en:'The railway depot is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Bahnhof.',en:'I see the railway depot.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bahnhof.',en:'I speak about the railway depot.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bahnsteig','A1','der','Bahnsteig',{nom:'der',akk:'den',dat:'dem'},'Bahnsteige','train platform',[
-    {de:'Der Bahnsteig ist hier.',en:'The train platform is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Bahnsteig.',en:'I see the train platform.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bahnsteig.',en:'I speak about the train platform.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-balkon','A1','der','Balkon',{nom:'der',akk:'den',dat:'dem'},'—','balcony',[
-    {de:'Der Balkon ist hier.',en:'The balcony is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Balkon.',en:'I see the balcony.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Balkon.',en:'I speak about the balcony.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-banane','A1','die','Banane',{nom:'die',akk:'die',dat:'der'},'Bananen','banana',[
-    {de:'Die Banane ist hier.',en:'The banana is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Banane.',en:'I see the banana.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Banane.',en:'I speak about the banana.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bauch','A1','der','Bauch',{nom:'der',akk:'den',dat:'dem'},'Bäuche','abdomen',[
+  _noun('gen-noun-bauch','A1','der','Bauch',{nom:'der',akk:'den',dat:'dem'},'Bäuche','abdomen','easy',[
     {de:'Mein Bauch tut mir so weh!',en:'My belly hurts so bad!',focus:'Bauch'},
     {de:'Ich sehe den Bauch.',en:'I see the abdomen.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bauch.',en:'I speak about the abdomen.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-baum','A1','der','Baum',{nom:'der',akk:'den',dat:'dem'},'Bäume','tree',[
-    {de:'Der Baum ist hier.',en:'The tree is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Baum.',en:'I see the tree.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Baum.',en:'I speak about the tree.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bein','A1','das','Bein',{nom:'das',akk:'das',dat:'dem'},'Beine','leg of a person',[
-    {de:'Das Bein ist hier.',en:'The leg of a person is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Bein.',en:'I see the leg of a person.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bein.',en:'I speak about the leg of a person.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-beispiel','A1','das','Beispiel',{nom:'das',akk:'das',dat:'dem'},'Beispiele','example',[
-    {de:'an vielen Beispielen (verdeutlichen/zeigen).',en:'(to illustrate/demonstrate) by many examples.',focus:'Beispielen'},
-    {de:'Ich sehe das Beispiel.',en:'I see the example.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Beispiel.',en:'I speak about the example.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-beruf','A1','der','Beruf',{nom:'der',akk:'den',dat:'dem'},'Berufe','occupation',[
-    {de:'Der Beruf ist hier.',en:'The occupation is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Beruf.',en:'I see the occupation.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Beruf.',en:'I speak about the occupation.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bett','A1','das','Bett',{nom:'das',akk:'das',dat:'dem'},'Betten','bed',[
-    {de:'Das Bett ist hier.',en:'The bed is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Bett.',en:'I see the bed.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bett.',en:'I speak about the bed.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bier','A1','das','Bier',{nom:'das',akk:'das',dat:'dem'},'Biere','beer',[
+  _noun('gen-noun-bier','A1','das','Bier',{nom:'das',akk:'das',dat:'dem'},'Biere','beer','easy',[
     {de:'Das ist nicht mein Bier!',en:'That\'s none of my business!',focus:'Bier'},
     {de:'Ich sehe das Bier.',en:'I see the beer.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bier.',en:'I speak about the beer.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-bild','A1','das','Bild',{nom:'das',akk:'das',dat:'dem'},'Bilder','depiction',[
+  _noun('gen-noun-bild','A1','das','Bild',{nom:'das',akk:'das',dat:'dem'},'Bilder','depiction','easy',[
+    {de:'Bilder an die Wand hängen',en:'to hang pictures on the wall',focus:'Bilder'},
     {de:'Bilder an die Wand hängen',en:'to hang pictures on the wall',focus:'Bilder'},
     {de:'Ich sehe das Bild.',en:'I see the depiction.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bild.',en:'I speak about the depiction.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-birne','A1','die','Birne',{nom:'die',akk:'die',dat:'der'},'Birnen','pear',[
-    {de:'Die Birne ist hier.',en:'The pear is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Birne.',en:'I see the pear.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Birne.',en:'I speak about the pear.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bitte','A1','die','Bitte',{nom:'die',akk:'die',dat:'der'},'Bitten','request',[
-    {de:'Die Bitte ist hier.',en:'The request is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bitte.',en:'I see the request.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bitte.',en:'I speak about the request.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bleistift','A1','der','Bleistift',{nom:'der',akk:'den',dat:'dem'},'Bleistifte','pencil',[
-    {de:'Der Bleistift ist hier.',en:'The pencil is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Bleistift.',en:'I see the pencil.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bleistift.',en:'I speak about the pencil.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-blick','A1','der','Blick',{nom:'der',akk:'den',dat:'dem'},'Blicke','glance',[
-    {de:'auf den ersten Blick',en:'at first glance',focus:'Blick'},
-    {de:'Ich sehe den Blick.',en:'I see the glance.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Blick.',en:'I speak about the glance.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-blume','A1','die','Blume',{nom:'die',akk:'die',dat:'der'},'Blumen','flower',[
-    {de:'Insekten helfen Blumen bei der Reproduktion.',en:'Insects help flowers reproduce.',focus:'Blumen'},
+  _noun('gen-noun-blume','A1','die','Blume',{nom:'die',akk:'die',dat:'der'},'Blumen','flower','easy',[
+    {de:'Die breite Varietät an Blumensorten faszinierte die Menschen schon lange',en:'The wide range of different kinds of flowers has fascinated man for ages.',focus:'Blumen'},
+    {de:'Blumen sind häufig ein Bestandteil von Symbolen auf Flaggen und Wappen',en:'Flowers are often a building block of symbols on flags.',focus:'Blumen'},
     {de:'Ich sehe die Blume.',en:'I see the flower.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Blume.',en:'I speak about the flower.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-bogen','A1','der','Bogen',{nom:'der',akk:'den',dat:'dem'},'—','bow',[
-    {de:'Der Bogen ist hier.',en:'The bow is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Bogen.',en:'I see the bow.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bogen.',en:'I speak about the bow.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-brief','A1','der','Brief',{nom:'der',akk:'den',dat:'dem'},'Briefe','letter',[
-    {de:'Der Brief ist hier.',en:'The letter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Brief.',en:'I see the letter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Brief.',en:'I speak about the letter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-briefmarke','A1','die','Briefmarke',{nom:'die',akk:'die',dat:'der'},'Briefmarken','postage stamp',[
-    {de:'Die Briefmarke ist hier.',en:'The postage stamp is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Briefmarke.',en:'I see the postage stamp.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Briefmarke.',en:'I speak about the postage stamp.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bruder','A1','der','Bruder',{nom:'der',akk:'den',dat:'dem'},'Brüder','brother',[
+  _noun('gen-noun-bruder','A1','der','Bruder',{nom:'der',akk:'den',dat:'dem'},'Brüder','brother','easy',[
     {de:'Mein Bruder hat zwei Katzen.',en:'My brother has two cats.',focus:'Bruder'},
     {de:'Ich sehe den Bruder.',en:'I see the brother.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bruder.',en:'I speak about the brother.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-broetchen','A1','das','Brötchen',{nom:'das',akk:'das',dat:'dem'},'Brötchen','bun',[
-    {de:'Das Brötchen ist hier.',en:'The bun is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Brötchen.',en:'I see the bun.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Brötchen.',en:'I speak about the bun.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-buchstabe','A1','der','Buchstabe',{nom:'der',akk:'den',dat:'dem'},'Buchstaben','letter',[
-    {de:'Der Buchstabe ist hier.',en:'The letter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Buchstaben.',en:'I see the letter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Buchstaben.',en:'I speak about the letter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-butter','A1','die','Butter',{nom:'die',akk:'die',dat:'der'},'—','butter',[
-    {de:'Die Butter ist hier.',en:'The butter is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Butter.',en:'I see the butter.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Butter.',en:'I speak about the butter.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-baeckerei','A1','die','Bäckerei',{nom:'die',akk:'die',dat:'der'},'Bäckereien','bakery',[
-    {de:'Die Bäckerei ist hier.',en:'The bakery is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bäckerei.',en:'I see the bakery.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bäckerei.',en:'I speak about the bakery.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-caf','A1','das','Café',{nom:'das',akk:'das',dat:'dem'},'Cafés','café',[
-    {de:'Das Café ist hier.',en:'The café is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Café.',en:'I see the café.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Café.',en:'I speak about the café.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-cd','A1','die','CD',{nom:'die',akk:'die',dat:'der'},'CDs','CD',[
-    {de:'Die CD ist hier.',en:'The CD is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die CD.',en:'I see the CD.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der CD.',en:'I speak about the CD.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-cent','A1','der','Cent',{nom:'der',akk:'den',dat:'dem'},'—','cent',[
-    {de:'Der Cent ist hier.',en:'The cent is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Cent.',en:'I see the cent.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Cent.',en:'I speak about the cent.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-chef','A1','der','Chef',{nom:'der',akk:'den',dat:'dem'},'Chefs','boss',[
-    {de:'Der Chef ist hier.',en:'The boss is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Chef.',en:'I see the boss.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Chef.',en:'I speak about the boss.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-computer','A1','der','Computer',{nom:'der',akk:'den',dat:'dem'},'Computer','computer',[
-    {de:'Der Computer ist hier.',en:'The computer is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Computer.',en:'I see the computer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Computer.',en:'I speak about the computer.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dank','A1','der','Dank',{nom:'der',akk:'den',dat:'dem'},'—','thanks',[
-    {de:'Der Dank ist hier.',en:'The thanks is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Dank.',en:'I see the thanks.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Dank.',en:'I speak about the thanks.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-datum','A1','das','Datum',{nom:'das',akk:'das',dat:'dem'},'Daten','date',[
-    {de:'Das Datum ist hier.',en:'The date is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Datum.',en:'I see the date.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Datum.',en:'I speak about the date.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-deutsche','A1','die','Deutsche',{nom:'die',akk:'die',dat:'der'},'—','female equivalent of Deutscher',[
-    {de:'Die Deutsche ist hier.',en:'The female equivalent of Deutscher is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Deutsche.',en:'I see the female equivalent of Deutscher.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Deutschen.',en:'I speak about the female equivalent of Deutscher.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-deutschland','A1','das','Deutschland',{nom:'das',akk:'das',dat:'dem'},'Deutschländer','Germany',[
-    {de:'Das Deutschland ist hier.',en:'The Germany is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Deutschland.',en:'I see the Germany.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Deutschland.',en:'I speak about the Germany.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dezember','A1','der','Dezember',{nom:'der',akk:'den',dat:'dem'},'Dezember','December',[
-    {de:'Der Dezember ist hier.',en:'The December is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Dezember.',en:'I see the December.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Dezember.',en:'I speak about the December.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dienstag','A1','der','Dienstag',{nom:'der',akk:'den',dat:'dem'},'Dienstage','Tuesday',[
-    {de:'Der Dienstag ist hier.',en:'The Tuesday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Dienstag.',en:'I see the Tuesday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Dienstag.',en:'I speak about the Tuesday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-doktor','A1','der','Doktor',{nom:'der',akk:'den',dat:'dem'},'—','doctor',[
-    {de:'Der Doktor ist hier.',en:'The doctor is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Doktor.',en:'I see the doctor.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Doktor.',en:'I speak about the doctor.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-donnerstag','A1','der','Donnerstag',{nom:'der',akk:'den',dat:'dem'},'Donnerstage','Thursday',[
-    {de:'Der Donnerstag ist hier.',en:'The Thursday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Donnerstag.',en:'I see the Thursday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Donnerstag.',en:'I speak about the Thursday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-doppelzimmer','A1','das','Doppelzimmer',{nom:'das',akk:'das',dat:'dem'},'Doppelzimmer','double room',[
-    {de:'Das Doppelzimmer ist hier.',en:'The double room is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Doppelzimmer.',en:'I see the double room.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Doppelzimmer.',en:'I speak about the double room.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dorf','A1','das','Dorf',{nom:'das',akk:'das',dat:'dem'},'Dörfer','village',[
-    {de:'Das Dorf ist hier.',en:'The village is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Dorf.',en:'I see the village.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Dorf.',en:'I speak about the village.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-drucker','A1','der','Drucker',{nom:'der',akk:'den',dat:'dem'},'Drucker','agent noun of drucken',[
-    {de:'Der Drucker ist hier.',en:'The agent noun of drucken is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Drucker.',en:'I see the agent noun of drucken.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Drucker.',en:'I speak about the agent noun of drucken.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-durchsage','A1','die','Durchsage',{nom:'die',akk:'die',dat:'der'},'Durchsagen','announcement over loudspeakers or on the radio',[
-    {de:'Die Durchsage ist hier.',en:'The announcement over loudspeakers or on the radio is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Durchsage.',en:'I see the announcement over loudspeakers or on the radio.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Durchsage.',en:'I speak about the announcement over loudspeakers or on the radio.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-durst','A1','der','Durst',{nom:'der',akk:'den',dat:'dem'},'—','thirst',[
-    {de:'Der Durst ist hier.',en:'The thirst is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Durst.',en:'I see the thirst.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Durst.',en:'I speak about the thirst.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dusche','A1','die','Dusche',{nom:'die',akk:'die',dat:'der'},'Duschen','shower',[
-    {de:'Die Dusche ist hier.',en:'The shower is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Dusche.',en:'I see the shower.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Dusche.',en:'I speak about the shower.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-e-mail','A1','die','E-Mail',{nom:'die',akk:'die',dat:'der'},'E-Mails','e-mail',[
-    {de:'Die E-Mail ist hier.',en:'The e-mail is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die E-Mail.',en:'I see the e-mail.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der E-Mail.',en:'I speak about the e-mail.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ecke','A1','die','Ecke',{nom:'die',akk:'die',dat:'der'},'Ecken','corner',[
+  _noun('gen-noun-ecke','A1','die','Ecke',{nom:'die',akk:'die',dat:'der'},'Ecken','corner','easy',[
     {de:'Ich habe mich an der Ecke vom Tisch gestoßen.',en:'I bumped into the corner of the table.',focus:'Ecke'},
+    {de:'Der Tisch steht in der Ecke.',en:'The table stands in the corner.',focus:'Ecke'},
     {de:'Ich sehe die Ecke.',en:'I see the corner.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ecke.',en:'I speak about the corner.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-ehefrau','A1','die','Ehefrau',{nom:'die',akk:'die',dat:'der'},'Ehefrauen','married woman',[
-    {de:'Die Ehefrau ist hier.',en:'The married woman is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ehefrau.',en:'I see the married woman.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ehefrau.',en:'I speak about the married woman.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ehemann','A1','der','Ehemann',{nom:'der',akk:'den',dat:'dem'},'Ehemänner','married man',[
-    {de:'Der Ehemann ist hier.',en:'The married man is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ehemann.',en:'I see the married man.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ehemann.',en:'I speak about the married man.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ei','A1','das','Ei',{nom:'das',akk:'das',dat:'dem'},'Eier','egg',[
+  _noun('gen-noun-ei','A1','das','Ei',{nom:'das',akk:'das',dat:'dem'},'Eier','egg','easy',[
     {de:'Willst du dein Ei hart oder weich?',en:'Do you want your egg hard-boiled or soft-boiled?',focus:'Ei'},
+    {de:'Das befruchtete Ei nistet sich in der Gebärmutter ein.',en:'The fertilised egg nidates in the uterus.',focus:'Ei'},
     {de:'Ich sehe das Ei.',en:'I see the egg.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ei.',en:'I speak about the egg.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-eingang','A1','der','Eingang',{nom:'der',akk:'den',dat:'dem'},'Eingänge','entrance',[
+  _noun('gen-noun-eingang','A1','der','Eingang',{nom:'der',akk:'den',dat:'dem'},'Eingänge','entrance','easy',[
     {de:'Ich warte am Eingang auf dich.',en:'I\'ll wait for you at the entrance.',focus:'Eingang'},
     {de:'Ich sehe den Eingang.',en:'I see the entrance.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Eingang.',en:'I speak about the entrance.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-einladung','A1','die','Einladung',{nom:'die',akk:'die',dat:'der'},'Einladungen','invitation',[
-    {de:'Die Einladung ist hier.',en:'The invitation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Einladung.',en:'I see the invitation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Einladung.',en:'I speak about the invitation.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-eintritt','A1','der','Eintritt',{nom:'der',akk:'den',dat:'dem'},'Eintritte','occurring',[
-    {de:'Eintritt frei für Kinder.',en:'Free entry for children.',focus:'Eintritt'},
-    {de:'Ich sehe den Eintritt.',en:'I see the occurring.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Eintritt.',en:'I speak about the occurring.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-einzelzimmer','A1','das','Einzelzimmer',{nom:'das',akk:'das',dat:'dem'},'Einzelzimmer','single room',[
-    {de:'Das Einzelzimmer ist hier.',en:'The single room is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Einzelzimmer.',en:'I see the single room.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Einzelzimmer.',en:'I speak about the single room.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-empfaenger','A1','der','Empfänger',{nom:'der',akk:'den',dat:'dem'},'Empfänger','agent noun of empfangen receiver receiver recipient',[
-    {de:'Der Empfänger ist hier.',en:'The agent noun of empfangen receiver receiver recipient is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Empfänger.',en:'I see the agent noun of empfangen receiver receiver recipient.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Empfänger.',en:'I speak about the agent noun of empfangen receiver receiver recipient.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ende','A1','das','Ende',{nom:'das',akk:'das',dat:'dem'},'Enden','end',[
-    {de:'Das Ende ist hier.',en:'The end is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Ende.',en:'I see the end.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ende.',en:'I speak about the end.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-entschuldigung','A1','die','Entschuldigung',{nom:'die',akk:'die',dat:'der'},'Entschuldigungen','apology',[
-    {de:'Die Entschuldigung ist hier.',en:'The apology is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Entschuldigung.',en:'I see the apology.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Entschuldigung.',en:'I speak about the apology.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ergebnis','A1','das','Ergebnis',{nom:'das',akk:'das',dat:'dem'},'Ergebnisse','result',[
-    {de:'Das Ergebnis ist hier.',en:'The result is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Ergebnis.',en:'I see the result.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ergebnis.',en:'I speak about the result.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-euro','A1','der','Euro',{nom:'der',akk:'den',dat:'dem'},'—','euro',[
+  _noun('gen-noun-euro','A1','der','Euro',{nom:'der',akk:'den',dat:'dem'},'—','euro','easy',[
     {de:'Ich habe nur noch fünf Euro in meinem Portmonee.',en:'I have just five euro in my purse.',focus:'Euro'},
+    {de:'Gestern habe ich zwei Euro gefunden.',en:'Yesterday I found two euro.',focus:'Euro'},
     {de:'Ich sehe den Euro.',en:'I see the euro.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Euro.',en:'I speak about the euro.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-europaeer','A1','der','Europäer',{nom:'der',akk:'den',dat:'dem'},'Europäer','European',[
-    {de:'Der Europäer ist hier.',en:'The European is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Europäer.',en:'I see the European.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Europäer.',en:'I speak about the European.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fahrer','A1','der','Fahrer',{nom:'der',akk:'den',dat:'dem'},'Fahrer','agent noun of fahren',[
-    {de:'Der Fahrer ist hier.',en:'The agent noun of fahren is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fahrer.',en:'I see the agent noun of fahren.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fahrer.',en:'I speak about the agent noun of fahren.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fahrkarte','A1','die','Fahrkarte',{nom:'die',akk:'die',dat:'der'},'Fahrkarten','fare ticket',[
-    {de:'Die Fahrkarte ist hier.',en:'The fare ticket is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Fahrkarte.',en:'I see the fare ticket.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Fahrkarte.',en:'I speak about the fare ticket.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fahrrad','A1','das','Fahrrad',{nom:'das',akk:'das',dat:'dem'},'Fahrräder','bicycle',[
-    {de:'Das Fahrrad ist hier.',en:'The bicycle is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Fahrrad.',en:'I see the bicycle.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fahrrad.',en:'I speak about the bicycle.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-familienname','A1','der','Familienname',{nom:'der',akk:'den',dat:'dem'},'Familiennamen','surname',[
-    {de:'Der Familienname ist hier.',en:'The surname is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Familiennamen.',en:'I see the surname.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Familiennamen.',en:'I speak about the surname.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-familienstand','A1','der','Familienstand',{nom:'der',akk:'den',dat:'dem'},'Familienstände','marital status',[
-    {de:'Der Familienstand ist hier.',en:'The marital status is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Familienstand.',en:'I see the marital status.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Familienstande.',en:'I speak about the marital status.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-farbe','A1','die','Farbe',{nom:'die',akk:'die',dat:'der'},'Farben','colour',[
-    {de:'Die Farbe ist hier.',en:'The colour is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Farbe.',en:'I see the colour.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Farbe.',en:'I speak about the colour.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fax','A1','das','Fax',{nom:'das',akk:'das',dat:'dem'},'Faxe','fax',[
-    {de:'Das Fax ist hier.',en:'The fax is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Fax.',en:'I see the fax.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fax.',en:'I speak about the fax.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-februar','A1','der','Februar',{nom:'der',akk:'den',dat:'dem'},'Februare','February',[
-    {de:'Der Februar ist hier.',en:'The February is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Februar.',en:'I see the February.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Februar.',en:'I speak about the February.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fehler','A1','der','Fehler',{nom:'der',akk:'den',dat:'dem'},'Fehler','fault',[
-    {de:'Der Fehler ist hier.',en:'The fault is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fehler.',en:'I see the fault.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fehler.',en:'I speak about the fault.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-feierabend','A1','der','Feierabend',{nom:'der',akk:'den',dat:'dem'},'Feierabende','evening before a holiday',[
-    {de:'Jetzt machen wir Feierabend!',en:'Let\'s call it a night!',focus:'Feierabend'},
-    {de:'Ich sehe den Feierabend.',en:'I see the evening before a holiday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Feierabend.',en:'I speak about the evening before a holiday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-feiertag','A1','der','Feiertag',{nom:'der',akk:'den',dat:'dem'},'Feiertage','holiday',[
-    {de:'Der Feiertag ist hier.',en:'The holiday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Feiertag.',en:'I see the holiday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Feiertag.',en:'I speak about the holiday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-feuer','A1','das','Feuer',{nom:'das',akk:'das',dat:'dem'},'Feuer','fire',[
+  _noun('gen-noun-feuer','A1','das','Feuer',{nom:'das',akk:'das',dat:'dem'},'Feuer','fire','easy',[
     {de:'Hätten Sie mal Feuer für mich?',en:'Do you have a light please?',focus:'Feuer'},
     {de:'Ich sehe das Feuer.',en:'I see the fire.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Feuer.',en:'I speak about the fire.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-fieber','A1','das','Fieber',{nom:'das',akk:'das',dat:'dem'},'Fieber','fever',[
+  _noun('gen-noun-fieber','A1','das','Fieber',{nom:'das',akk:'das',dat:'dem'},'Fieber','fever','easy',[
     {de:'Paul ist krank, er hat Fieber.',en:'Paul is sick, he\'s got a fever.',focus:'Fieber'},
     {de:'Ich sehe das Fieber.',en:'I see the fever.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fieber.',en:'I speak about the fever.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-film','A1','der','Film',{nom:'der',akk:'den',dat:'dem'},'Filme','film',[
-    {de:'Der Film ist hier.',en:'The film is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Film.',en:'I see the film.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Film.',en:'I speak about the film.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-firma','A1','die','Firma',{nom:'die',akk:'die',dat:'der'},'Firmen','company',[
-    {de:'Die Firma ist hier.',en:'The company is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Firma.',en:'I see the company.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Firma.',en:'I speak about the company.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fisch','A1','der','Fisch',{nom:'der',akk:'den',dat:'dem'},'Fische','fish',[
+  _noun('gen-noun-fisch','A1','der','Fisch',{nom:'der',akk:'den',dat:'dem'},'Fische','fish','easy',[
     {de:'Wir haben jeder einen Fisch gefangen.',en:'Each one of us has caught a fish.',focus:'Fisch'},
+    {de:'Ob ein Wal ein Fisch ist, hängt von der Definition ab.',en:'Whether a whale is a fish depends on the definition.',focus:'Fisch'},
     {de:'Ich sehe den Fisch.',en:'I see the fish.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fisch.',en:'I speak about the fish.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-flasche','A1','die','Flasche',{nom:'die',akk:'die',dat:'der'},'Flaschen','bottle',[
+  _noun('gen-noun-flasche','A1','die','Flasche',{nom:'die',akk:'die',dat:'der'},'Flaschen','bottle','easy',[
     {de:'Wir hätten gern eine Flasche von dem Chardonnay und eine Flasche stilles Wasser dazu.',en:'We’d like a bottle of your chardonnay and a bottle of still water with it.',focus:['Flasche','Flasche']},
     {de:'Ich sehe die Flasche.',en:'I see the bottle.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Flasche.',en:'I speak about the bottle.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-fleisch','A1','das','Fleisch',{nom:'das',akk:'das',dat:'dem'},'—','flesh',[
-    {de:'Das Fleisch ist hier.',en:'The flesh is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Fleisch.',en:'I see the flesh.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fleisch.',en:'I speak about the flesh.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-flughafen','A1','der','Flughafen',{nom:'der',akk:'den',dat:'dem'},'Flughäfen','airport',[
-    {de:'Der Flughafen ist hier.',en:'The airport is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Flughafen.',en:'I see the airport.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Flughafen.',en:'I speak about the airport.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-flugzeug','A1','das','Flugzeug',{nom:'das',akk:'das',dat:'dem'},'Flugzeuge','aeroplane',[
-    {de:'Das Flugzeug ist hier.',en:'The aeroplane is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Flugzeug.',en:'I see the aeroplane.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Flugzeug.',en:'I speak about the aeroplane.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-formular','A1','das','Formular',{nom:'das',akk:'das',dat:'dem'},'Formulare','form',[
-    {de:'Das Formular ist hier.',en:'The form is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Formular.',en:'I see the form.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Formular.',en:'I speak about the form.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-foto','A1','das','Foto',{nom:'das',akk:'das',dat:'dem'},'Fotos','photograph',[
-    {de:'Das Foto ist hier.',en:'The photograph is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Foto.',en:'I see the photograph.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Foto.',en:'I speak about the photograph.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-frage','A1','die','Frage',{nom:'die',akk:'die',dat:'der'},'Fragen','question',[
-    {de:'Eine Frage an euch.',en:'A question for you.',focus:'Frage'},
+  _noun('gen-noun-frage','A1','die','Frage',{nom:'die',akk:'die',dat:'der'},'Fragen','question','easy',[
+    {de:'Es ist nur eine Frage der Geduld.',en:'It\'s just a matter of patience.',focus:'Frage'},
     {de:'Ich sehe die Frage.',en:'I see the question.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Frage.',en:'I speak about the question.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-freitag','A1','der','Freitag',{nom:'der',akk:'den',dat:'dem'},'Freitage','Friday',[
-    {de:'Der Freitag ist hier.',en:'The Friday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Freitag.',en:'I see the Friday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Freitag.',en:'I speak about the Friday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-freizeit','A1','die','Freizeit',{nom:'die',akk:'die',dat:'der'},'Freizeiten','free time',[
+  _noun('gen-noun-freizeit','A1','die','Freizeit',{nom:'die',akk:'die',dat:'der'},'Freizeiten','free time','easy',[
     {de:'Zeitung lesen kannst du in deiner Freizeit.',en:'You can read the newspaper in your free time.',focus:'Freizeit'},
     {de:'Ich sehe die Freizeit.',en:'I see the free time.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Freizeit.',en:'I speak about the free time.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-freund','A1','der','Freund',{nom:'der',akk:'den',dat:'dem'},'Freunde','friend',[
-    {de:'Lass uns Freunde bleiben.',en:'Let’s stay friends.',focus:'Freunde'},
-    {de:'Ich sehe den Freund.',en:'I see the friend.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Freund.',en:'I speak about the friend.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-freundin','A1','die','Freundin',{nom:'die',akk:'die',dat:'der'},'Freundinnen','female equivalent of Freund',[
-    {de:'Die Freundin ist hier.',en:'The female equivalent of Freund is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Freundin.',en:'I see the female equivalent of Freund.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Freundin.',en:'I speak about the female equivalent of Freund.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fruehjahr','A1','das','Frühjahr',{nom:'das',akk:'das',dat:'dem'},'Frühjahre','spring',[
-    {de:'Das Frühjahr ist hier.',en:'The spring is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Frühjahr.',en:'I see the spring.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Frühjahr.',en:'I speak about the spring.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fruehling','A1','der','Frühling',{nom:'der',akk:'den',dat:'dem'},'Frühlinge','spring',[
-    {de:'Der Frühling ist hier.',en:'The spring is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Frühling.',en:'I see the spring.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Frühling.',en:'I speak about the spring.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fruehstueck','A1','das','Frühstück',{nom:'das',akk:'das',dat:'dem'},'Frühstücke','breakfast',[
+  _noun('gen-noun-fruehstueck','A1','das','Frühstück',{nom:'das',akk:'das',dat:'dem'},'Frühstücke','breakfast','easy',[
     {de:'Gewöhnlich essen sie ihr Frühstück im Bett.',en:'They usually have their breakfast in bed.',focus:'Frühstück'},
     {de:'Ich sehe das Frühstück.',en:'I see the breakfast.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Frühstück.',en:'I speak about the breakfast.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-fuss','A1','der','Fuß',{nom:'der',akk:'den',dat:'dem'},'Füße','foot',[
-    {de:'900 Fuß hoch',en:'900 feet tall',focus:'Fuß'},
-    {de:'Ich sehe den Fuß.',en:'I see the foot.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fuß.',en:'I speak about the foot.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fussball','A1','der','Fußball',{nom:'der',akk:'den',dat:'dem'},'Fußbälle','soccer',[
-    {de:'Der Fußball ist hier.',en:'The soccer is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fußball.',en:'I see the soccer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fußball.',en:'I speak about the soccer.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fuehrung','A1','die','Führung',{nom:'die',akk:'die',dat:'der'},'Führungen','lead',[
-    {de:'Die Führung ist hier.',en:'The lead is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Führung.',en:'I see the lead.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Führung.',en:'I speak about the lead.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-garten','A1','der','Garten',{nom:'der',akk:'den',dat:'dem'},'Gärten','garden',[
-    {de:'Wir sitzen im Garten.',en:'We\'re sitting in the garden.',focus:'Garten'},
-    {de:'Ich sehe den Garten.',en:'I see the garden.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Garten.',en:'I speak about the garden.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gast','A1','der','Gast',{nom:'der',akk:'den',dat:'dem'},'Gäste','guest',[
-    {de:'Der Gast ist hier.',en:'The guest is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Gast.',en:'I see the guest.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gast.',en:'I speak about the guest.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geburtsjahr','A1','das','Geburtsjahr',{nom:'das',akk:'das',dat:'dem'},'Geburtsjahre','year of birth',[
-    {de:'Das Geburtsjahr ist hier.',en:'The year of birth is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Geburtsjahr.',en:'I see the year of birth.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geburtsjahr.',en:'I speak about the year of birth.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geburtsort','A1','der','Geburtsort',{nom:'der',akk:'den',dat:'dem'},'Geburtsorte','birthplace',[
-    {de:'Der Geburtsort ist hier.',en:'The birthplace is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Geburtsort.',en:'I see the birthplace.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geburtsort.',en:'I speak about the birthplace.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geburtstag','A1','der','Geburtstag',{nom:'der',akk:'den',dat:'dem'},'Geburtstage','birthday',[
-    {de:'Der Geburtstag ist hier.',en:'The birthday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Geburtstag.',en:'I see the birthday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geburtstag.',en:'I speak about the birthday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gemuese','A1','das','Gemüse',{nom:'das',akk:'das',dat:'dem'},'Gemüse','vegetable',[
-    {de:'Iss dein Gemüse!',en:'Eat your vegetables!',focus:'Gemüse'},
+  _noun('gen-noun-gemuese','A1','das','Gemüse',{nom:'das',akk:'das',dat:'dem'},'Gemüse','vegetable','easy',[
+    {de:'Wir essen heute Hähnchenschnitzel mit Zwiebel-Möhren-Gemüse.',en:'Today we’re having chicken cutlets with an onion and carrot relish.',focus:'Gemüse'},
     {de:'Ich sehe das Gemüse.',en:'I see the vegetable.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gemüse.',en:'I speak about the vegetable.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-gepaeck','A1','das','Gepäck',{nom:'das',akk:'das',dat:'dem'},'Gepäcke','luggage',[
-    {de:'Das Gepäck ist hier.',en:'The luggage is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gepäck.',en:'I see the luggage.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gepäck.',en:'I speak about the luggage.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geschenk','A1','das','Geschenk',{nom:'das',akk:'das',dat:'dem'},'Geschenke','present',[
-    {de:'Das Geschenk ist hier.',en:'The present is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Geschenk.',en:'I see the present.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geschenk.',en:'I speak about the present.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geschwister','A1','das','Geschwister',{nom:'das',akk:'das',dat:'dem'},'Geschwister','sibling',[
-    {de:'Das Geschwister ist hier.',en:'The sibling is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Geschwister.',en:'I see the sibling.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geschwister.',en:'I speak about the sibling.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geschaeft','A1','das','Geschäft',{nom:'das',akk:'das',dat:'dem'},'Geschäfte','shop',[
-    {de:'Das Geschäft ist hier.',en:'The shop is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Geschäft.',en:'I see the shop.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geschäft.',en:'I speak about the shop.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gespraech','A1','das','Gespräch',{nom:'das',akk:'das',dat:'dem'},'Gespräche','conversation',[
-    {de:'in einem Gespräch aufkommen',en:'to come up in conversation',focus:'Gespräch'},
-    {de:'Ich sehe das Gespräch.',en:'I see the conversation.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gespräch.',en:'I speak about the conversation.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-getraenk','A1','das','Getränk',{nom:'das',akk:'das',dat:'dem'},'Getränke','drink',[
-    {de:'Das Getränk ist hier.',en:'The drink is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Getränk.',en:'I see the drink.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Getränk.',en:'I speak about the drink.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gewicht','A1','das','Gewicht',{nom:'das',akk:'das',dat:'dem'},'Gewichte','weight',[
-    {de:'Das Gewicht ist hier.',en:'The weight is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gewicht.',en:'I see the weight.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gewicht.',en:'I speak about the weight.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-glas','A1','das','Glas',{nom:'das',akk:'das',dat:'dem'},'Gläser','glass',[
-    {de:'Das Glas ist hier.',en:'The glass is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Glas.',en:'I see the glass.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Glas.',en:'I speak about the glass.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gleis','A1','das','Gleis',{nom:'das',akk:'das',dat:'dem'},'Gleise','railway',[
-    {de:'Das Gleis ist hier.',en:'The railway is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gleis.',en:'I see the railway.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gleis.',en:'I speak about the railway.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-glueck','A1','das','Glück',{nom:'das',akk:'das',dat:'dem'},'—','happiness',[
+  _noun('gen-noun-glueck','A1','das','Glück',{nom:'das',akk:'das',dat:'dem'},'—','happiness','easy',[
     {de:'Das größte Glück im Leben ist es, geliebt zu werden.',en:'The greatest joy in life is to be loved.',focus:'Glück'},
+    {de:'Er hatte immer schon viel Glück bei den Frauen.',en:'He’s always had a lot of luck with the ladies.',focus:'Glück'},
     {de:'Ich sehe das Glück.',en:'I see the happiness.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Glück.',en:'I speak about the happiness.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-glueckwunsch','A1','der','Glückwunsch',{nom:'der',akk:'den',dat:'dem'},'Glückwünsche','congratulation',[
-    {de:'Der Glückwunsch ist hier.',en:'The congratulation is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Glückwunsch.',en:'I see the congratulation.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Glückwunsch.',en:'I speak about the congratulation.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-grad','A1','der','Grad',{nom:'der',akk:'den',dat:'dem'},'Grade','degree',[
+  _noun('gen-noun-grad','A1','der','Grad',{nom:'der',akk:'den',dat:'dem'},'Grade','degree','easy',[
     {de:'0 Grad Celsius (0°C) sind 273,15 Kelvin.',en:'Zero degrees Celsius (0°C) are 273.15 Kelvin.',focus:'Grad'},
     {de:'Ich sehe den Grad.',en:'I see the degree.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Grad.',en:'I speak about the degree.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-gramm','A1','das','Gramm',{nom:'das',akk:'das',dat:'dem'},'Gramme','gram',[
-    {de:'Das Gramm ist hier.',en:'The gram is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gramm.',en:'I see the gram.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gramm.',en:'I speak about the gram.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-grossmutter','A1','die','Großmutter',{nom:'die',akk:'die',dat:'der'},'Großmütter','grandmother',[
-    {de:'Die Großmutter ist hier.',en:'The grandmother is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Großmutter.',en:'I see the grandmother.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Großmutter.',en:'I speak about the grandmother.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-grossvater','A1','der','Großvater',{nom:'der',akk:'den',dat:'dem'},'Großväter','grandfather',[
-    {de:'Der Großvater ist hier.',en:'The grandfather is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Großvater.',en:'I see the grandfather.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Großvater.',en:'I speak about the grandfather.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gruppe','A1','die','Gruppe',{nom:'die',akk:'die',dat:'der'},'Gruppen','group',[
-    {de:'Die Gruppe ist hier.',en:'The group is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Gruppe.',en:'I see the group.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Gruppe.',en:'I speak about the group.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gruss','A1','der','Gruß',{nom:'der',akk:'den',dat:'dem'},'Grüße','greeting',[
-    {de:'Der Gruß ist hier.',en:'The greeting is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Gruß.',en:'I see the greeting.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gruß.',en:'I speak about the greeting.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-groesse','A1','die','Größe',{nom:'die',akk:'die',dat:'der'},'Größen','size',[
-    {de:'Die Größe ist hier.',en:'The size is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Größe.',en:'I see the size.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Größe.',en:'I speak about the size.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-haar','A1','das','Haar',{nom:'das',akk:'das',dat:'dem'},'Haare','hair',[
-    {de:'Das Haar ist hier.',en:'The hair is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Haar.',en:'I see the hair.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Haar.',en:'I speak about the hair.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-halbpension','A1','die','Halbpension',{nom:'die',akk:'die',dat:'der'},'—','half board',[
-    {de:'Die Halbpension ist hier.',en:'The half board is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Halbpension.',en:'I see the half board.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Halbpension.',en:'I speak about the half board.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-halle','A1','die','Halle',{nom:'die',akk:'die',dat:'der'},'Hallen','hall',[
-    {de:'Die Halle ist hier.',en:'The hall is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Halle.',en:'I see the hall.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Halle.',en:'I speak about the hall.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-haltestelle','A1','die','Haltestelle',{nom:'die',akk:'die',dat:'der'},'Haltestellen','stop',[
-    {de:'Die Haltestelle ist hier.',en:'The stop is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Haltestelle.',en:'I see the stop.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Haltestelle.',en:'I speak about the stop.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hand','A1','die','Hand',{nom:'die',akk:'die',dat:'der'},'Hände','hand',[
-    {de:'Die Hand ist hier.',en:'The hand is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hand.',en:'I see the hand.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hand.',en:'I speak about the hand.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-handy','A1','das','Handy',{nom:'das',akk:'das',dat:'dem'},'Handys','mobile phone',[
-    {de:'Das Handy ist hier.',en:'The mobile phone is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Handy.',en:'I see the mobile phone.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Handy.',en:'I speak about the mobile phone.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hausaufgabe','A1','die','Hausaufgabe',{nom:'die',akk:'die',dat:'der'},'Hausaufgaben','homework assignment',[
-    {de:'Die Hausaufgabe ist hier.',en:'The homework assignment is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hausaufgabe.',en:'I see the homework assignment.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hausaufgabe.',en:'I speak about the homework assignment.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hausfrau','A1','die','Hausfrau',{nom:'die',akk:'die',dat:'der'},'Hausfrauen','housewife',[
-    {de:'Die Hausfrau ist hier.',en:'The housewife is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hausfrau.',en:'I see the housewife.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hausfrau.',en:'I speak about the housewife.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hausmann','A1','der','Hausmann',{nom:'der',akk:'den',dat:'dem'},'Hausmänner','caretaker',[
-    {de:'Der Hausmann ist hier.',en:'The caretaker is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Hausmann.',en:'I see the caretaker.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hausmann.',en:'I speak about the caretaker.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-heimat','A1','die','Heimat',{nom:'die',akk:'die',dat:'der'},'Heimaten','home',[
+  _noun('gen-noun-heimat','A1','die','Heimat',{nom:'die',akk:'die',dat:'der'},'Heimaten','home','easy',[
     {de:'Ich habe meine Heimat Türkei vor zwei Jahren verlassen.',en:'I left my native Turkey two years ago.',focus:'Heimat'},
+    {de:'Bayern ist die Heimat von Brezeln und Weißbier.',en:'Bavaria is the homeland of pretzels and wheat beer.',focus:'Heimat'},
     {de:'Ich sehe die Heimat.',en:'I see the home.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Heimat.',en:'I speak about the home.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-herbst','A1','der','Herbst',{nom:'der',akk:'den',dat:'dem'},'Herbste','autumn',[
-    {de:'Der Herbst ist hier.',en:'The autumn is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Herbst.',en:'I see the autumn.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Herbst.',en:'I speak about the autumn.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-herd','A1','der','Herd',{nom:'der',akk:'den',dat:'dem'},'Herde','cooker',[
+  _noun('gen-noun-herd','A1','der','Herd',{nom:'der',akk:'den',dat:'dem'},'Herde','cooker','easy',[
     {de:'Der Herd besteht aus einem Ofen und vier Herdplatten.',en:'The cooker consists of an oven and four rings.',focus:'Herd'},
+    {de:'Der Ofen ist aus, aber der Herd ist noch an.',en:'The oven is off, but the hob is still on.',focus:'Herd'},
     {de:'Ich sehe den Herd.',en:'I see the cooker.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Herd.',en:'I speak about the cooker.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-herr','A1','der','Herr',{nom:'der',akk:'den',dat:'dem'},'—','man',[
-    {de:'ein älterer Herr',en:'an older gentleman',focus:'Herr'},
+  _noun('gen-noun-herr','A1','der','Herr',{nom:'der',akk:'den',dat:'dem'},'—','man','easy',[
+    {de:'Wie kann ich Euch zu Diensten sein, Herr?',en:'How can I serve you, sir?',focus:'Herr'},
     {de:'Ich sehe den Herr.',en:'I see the man.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Herr.',en:'I speak about the man.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-hilfe','A1','die','Hilfe',{nom:'die',akk:'die',dat:'der'},'Hilfen','help',[
-    {de:'Die Hilfe ist hier.',en:'The help is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hilfe.',en:'I see the help.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hilfe.',en:'I speak about the help.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hobby','A1','das','Hobby',{nom:'das',akk:'das',dat:'dem'},'Hobbys','hobby',[
-    {de:'Das Hobby ist hier.',en:'The hobby is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Hobby.',en:'I see the hobby.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hobby.',en:'I speak about the hobby.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hochzeit','A1','die','Hochzeit',{nom:'die',akk:'die',dat:'der'},'Hochzeiten','wedding',[
+  _noun('gen-noun-hochzeit','A1','die','Hochzeit',{nom:'die',akk:'die',dat:'der'},'Hochzeiten','wedding','easy',[
     {de:'Die Hochzeit der Oscar-Preisträgerin war tagelang Hauptthema in der Klatschpresse.',en:'The Oscar award winner’s wedding was the main topic of the yellow press for days.',focus:'Hochzeit'},
+    {de:'Ich hab Hochzeit. Der erste Fehl geht mit.',en:'I have both queens of clubs. The first non-trump joins me.',focus:'Hochzeit'},
     {de:'Ich sehe die Hochzeit.',en:'I see the wedding.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hochzeit.',en:'I speak about the wedding.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-hotel','A1','das','Hotel',{nom:'das',akk:'das',dat:'dem'},'Hotels','hotel',[
-    {de:'Das Hotel ist hier.',en:'The hotel is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Hotel.',en:'I see the hotel.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hotel.',en:'I speak about the hotel.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hunger','A1','der','Hunger',{nom:'der',akk:'den',dat:'dem'},'—','hunger',[
-    {de:'Der Hunger ist hier.',en:'The hunger is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Hunger.',en:'I see the hunger.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hunger.',en:'I speak about the hunger.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-haehnchen','A1','das','Hähnchen',{nom:'das',akk:'das',dat:'dem'},'Hähnchen','diminutive of Hahn',[
-    {de:'ein halbes Hähnchen',en:'half a chicken',focus:'Hähnchen'},
+  _noun('gen-noun-haehnchen','A1','das','Hähnchen',{nom:'das',akk:'das',dat:'dem'},'Hähnchen','diminutive of Hahn','easy',[
+    {de:'Ist das Schwein oder Hähnchen?',en:'Is this pork or chicken?',focus:'Hähnchen'},
     {de:'Ich sehe das Hähnchen.',en:'I see the diminutive of Hahn.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hähnchen.',en:'I speak about the diminutive of Hahn.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-information','A1','die','Information',{nom:'die',akk:'die',dat:'der'},'Informationen','piece of information',[
+  _noun('gen-noun-information','A1','die','Information',{nom:'die',akk:'die',dat:'der'},'Informationen','piece of information','easy',[
     {de:'Wir brauchen mehr Informationen über den Fall.',en:'We need more information about the case.',focus:'Informationen'},
     {de:'Ich sehe die Information.',en:'I see the piece of information.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Information.',en:'I speak about the piece of information.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-internet','A1','das','Internet',{nom:'das',akk:'das',dat:'dem'},'—','internet',[
-    {de:'Das Internet ist hier.',en:'The internet is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Internet.',en:'I see the internet.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Internet.',en:'I speak about the internet.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-jacke','A1','die','Jacke',{nom:'die',akk:'die',dat:'der'},'Jacken','jacket',[
-    {de:'Die Jacke ist hier.',en:'The jacket is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Jacke.',en:'I see the jacket.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Jacke.',en:'I speak about the jacket.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-jahr','A1','das','Jahr',{nom:'das',akk:'das',dat:'dem'},'Jahre','year',[
-    {de:'Jahr für Jahr',en:'year after year',focus:['Jahr','Jahr']},
-    {de:'Ich sehe das Jahr.',en:'I see the year.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Jahr.',en:'I speak about the year.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-januar','A1','der','Januar',{nom:'der',akk:'den',dat:'dem'},'Januare','January',[
-    {de:'Der Januar ist hier.',en:'The January is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Januar.',en:'I see the January.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Januar.',en:'I speak about the January.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-job','A1','der','Job',{nom:'der',akk:'den',dat:'dem'},'Jobs','job',[
+  _noun('gen-noun-job','A1','der','Job',{nom:'der',akk:'den',dat:'dem'},'Jobs','job','easy',[
     {de:'Wenn ich den Job kriege, kann ich mir vielleicht ein Auto leisten.',en:'If I get the job, I might be able to afford a car.',focus:'Job'},
+    {de:'Im Job ist er sehr erfolgreich, aber privat läuft es überhaupt nicht.',en:'He’s very successful in his job, but his private life is a mess.',focus:'Job'},
     {de:'Ich sehe den Job.',en:'I see the job.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Job.',en:'I speak about the job.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-juli','A1','der','Juli',{nom:'der',akk:'den',dat:'dem'},'Julis','July',[
-    {de:'Der Juli ist hier.',en:'The July is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Juli.',en:'I see the July.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Juli.',en:'I speak about the July.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-junge','A1','der','Junge',{nom:'der',akk:'den',dat:'dem'},'—','boy',[
-    {de:'Der Junge ist hier.',en:'The boy is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Jungen.',en:'I see the boy.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Jungen.',en:'I speak about the boy.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-juni','A1','der','Juni',{nom:'der',akk:'den',dat:'dem'},'Junis','June',[
-    {de:'Der Juni ist hier.',en:'The June is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Juni.',en:'I see the June.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Juni.',en:'I speak about the June.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-karte','A1','die','Karte',{nom:'die',akk:'die',dat:'der'},'Karten','card',[
-    {de:'Die Karte ist hier.',en:'The card is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Karte.',en:'I see the card.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Karte.',en:'I speak about the card.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kartoffel','A1','die','Kartoffel',{nom:'die',akk:'die',dat:'der'},'Kartoffeln','potato',[
-    {de:'Die Kartoffel ist hier.',en:'The potato is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kartoffel.',en:'I see the potato.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kartoffel.',en:'I speak about the potato.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kasse','A1','die','Kasse',{nom:'die',akk:'die',dat:'der'},'Kassen','cash register',[
-    {de:'Die Kasse ist hier.',en:'The cash register is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kasse.',en:'I see the cash register.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kasse.',en:'I speak about the cash register.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kilo','A1','das','Kilo',{nom:'das',akk:'das',dat:'dem'},'—','kilo',[
-    {de:'Das Kilo ist hier.',en:'The kilo is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Kilo.',en:'I see the kilo.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kilo.',en:'I speak about the kilo.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kilogramm','A1','das','Kilogramm',{nom:'das',akk:'das',dat:'dem'},'Kilogramme','kilogram',[
-    {de:'Das Kilogramm ist hier.',en:'The kilogram is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Kilogramm.',en:'I see the kilogram.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kilogramm.',en:'I speak about the kilogram.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kilometer','A1','der','Kilometer',{nom:'der',akk:'den',dat:'dem'},'Kilometer','kilometer',[
-    {de:'Der Kilometer ist hier.',en:'The kilometer is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kilometer.',en:'I see the kilometer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kilometer.',en:'I speak about the kilometer.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kindergarten','A1','der','Kindergarten',{nom:'der',akk:'den',dat:'dem'},'Kindergärten','nursery school',[
-    {de:'Der Kindergarten ist hier.',en:'The nursery school is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kindergarten.',en:'I see the nursery school.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kindergarten.',en:'I speak about the nursery school.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kino','A1','das','Kino',{nom:'das',akk:'das',dat:'dem'},'Kinos','cinema',[
-    {de:'Das Kino ist hier.',en:'The cinema is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Kino.',en:'I see the cinema.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kino.',en:'I speak about the cinema.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kiosk','A1','der','Kiosk',{nom:'der',akk:'den',dat:'dem'},'Kioske','kiosk',[
-    {de:'Der Kiosk ist hier.',en:'The kiosk is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kiosk.',en:'I see the kiosk.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kiosk.',en:'I speak about the kiosk.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-klasse','A1','die','Klasse',{nom:'die',akk:'die',dat:'der'},'Klassen','class',[
-    {de:'Die Klasse ist hier.',en:'The class is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Klasse.',en:'I see the class.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Klasse.',en:'I speak about the class.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kleidung','A1','die','Kleidung',{nom:'die',akk:'die',dat:'der'},'Kleidungen','clothing',[
-    {de:'Die Kleidung ist hier.',en:'The clothing is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kleidung.',en:'I see the clothing.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kleidung.',en:'I speak about the clothing.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-koffer','A1','der','Koffer',{nom:'der',akk:'den',dat:'dem'},'Koffer','case',[
-    {de:'Der Koffer ist hier.',en:'The case is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Koffer.',en:'I see the case.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Koffer.',en:'I speak about the case.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kollege','A1','der','Kollege',{nom:'der',akk:'den',dat:'dem'},'Kollegen','colleague',[
-    {de:'Der Kollege ist hier.',en:'The colleague is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kollegen.',en:'I see the colleague.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kollegen.',en:'I speak about the colleague.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-konto','A1','das','Konto',{nom:'das',akk:'das',dat:'dem'},'—','account',[
-    {de:'Das Konto ist hier.',en:'The account is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Konto.',en:'I see the account.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Konto.',en:'I speak about the account.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kopf','A1','der','Kopf',{nom:'der',akk:'den',dat:'dem'},'Köpfe','head',[
+  _noun('gen-noun-kopf','A1','der','Kopf',{nom:'der',akk:'den',dat:'dem'},'Köpfe','head','easy',[
     {de:'Er fiel die Treppe hinunter, als sie ihm ein Buch an den Kopf warf.',en:'He fell down the stairs when she threw a book at his head.',focus:'Kopf'},
     {de:'Ich sehe den Kopf.',en:'I see the head.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kopf.',en:'I speak about the head.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-kreditkarte','A1','die','Kreditkarte',{nom:'die',akk:'die',dat:'der'},'Kreditkarten','credit card',[
-    {de:'Die Kreditkarte ist hier.',en:'The credit card is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kreditkarte.',en:'I see the credit card.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kreditkarte.',en:'I speak about the credit card.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kuchen','A1','der','Kuchen',{nom:'der',akk:'den',dat:'dem'},'Kuchen','pie',[
-    {de:'Der Kuchen ist hier.',en:'The pie is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kuchen.',en:'I see the pie.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kuchen.',en:'I speak about the pie.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kugelschreiber','A1','der','Kugelschreiber',{nom:'der',akk:'den',dat:'dem'},'Kugelschreiber','ballpoint pen',[
+  _noun('gen-noun-kugelschreiber','A1','der','Kugelschreiber',{nom:'der',akk:'den',dat:'dem'},'Kugelschreiber','ballpoint pen','easy',[
     {de:'Kann ich mal eben deinen Kugelschreiber haben?',en:'May I have your biro for a second?',focus:'Kugelschreiber'},
+    {de:'Du hast Kugelschreiber am Kinn.',en:'You\'ve got biro on your chin.',focus:'Kugelschreiber'},
     {de:'Ich sehe den Kugelschreiber.',en:'I see the ballpoint pen.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kugelschreiber.',en:'I speak about the ballpoint pen.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-kunde','A1','der','Kunde',{nom:'der',akk:'den',dat:'dem'},'Kunden','customer',[
-    {de:'Der Kunde ist König.',en:'The customer is king.',focus:'Kunde'},
+  _noun('gen-noun-kunde','A1','der','Kunde',{nom:'der',akk:'den',dat:'dem'},'Kunden','customer','easy',[
+    {de:'Du bist so ein komischer Kunde!',en:'You\'re such a strange guy / such a weirdo!',focus:'Kunde'},
     {de:'Ich sehe den Kunden.',en:'I see the customer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kunden.',en:'I speak about the customer.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-kundin','A1','die','Kundin',{nom:'die',akk:'die',dat:'der'},'Kundinnen','female equivalent of Kunde',[
-    {de:'Die Kundin ist hier.',en:'The female equivalent of Kunde is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kundin.',en:'I see the female equivalent of Kunde.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kundin.',en:'I speak about the female equivalent of Kunde.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kurs','A1','der','Kurs',{nom:'der',akk:'den',dat:'dem'},'Kurse','course',[
-    {de:'Der Kurs ist hier.',en:'The course is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kurs.',en:'I see the course.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kurs.',en:'I speak about the course.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kueche','A1','die','Küche',{nom:'die',akk:'die',dat:'der'},'Küchen','kitchen',[
-    {de:'Die Küche ist hier.',en:'The kitchen is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Küche.',en:'I see the kitchen.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Küche.',en:'I speak about the kitchen.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kuehlschrank','A1','der','Kühlschrank',{nom:'der',akk:'den',dat:'dem'},'Kühlschränke','refrigerator',[
-    {de:'Der Kühlschrank ist hier.',en:'The refrigerator is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kühlschrank.',en:'I see the refrigerator.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kühlschrank.',en:'I speak about the refrigerator.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-laden','A1','der','Laden',{nom:'der',akk:'den',dat:'dem'},'—','shop',[
+  _noun('gen-noun-laden','A1','der','Laden',{nom:'der',akk:'den',dat:'dem'},'—','shop','easy',[
     {de:'Was kostet denn das Bier hier in dem Laden?',en:'So how much is a beer in this place?',focus:'Laden'},
+    {de:'Ich bin den ganzen Laden so leid.',en:'I’m so fed up with the whole bunch.',focus:'Laden'},
     {de:'Ich sehe den Laden.',en:'I see the shop.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Laden.',en:'I speak about the shop.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-land','A1','das','Land',{nom:'das',akk:'das',dat:'dem'},'—','country',[
-    {de:'Das Land ist hier.',en:'The country is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Land.',en:'I see the country.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Land.',en:'I speak about the country.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-leben','A1','das','Leben',{nom:'das',akk:'das',dat:'dem'},'Leben','gerund of leben',[
-    {de:'Die Kunst des Lebens',en:'The art of living.',focus:'Lebens'},
+  _noun('gen-noun-leben','A1','das','Leben',{nom:'das',akk:'das',dat:'dem'},'Leben','gerund of leben','easy',[
+    {de:'Das Leben ist nicht an das geistige Bewusstsein gebunden.',en:'Life is not dependent on mental consciousness.',focus:'Leben'},
+    {de:'Die Erde quillt über vor Leben.',en:'Earth is full of life.',focus:'Leben'},
     {de:'Ich sehe das Leben.',en:'I see the gerund of leben.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Leben.',en:'I speak about the gerund of leben.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-lebensmittel','A1','das','Lebensmittel',{nom:'das',akk:'das',dat:'dem'},'Lebensmittel','any item or substance intended for human consumption',[
-    {de:'Das Lebensmittel ist hier.',en:'The any item or substance intended for human consumption is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Lebensmittel.',en:'I see the any item or substance intended for human consumption.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lebensmittel.',en:'I speak about the any item or substance intended for human consumption.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lehrer','A1','der','Lehrer',{nom:'der',akk:'den',dat:'dem'},'Lehrer','agent noun of lehren',[
-    {de:'Der Lehrer ist hier.',en:'The agent noun of lehren is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Lehrer.',en:'I see the agent noun of lehren.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lehrer.',en:'I speak about the agent noun of lehren.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-licht','A1','das','Licht',{nom:'das',akk:'das',dat:'dem'},'—','light',[
+  _noun('gen-noun-licht','A1','das','Licht',{nom:'das',akk:'das',dat:'dem'},'—','light','easy',[
     {de:'Das Licht des Vollmondes ist hell genug, dass man eine Zeitung lesen könnte.',en:'The full moon\'s light is bright enough to read a newspaper by.',focus:'Licht'},
     {de:'Ich sehe das Licht.',en:'I see the light.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Licht.',en:'I speak about the light.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-lieblingslied','A1','das','Lieblingslied',{nom:'das',akk:'das',dat:'dem'},'Lieblingslieder','favorite song',[
-    {de:'Das Lieblingslied ist hier.',en:'The favorite song is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Lieblingslied.',en:'I see the favorite song.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lieblingslied.',en:'I speak about the favorite song.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lied','A1','das','Lied',{nom:'das',akk:'das',dat:'dem'},'Lieder','song',[
-    {de:'Das Lied ist hier.',en:'The song is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Lied.',en:'I see the song.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lied.',en:'I speak about the song.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-liter','A1','der','Liter',{nom:'der',akk:'den',dat:'dem'},'Liter','liter',[
-    {de:'Der Liter ist hier.',en:'The liter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Liter.',en:'I see the liter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Liter.',en:'I speak about the liter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lkw','A1','der','Lkw',{nom:'der',akk:'den',dat:'dem'},'—','LKW',[
-    {de:'Der Lkw ist hier.',en:'The LKW is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Lkw.',en:'I see the LKW.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lkw.',en:'I speak about the LKW.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lokal','A1','das','Lokal',{nom:'das',akk:'das',dat:'dem'},'Lokale','restaurant',[
-    {de:'Das Lokal ist hier.',en:'The restaurant is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Lokal.',en:'I see the restaurant.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Lokal.',en:'I speak about the restaurant.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-loesung','A1','die','Lösung',{nom:'die',akk:'die',dat:'der'},'Lösungen','solution',[
+  _noun('gen-noun-loesung','A1','die','Lösung',{nom:'die',akk:'die',dat:'der'},'Lösungen','solution','easy',[
     {de:'Alkohol ist keine Lösung für ein Problem.',en:'Alcohol is not a solution to a problem.',focus:'Lösung'},
+    {de:'Alkohol ist keine Lösung, sondern ein Destilat',en:'Alcohol is not a solution, but a distillate.',focus:'Lösung'},
     {de:'Ich sehe die Lösung.',en:'I see the solution.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Lösung.',en:'I speak about the solution.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-mai','A1','der','Mai',{nom:'der',akk:'den',dat:'dem'},'Maie','May',[
-    {de:'Der Mai ist hier.',en:'The May is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Mai.',en:'I see the May.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mai.',en:'I speak about the May.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-maschine','A1','die','Maschine',{nom:'die',akk:'die',dat:'der'},'Maschinen','machine',[
+  _noun('gen-noun-maschine','A1','die','Maschine',{nom:'die',akk:'die',dat:'der'},'Maschinen','machine','easy',[
     {de:'Die Maschine war am Vormittag gestartet.',en:'The plane took off this morning.',focus:'Maschine'},
     {de:'Ich sehe die Maschine.',en:'I see the machine.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Maschine.',en:'I speak about the machine.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-meer','A1','das','Meer',{nom:'das',akk:'das',dat:'dem'},'Meere','sea',[
-    {de:'Das Meer ist hier.',en:'The sea is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Meer.',en:'I see the sea.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Meer.',en:'I speak about the sea.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mensch','A1','der','Mensch',{nom:'der',akk:'den',dat:'dem'},'Menschen','human',[
+  _noun('gen-noun-mensch','A1','der','Mensch',{nom:'der',akk:'den',dat:'dem'},'Menschen','human','easy',[
     {de:'Sie ist ein ganz toller Mensch.',en:'She is a really awesome person.',focus:'Mensch'},
     {de:'Ich sehe den Menschen.',en:'I see the human.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Menschen.',en:'I speak about the human.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-meter','A1','der','Meter',{nom:'der',akk:'den',dat:'dem'},'Meter','meter',[
-    {de:'Der Meter ist hier.',en:'The meter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Meter.',en:'I see the meter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Meter.',en:'I speak about the meter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-miete','A1','die','Miete',{nom:'die',akk:'die',dat:'der'},'Mieten','rent',[
-    {de:'Die Miete ist hier.',en:'The rent is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Miete.',en:'I see the rent.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Miete.',en:'I speak about the rent.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-milch','A1','die','Milch',{nom:'die',akk:'die',dat:'der'},'—','milk',[
-    {de:'Die Milch ist hier.',en:'The milk is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Milch.',en:'I see the milk.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Milch.',en:'I speak about the milk.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-milliarde','A1','die','Milliarde',{nom:'die',akk:'die',dat:'der'},'Milliarden','billion',[
-    {de:'Die Milliarde ist hier.',en:'The billion is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Milliarde.',en:'I see the billion.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Milliarde.',en:'I speak about the billion.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-million','A1','die','Million',{nom:'die',akk:'die',dat:'der'},'Millionen','million',[
-    {de:'Die Million ist hier.',en:'The million is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Million.',en:'I see the million.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Million.',en:'I speak about the million.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-minute','A1','die','Minute',{nom:'die',akk:'die',dat:'der'},'Minuten','minute',[
-    {de:'Die Minute ist hier.',en:'The minute is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Minute.',en:'I see the minute.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Minute.',en:'I speak about the minute.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mittag','A1','der','Mittag',{nom:'der',akk:'den',dat:'dem'},'Mittage','noon',[
-    {de:'Sie hat bis Mittag geschlafen.',en:'She slept until midday.',focus:'Mittag'},
-    {de:'Ich sehe den Mittag.',en:'I see the noon.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mittag.',en:'I speak about the noon.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mitte','A1','die','Mitte',{nom:'die',akk:'die',dat:'der'},'Mitten','middle',[
-    {de:'Die Mitte ist hier.',en:'The middle is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Mitte.',en:'I see the middle.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mitte.',en:'I speak about the middle.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mittwoch','A1','der','Mittwoch',{nom:'der',akk:'den',dat:'dem'},'Mittwoche','Wednesday',[
-    {de:'Der Mittwoch ist hier.',en:'The Wednesday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Mittwoch.',en:'I see the Wednesday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mittwoch.',en:'I speak about the Wednesday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-moment','A1','der','Moment',{nom:'der',akk:'den',dat:'dem'},'Momente','moment',[
-    {de:'Der Moment ist hier.',en:'The moment is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Moment.',en:'I see the moment.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Moment.',en:'I speak about the moment.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-montag','A1','der','Montag',{nom:'der',akk:'den',dat:'dem'},'Montage','Monday',[
-    {de:'Der Montag ist hier.',en:'The Monday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Montag.',en:'I see the Monday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Montag.',en:'I speak about the Monday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-morgen','A1','der','Morgen',{nom:'der',akk:'den',dat:'dem'},'Morgen','morning',[
+  _noun('gen-noun-morgen','A1','der','Morgen',{nom:'der',akk:'den',dat:'dem'},'Morgen','morning','easy',[
     {de:'am Morgen des 6. Dezember 2000',en:'on the morning of the 6th December 2000',focus:'Morgen'},
     {de:'Ich sehe den Morgen.',en:'I see the morning.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Morgen.',en:'I speak about the morning.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-mund','A1','der','Mund',{nom:'der',akk:'den',dat:'dem'},'Münder','mouth of a person',[
-    {de:'Der Mund ist hier.',en:'The mouth of a person is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Mund.',en:'I see the mouth of a person.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mund.',en:'I speak about the mouth of a person.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mutter','A1','die','Mutter',{nom:'die',akk:'die',dat:'der'},'Mütter','mother',[
-    {de:'Die Mutter ist hier.',en:'The mother is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Mutter.',en:'I see the mother.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mutter.',en:'I speak about the mother.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-maedchen','A1','das','Mädchen',{nom:'das',akk:'das',dat:'dem'},'—','girl',[
-    {de:'Das Mädchen ist hier.',en:'The girl is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Mädchen.',en:'I see the girl.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mädchen.',en:'I speak about the girl.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-maerz','A1','der','März',{nom:'der',akk:'den',dat:'dem'},'Märze','March',[
-    {de:'Der März ist hier.',en:'The March is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den März.',en:'I see the March.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem März.',en:'I speak about the March.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-moebel','A1','das','Möbel',{nom:'das',akk:'das',dat:'dem'},'—','piece of furniture',[
-    {de:'Das Möbel ist hier.',en:'The piece of furniture is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Möbel.',en:'I see the piece of furniture.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Möbel.',en:'I speak about the piece of furniture.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nachmittag','A1','der','Nachmittag',{nom:'der',akk:'den',dat:'dem'},'Nachmittage','afternoon',[
-    {de:'Der Nachmittag ist hier.',en:'The afternoon is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Nachmittag.',en:'I see the afternoon.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Nachmittag.',en:'I speak about the afternoon.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-name','A1','der','Name',{nom:'der',akk:'den',dat:'dem'},'Namen','name',[
-    {de:'Der Name ist hier.',en:'The name is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Namen.',en:'I see the name.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Namen.',en:'I speak about the name.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-namen','A1','der','Namen',{nom:'der',akk:'den',dat:'dem'},'Namen','Name',[
-    {de:'Der Namen ist hier.',en:'The Name is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Namen.',en:'I see the Name.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Namen.',en:'I speak about the Name.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-norden','A1','der','Norden',{nom:'der',akk:'den',dat:'dem'},'—','north',[
-    {de:'Der Norden ist hier.',en:'The north is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Norden.',en:'I see the north.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Norden.',en:'I speak about the north.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-november','A1','der','November',{nom:'der',akk:'den',dat:'dem'},'November','November',[
-    {de:'Der November ist hier.',en:'The November is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den November.',en:'I see the November.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem November.',en:'I speak about the November.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nummer','A1','die','Nummer',{nom:'die',akk:'die',dat:'der'},'Nummern','number',[
-    {de:'Die Nummer ist hier.',en:'The number is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Nummer.',en:'I see the number.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Nummer.',en:'I speak about the number.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-obst','A1','das','Obst',{nom:'das',akk:'das',dat:'dem'},'—','fruit',[
+  _noun('gen-noun-obst','A1','das','Obst',{nom:'das',akk:'das',dat:'dem'},'—','fruit','easy',[
     {de:'Heute esse ich nur Obst.',en:'Today I only eat fruit.',focus:'Obst'},
     {de:'Ich sehe das Obst.',en:'I see the fruit.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Obst.',en:'I speak about the fruit.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-oktober','A1','der','Oktober',{nom:'der',akk:'den',dat:'dem'},'Oktober','October',[
-    {de:'Der Oktober ist hier.',en:'The October is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Oktober.',en:'I see the October.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Oktober.',en:'I speak about the October.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-oma','A1','die','Oma',{nom:'die',akk:'die',dat:'der'},'Omas','grandma',[
-    {de:'Die Oma ist hier.',en:'The grandma is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Oma.',en:'I see the grandma.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Oma.',en:'I speak about the grandma.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-opa','A1','der','Opa',{nom:'der',akk:'den',dat:'dem'},'Opas','grandpa',[
-    {de:'Der Opa ist hier.',en:'The grandpa is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Opa.',en:'I see the grandpa.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Opa.',en:'I speak about the grandpa.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ordnung','A1','die','Ordnung',{nom:'die',akk:'die',dat:'der'},'Ordnungen','arrangement',[
-    {de:'Die Ordnung ist hier.',en:'The arrangement is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ordnung.',en:'I see the arrangement.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ordnung.',en:'I speak about the arrangement.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ort','A1','der','Ort',{nom:'der',akk:'den',dat:'dem'},'—','place',[
-    {de:'Der Ort ist hier.',en:'The place is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ort.',en:'I see the place.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ort.',en:'I speak about the place.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-osten','A1','der','Osten',{nom:'der',akk:'den',dat:'dem'},'—','East',[
-    {de:'Der Osten ist hier.',en:'The East is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Osten.',en:'I see the East.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Osten.',en:'I speak about the East.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-papier','A1','das','Papier',{nom:'das',akk:'das',dat:'dem'},'Papiere','paper',[
-    {de:'Das Papier ist hier.',en:'The paper is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Papier.',en:'I see the paper.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Papier.',en:'I speak about the paper.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-partner','A1','der','Partner',{nom:'der',akk:'den',dat:'dem'},'Partner','partner',[
-    {de:'Der Partner ist hier.',en:'The partner is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Partner.',en:'I see the partner.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Partner.',en:'I speak about the partner.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-partnerin','A1','die','Partnerin',{nom:'die',akk:'die',dat:'der'},'Partnerinnen','female equivalent of Partner',[
-    {de:'Die Partnerin ist hier.',en:'The female equivalent of Partner is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Partnerin.',en:'I see the female equivalent of Partner.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Partnerin.',en:'I speak about the female equivalent of Partner.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-party','A1','die','Party',{nom:'die',akk:'die',dat:'der'},'Partys','party',[
-    {de:'eine Party schmeißen',en:'to throw a party',focus:'Party'},
-    {de:'Ich sehe die Party.',en:'I see the party.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Party.',en:'I speak about the party.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-pass','A1','der','Pass',{nom:'der',akk:'den',dat:'dem'},'Pässe','pass',[
-    {de:'Der Pass ist hier.',en:'The pass is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Pass.',en:'I see the pass.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Pass.',en:'I speak about the pass.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-pause','A1','die','Pause',{nom:'die',akk:'die',dat:'der'},'Pausen','pause',[
-    {de:'Die Pause ist hier.',en:'The pause is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Pause.',en:'I see the pause.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Pause.',en:'I speak about the pause.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-pfund','A1','das','Pfund',{nom:'das',akk:'das',dat:'dem'},'Pfunde','metric pound',[
-    {de:'Das Pfund ist hier.',en:'The metric pound is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Pfund.',en:'I see the metric pound.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Pfund.',en:'I speak about the metric pound.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-plan','A1','der','Plan',{nom:'der',akk:'den',dat:'dem'},'Pläne','project',[
+  _noun('gen-noun-plan','A1','der','Plan',{nom:'der',akk:'den',dat:'dem'},'Pläne','project','easy',[
     {de:'Ich hab davon keinen Plan.',en:'I have no idea about that.',focus:'Plan'},
     {de:'Ich sehe den Plan.',en:'I see the project.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Plan.',en:'I speak about the project.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-platz','A1','der','Platz',{nom:'der',akk:'den',dat:'dem'},'Plätze','square',[
-    {de:'für etwas Platz machen',en:'to make room for something',focus:'Platz'},
+  _noun('gen-noun-platz','A1','der','Platz',{nom:'der',akk:'den',dat:'dem'},'Plätze','square','easy',[
+    {de:'Ich halte dir einen Platz frei.',en:'I\'ll hold a place for you.',focus:'Platz'},
     {de:'Ich sehe den Platz.',en:'I see the square.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Platz.',en:'I speak about the square.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-polizei','A1','die','Polizei',{nom:'die',akk:'die',dat:'der'},'Polizeien','police',[
+  _noun('gen-noun-polizei','A1','die','Polizei',{nom:'die',akk:'die',dat:'der'},'Polizeien','police','easy',[
     {de:'Die Polizei erwischte den Taschendieb auf frischer Tat.',en:'The police caught the pickpocket in the act.',focus:'Polizei'},
     {de:'Ich sehe die Polizei.',en:'I see the police.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Polizei.',en:'I speak about the police.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-post','A1','die','Post',{nom:'die',akk:'die',dat:'der'},'Posten','mail',[
-    {de:'Hier ist deine Post.',en:'Here’s your mail.',focus:'Post'},
+  _noun('gen-noun-post','A1','die','Post',{nom:'die',akk:'die',dat:'der'},'Posten','mail','easy',[
+    {de:'Sie arbeitet bei der Post.',en:'She works for the mail.',focus:'Post'},
+    {de:'Ich war gerade auf/bei der Post.',en:'I’ve just been at the post office.',focus:'Post'},
     {de:'Ich sehe die Post.',en:'I see the mail.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Post.',en:'I speak about the mail.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-postleitzahl','A1','die','Postleitzahl',{nom:'die',akk:'die',dat:'der'},'Postleitzahlen','postal code',[
-    {de:'Die Postleitzahl ist hier.',en:'The postal code is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Postleitzahl.',en:'I see the postal code.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Postleitzahl.',en:'I speak about the postal code.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-praktikum','A1','das','Praktikum',{nom:'das',akk:'das',dat:'dem'},'Praktika','internship',[
-    {de:'Das Praktikum ist hier.',en:'The internship is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Praktikum.',en:'I see the internship.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Praktikum.',en:'I speak about the internship.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-praxis','A1','die','Praxis',{nom:'die',akk:'die',dat:'der'},'—','practice',[
+  _noun('gen-noun-praxis','A1','die','Praxis',{nom:'die',akk:'die',dat:'der'},'—','practice','easy',[
     {de:'In der Praxis kommt das selten vor.',en:'That rarely ever occurs in practice.',focus:'Praxis'},
+    {de:'Mein Zahnarzt hat viele Blumen in der Praxis.',en:'My dentist has a lot of flowers in his surgery.',focus:'Praxis'},
     {de:'Ich sehe die Praxis.',en:'I see the practice.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Praxis.',en:'I speak about the practice.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-preis','A1','der','Preis',{nom:'der',akk:'den',dat:'dem'},'Preise','price',[
-    {de:'im Preis fallen',en:'to fall in price',focus:'Preis'},
-    {de:'Ich sehe den Preis.',en:'I see the price.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Preis.',en:'I speak about the price.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-problem','A1','das','Problem',{nom:'das',akk:'das',dat:'dem'},'Probleme','problem',[
-    {de:'Das Problem ist hier.',en:'The problem is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Problem.',en:'I see the problem.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Problem.',en:'I speak about the problem.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-prospekt','A1','der','Prospekt',{nom:'der',akk:'den',dat:'dem'},'Prospekte','brochure',[
-    {de:'Der Prospekt ist hier.',en:'The brochure is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Prospekt.',en:'I see the brochure.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Prospekt.',en:'I speak about the brochure.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-prozent','A1','das','Prozent',{nom:'das',akk:'das',dat:'dem'},'Prozente','percent',[
-    {de:'Das Prozent ist hier.',en:'The percent is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Prozent.',en:'I see the percent.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Prozent.',en:'I speak about the percent.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-pruefung','A1','die','Prüfung',{nom:'die',akk:'die',dat:'der'},'Prüfungen','official test or examination on a subject',[
-    {de:'Die Prüfung ist hier.',en:'The official test or examination on a subject is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Prüfung.',en:'I see the official test or examination on a subject.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Prüfung.',en:'I speak about the official test or examination on a subject.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-quadratmeter','A1','der','Quadratmeter',{nom:'der',akk:'den',dat:'dem'},'Quadratmeter','square metre',[
-    {de:'Der Quadratmeter ist hier.',en:'The square metre is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Quadratmeter.',en:'I see the square metre.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Quadratmeter.',en:'I speak about the square metre.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-raum','A1','der','Raum',{nom:'der',akk:'den',dat:'dem'},'Räume','space',[
-    {de:'Der Raum ist hier.',en:'The space is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Raum.',en:'I see the space.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Raum.',en:'I speak about the space.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rechnung','A1','die','Rechnung',{nom:'die',akk:'die',dat:'der'},'Rechnungen','bill',[
-    {de:'die Rechnung bezahlen',en:'to foot the bill',focus:'Rechnung'},
-    {de:'Ich sehe die Rechnung.',en:'I see the bill.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Rechnung.',en:'I speak about the bill.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-regen','A1','der','Regen',{nom:'der',akk:'den',dat:'dem'},'Regen','rain',[
-    {de:'Der Regen ist hier.',en:'The rain is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Regen.',en:'I see the rain.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Regen.',en:'I speak about the rain.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reis','A1','der','Reis',{nom:'der',akk:'den',dat:'dem'},'Reise','rice',[
-    {de:'Der Reis ist hier.',en:'The rice is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Reis.',en:'I see the rice.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Reis.',en:'I speak about the rice.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reise','A1','die','Reise',{nom:'die',akk:'die',dat:'der'},'Reisen','journey',[
-    {de:'Die Reise ist hier.',en:'The journey is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Reise.',en:'I see the journey.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Reise.',en:'I speak about the journey.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reisebuero','A1','das','Reisebüro',{nom:'das',akk:'das',dat:'dem'},'Reisebüros','travel agency',[
-    {de:'Das Reisebüro ist hier.',en:'The travel agency is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Reisebüro.',en:'I see the travel agency.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Reisebüro.',en:'I speak about the travel agency.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reisefuehrer','A1','der','Reiseführer',{nom:'der',akk:'den',dat:'dem'},'Reiseführer','tourist guide',[
-    {de:'Der Reiseführer ist hier.',en:'The tourist guide is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Reiseführer.',en:'I see the tourist guide.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Reiseführer.',en:'I speak about the tourist guide.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reparatur','A1','die','Reparatur',{nom:'die',akk:'die',dat:'der'},'Reparaturen','repair',[
-    {de:'Die Reparatur ist hier.',en:'The repair is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Reparatur.',en:'I see the repair.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Reparatur.',en:'I speak about the repair.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-restaurant','A1','das','Restaurant',{nom:'das',akk:'das',dat:'dem'},'Restaurants','restaurant',[
-    {de:'Das Restaurant ist hier.',en:'The restaurant is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Restaurant.',en:'I see the restaurant.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Restaurant.',en:'I speak about the restaurant.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rezeption','A1','die','Rezeption',{nom:'die',akk:'die',dat:'der'},'Rezeptionen','reception',[
-    {de:'Die Rezeption ist hier.',en:'The reception is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Rezeption.',en:'I see the reception.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Rezeption.',en:'I speak about the reception.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-saft','A1','der','Saft',{nom:'der',akk:'den',dat:'dem'},'Säfte','juice',[
+  _noun('gen-noun-saft','A1','der','Saft',{nom:'der',akk:'den',dat:'dem'},'Säfte','juice','easy',[
     {de:'(Fleisch etc.) im eigenen Saft kochen',en:'(meat, etc.) to cook in its own juices',focus:'Saft'},
+    {de:'Das Handy hat keinen Saft mehr.',en:'The cellphone is out of juice.',focus:'Saft'},
     {de:'Ich sehe den Saft.',en:'I see the juice.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Saft.',en:'I speak about the juice.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-salat','A1','der','Salat',{nom:'der',akk:'den',dat:'dem'},'Salate','salad',[
-    {de:'Der Salat ist hier.',en:'The salad is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Salat.',en:'I see the salad.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Salat.',en:'I speak about the salad.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-salz','A1','das','Salz',{nom:'das',akk:'das',dat:'dem'},'Salze','salt',[
-    {de:'Das Salz ist hier.',en:'The salt is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Salz.',en:'I see the salt.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Salz.',en:'I speak about the salt.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-samstag','A1','der','Samstag',{nom:'der',akk:'den',dat:'dem'},'Samstage','Saturday',[
-    {de:'Der Samstag ist hier.',en:'The Saturday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Samstag.',en:'I see the Saturday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Samstag.',en:'I speak about the Saturday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-satz','A1','der','Satz',{nom:'der',akk:'den',dat:'dem'},'Sätze','sentence',[
+  _noun('gen-noun-satz','A1','der','Satz',{nom:'der',akk:'den',dat:'dem'},'Sätze','sentence','easy',[
     {de:'Dieser Satz scheint mir grammatikalisch falsch zu sein.',en:'This sentence seems grammatically wrong to me.',focus:'Satz'},
+    {de:'Ich war überglücklich als ich den Satz des Pythagoras zum ersten Mal in meinem Alltag anwenden konnte.',en:'I was overjoyed the first time I was able to use the Pythagorean theorem in my everyday life.',focus:'Satz'},
     {de:'Ich sehe den Satz.',en:'I see the sentence.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Satz.',en:'I speak about the sentence.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schalter','A1','der','Schalter',{nom:'der',akk:'den',dat:'dem'},'Schalter','agent noun of schalten switch information window',[
-    {de:'Der Schalter ist hier.',en:'The agent noun of schalten switch information window is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schalter.',en:'I see the agent noun of schalten switch information window.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schalter.',en:'I speak about the agent noun of schalten switch information window.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schild','A1','das','Schild',{nom:'das',akk:'das',dat:'dem'},'Schilde','sign',[
+  _noun('gen-noun-schild','A1','das','Schild',{nom:'das',akk:'das',dat:'dem'},'Schilde','sign','easy',[
     {de:'Was steht dahinten auf dem Schild?',en:'What does that sign say over there?',focus:'Schild'},
+    {de:'Du musst noch das Schild an deinem neuen Hemd abschneiden.',en:'You still have to cut off the label from your new shirt.',focus:'Schild'},
     {de:'Ich sehe das Schild.',en:'I see the sign.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schild.',en:'I speak about the sign.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schinken','A1','der','Schinken',{nom:'der',akk:'den',dat:'dem'},'Schinken','ham',[
-    {de:'Der Schinken ist hier.',en:'The ham is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schinken.',en:'I see the ham.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schinken.',en:'I speak about the ham.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schluss','A1','der','Schluss',{nom:'der',akk:'den',dat:'dem'},'Schlüsse','end',[
-    {de:'Der Schluss ist hier.',en:'The end is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schluss.',en:'I see the end.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schluss.',en:'I speak about the end.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schluessel','A1','der','Schlüssel',{nom:'der',akk:'den',dat:'dem'},'Schlüssel','key',[
-    {de:'Der Schlüssel passt nicht.',en:'The key doesn\'t fit.',focus:'Schlüssel'},
+  _noun('gen-noun-schluessel','A1','der','Schlüssel',{nom:'der',akk:'den',dat:'dem'},'Schlüssel','key','easy',[
+    {de:'Diese beiden Schlüssel sind identisch.',en:'These two keys are identical.',focus:'Schlüssel'},
     {de:'Ich sehe den Schlüssel.',en:'I see the key.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schlüssel.',en:'I speak about the key.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schrank','A1','der','Schrank',{nom:'der',akk:'den',dat:'dem'},'Schränke','cabinet',[
-    {de:'Der Schrank ist hier.',en:'The cabinet is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schrank.',en:'I see the cabinet.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schrank.',en:'I speak about the cabinet.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schuh','A1','der','Schuh',{nom:'der',akk:'den',dat:'dem'},'Schuhe','shoe',[
-    {de:'Der Schuh ist hier.',en:'The shoe is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schuh.',en:'I see the shoe.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schuh.',en:'I speak about the shoe.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schwester','A1','die','Schwester',{nom:'die',akk:'die',dat:'der'},'Schwestern','sister',[
-    {de:'Meine Schwester kommt morgen.',en:'My sister is coming tomorrow.',focus:'Schwester'},
-    {de:'Ich sehe die Schwester.',en:'I see the sister.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Schwester.',en:'I speak about the sister.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schwimmbad','A1','das','Schwimmbad',{nom:'das',akk:'das',dat:'dem'},'Schwimmbäder','public pool',[
-    {de:'Das Schwimmbad ist hier.',en:'The public pool is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Schwimmbad.',en:'I see the public pool.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schwimmbad.',en:'I speak about the public pool.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schueler','A1','der','Schüler',{nom:'der',akk:'den',dat:'dem'},'Schüler','pupil',[
-    {de:'Der Schüler ist hier.',en:'The pupil is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schüler.',en:'I see the pupil.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schüler.',en:'I speak about the pupil.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-see','A1','der','See',{nom:'der',akk:'den',dat:'dem'},'Seen','lake',[
+  _noun('gen-noun-see','A1','der','See',{nom:'der',akk:'den',dat:'dem'},'Seen','lake','easy',[
     {de:'Dieser See ist sehr klein.',en:'This lake is very small.',focus:'See'},
     {de:'Ich sehe den See.',en:'I see the lake.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem See.',en:'I speak about the lake.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sehenswuerdigkeit','A1','die','Sehenswürdigkeit',{nom:'die',akk:'die',dat:'der'},'Sehenswürdigkeiten','something worth seeing',[
-    {de:'Die Sehenswürdigkeit ist hier.',en:'The something worth seeing is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Sehenswürdigkeit.',en:'I see the something worth seeing.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sehenswürdigkeit.',en:'I speak about the something worth seeing.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sekunde','A1','die','Sekunde',{nom:'die',akk:'die',dat:'der'},'Sekunden','unit of time',[
-    {de:'Die Sekunde ist hier.',en:'The unit of time is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Sekunde.',en:'I see the unit of time.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sekunde.',en:'I speak about the unit of time.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-september','A1','der','September',{nom:'der',akk:'den',dat:'dem'},'September','September',[
-    {de:'Der September ist hier.',en:'The September is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den September.',en:'I see the September.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem September.',en:'I speak about the September.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sie','A1','das','Sie',{nom:'das',akk:'das',dat:'dem'},'Sie','you',[
+  _noun('gen-noun-sie','A1','das','Sie',{nom:'das',akk:'das',dat:'dem'},'Sie','you','easy',[
     {de:'Was möchten Sie, Frau Wagner?',en:'What would you like to have, Mrs. Wagner?',focus:'Sie'},
+    {de:'Wenn ich Sie hereinbitten dürfte, meine Herren.',en:'If I may invite you in, gentlemen.',focus:'Sie'},
     {de:'Ich sehe das Sie.',en:'I see the you.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sie.',en:'I speak about the you.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sofa','A1','das','Sofa',{nom:'das',akk:'das',dat:'dem'},'Sofas','sofa',[
-    {de:'Das Sofa ist hier.',en:'The sofa is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Sofa.',en:'I see the sofa.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sofa.',en:'I speak about the sofa.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sohn','A1','der','Sohn',{nom:'der',akk:'den',dat:'dem'},'Söhne','son',[
-    {de:'Der Sohn ist hier.',en:'The son is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sohn.',en:'I see the son.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sohn.',en:'I speak about the son.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sommer','A1','der','Sommer',{nom:'der',akk:'den',dat:'dem'},'Sommer','summer',[
-    {de:'Der Sommer ist hier.',en:'The summer is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sommer.',en:'I see the summer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sommer.',en:'I speak about the summer.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sonnabend','A1','der','Sonnabend',{nom:'der',akk:'den',dat:'dem'},'Sonnabende','Saturday',[
-    {de:'Der Sonnabend ist hier.',en:'The Saturday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sonnabend.',en:'I see the Saturday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sonnabend.',en:'I speak about the Saturday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sonne','A1','die','Sonne',{nom:'die',akk:'die',dat:'der'},'Sonnen','sun',[
+  _noun('gen-noun-sonne','A1','die','Sonne',{nom:'die',akk:'die',dat:'der'},'Sonnen','sun','easy',[
     {de:'Wir hatten den ganzen Tag Sonne.',en:'We had sunshine all day.',focus:'Sonne'},
+    {de:'Laut Wetterbericht wird es morgen Sonne geben.',en:'According to the weather forecast there will be sunshine tomorrow.',focus:'Sonne'},
     {de:'Ich sehe die Sonne.',en:'I see the sun.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sonne.',en:'I speak about the sun.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sonntag','A1','der','Sonntag',{nom:'der',akk:'den',dat:'dem'},'Sonntage','Sunday',[
-    {de:'Der Sonntag ist hier.',en:'The Sunday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sonntag.',en:'I see the Sunday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sonntag.',en:'I speak about the Sunday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-speisekarte','A1','die','Speisekarte',{nom:'die',akk:'die',dat:'der'},'Speisekarten','menu',[
-    {de:'Die Speisekarte ist hier.',en:'The menu is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Speisekarte.',en:'I see the menu.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Speisekarte.',en:'I speak about the menu.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sport','A1','der','Sport',{nom:'der',akk:'den',dat:'dem'},'Sporte','sport',[
-    {de:'Der Sport ist hier.',en:'The sport is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sport.',en:'I see the sport.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sport.',en:'I speak about the sport.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sprache','A1','die','Sprache',{nom:'die',akk:'die',dat:'der'},'Sprachen','language',[
+  _noun('gen-noun-sprache','A1','die','Sprache',{nom:'die',akk:'die',dat:'der'},'Sprachen','language','easy',[
     {de:'Ist Deutsch eine schwere Sprache zu erlernen?',en:'Is German a difficult language to learn?',focus:'Sprache'},
+    {de:'Sie lernt sehr gern Sprachen.',en:'She loves to learn languages.',focus:'Sprachen'},
     {de:'Ich sehe die Sprache.',en:'I see the language.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sprache.',en:'I speak about the language.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-stelle','A1','die','Stelle',{nom:'die',akk:'die',dat:'der'},'Stellen','place',[
-    {de:'Die Stelle ist hier.',en:'The place is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Stelle.',en:'I see the place.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Stelle.',en:'I speak about the place.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stock','A1','der','Stock',{nom:'der',akk:'den',dat:'dem'},'—','stick',[
+  _noun('gen-noun-stock','A1','der','Stock',{nom:'der',akk:'den',dat:'dem'},'—','stick','easy',[
     {de:'Schau mal, ich habe einen Stock gefunden, der wie ein Schwert aussieht.',en:'Check it out, I found a stick that looks like a sword.',focus:'Stock'},
+    {de:'Ich weiß nicht, wo ich den Stock gelassen habe; haben Sie ihn nicht gesehen?',en:'I don\'t know where I\'ve left the staff; have you seen it perhaps?',focus:'Stock'},
     {de:'Ich sehe den Stock.',en:'I see the stick.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stock.',en:'I speak about the stick.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-strassenbahn','A1','die','Straßenbahn',{nom:'die',akk:'die',dat:'der'},'Straßenbahnen','streetcar',[
-    {de:'Die Straßenbahn ist hier.',en:'The streetcar is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Straßenbahn.',en:'I see the streetcar.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Straßenbahn.',en:'I speak about the streetcar.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-student','A1','der','Student',{nom:'der',akk:'den',dat:'dem'},'Studenten','student',[
-    {de:'Der Student ist hier.',en:'The student is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Studenten.',en:'I see the student.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Studenten.',en:'I speak about the student.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-studium','A1','das','Studium',{nom:'das',akk:'das',dat:'dem'},'Studien','study',[
-    {de:'Das Studium ist hier.',en:'The study is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Studium.',en:'I see the study.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Studium.',en:'I speak about the study.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stunde','A1','die','Stunde',{nom:'die',akk:'die',dat:'der'},'Stunden','hour',[
+  _noun('gen-noun-stunde','A1','die','Stunde',{nom:'die',akk:'die',dat:'der'},'Stunden','hour','easy',[
     {de:'Der Film dauert drei Stunden.',en:'The movie lasts three hours.',focus:'Stunden'},
+    {de:'Bitte für uns Sünder, jetzt und in der Stunde unsres Todes.',en:'Pray for us sinners, now and at the hour of our death.',focus:'Stunde'},
     {de:'Ich sehe die Stunde.',en:'I see the hour.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Stunde.',en:'I speak about the hour.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sueden','A1','der','Süden',{nom:'der',akk:'den',dat:'dem'},'—','south',[
-    {de:'Der Süden ist hier.',en:'The south is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Süden.',en:'I see the south.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Süden.',en:'I speak about the south.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tasche','A1','die','Tasche',{nom:'die',akk:'die',dat:'der'},'Taschen','bag',[
-    {de:'Die Tasche ist hier.',en:'The bag is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tasche.',en:'I see the bag.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tasche.',en:'I speak about the bag.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-taxi','A1','das','Taxi',{nom:'das',akk:'das',dat:'dem'},'—','taxi',[
-    {de:'Das Taxi ist hier.',en:'The taxi is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Taxi.',en:'I see the taxi.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Taxi.',en:'I speak about the taxi.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tee','A1','der','Tee',{nom:'der',akk:'den',dat:'dem'},'Tees','tea',[
-    {de:'Der Tee ist hier.',en:'The tea is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Tee.',en:'I see the tea.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Tee.',en:'I speak about the tea.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-teil','A1','der','Teil',{nom:'der',akk:'den',dat:'dem'},'Teile','part',[
+  _noun('gen-noun-teil','A1','der','Teil',{nom:'der',akk:'den',dat:'dem'},'Teile','part','easy',[
     {de:'Ein großer Teil der Wähler:innen haben für die Partei gestimmt.',en:'A large chunk of the voterbase voted for the party.',focus:'Teil'},
     {de:'Ich sehe den Teil.',en:'I see the part.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Teil.',en:'I speak about the part.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-telefon','A1','das','Telefon',{nom:'das',akk:'das',dat:'dem'},'Telefone','telephone',[
-    {de:'Das Telefon ist hier.',en:'The telephone is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Telefon.',en:'I see the telephone.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Telefon.',en:'I speak about the telephone.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-termin','A1','der','Termin',{nom:'der',akk:'den',dat:'dem'},'Termine','date',[
+  _noun('gen-noun-termin','A1','der','Termin',{nom:'der',akk:'den',dat:'dem'},'Termine','date','easy',[
     {de:'Herr Müller ist aktuell in einem Termin.',en:'Mr. Müller is currently busy with an appointment.',focus:'Termin'},
     {de:'Ich sehe den Termin.',en:'I see the date.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Termin.',en:'I speak about the date.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-test','A1','der','Test',{nom:'der',akk:'den',dat:'dem'},'—','test',[
-    {de:'Der Test ist hier.',en:'The test is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Test.',en:'I see the test.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Test.',en:'I speak about the test.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-text','A1','der','Text',{nom:'der',akk:'den',dat:'dem'},'Texte','text',[
-    {de:'Der Text ist hier.',en:'The text is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Text.',en:'I see the text.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Text.',en:'I speak about the text.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-thema','A1','das','Thema',{nom:'das',akk:'das',dat:'dem'},'—','topic',[
+  _noun('gen-noun-thema','A1','das','Thema',{nom:'das',akk:'das',dat:'dem'},'—','topic','easy',[
     {de:'Das Thema hatten wir schon.',en:'We\'ve already talked about this (subject).',focus:'Thema'},
     {de:'Ich sehe das Thema.',en:'I see the topic.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Thema.',en:'I speak about the topic.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-ticket','A1','das','Ticket',{nom:'das',akk:'das',dat:'dem'},'Tickets','ticket',[
-    {de:'Das Ticket ist hier.',en:'The ticket is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Ticket.',en:'I see the ticket.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ticket.',en:'I speak about the ticket.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tochter','A1','die','Tochter',{nom:'die',akk:'die',dat:'der'},'Töchter','daughter',[
-    {de:'Die Tochter ist hier.',en:'The daughter is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tochter.',en:'I see the daughter.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tochter.',en:'I speak about the daughter.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-toilette','A1','die','Toilette',{nom:'die',akk:'die',dat:'der'},'Toiletten','toilet',[
-    {de:'Die Toilette ist hier.',en:'The toilet is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Toilette.',en:'I see the toilet.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Toilette.',en:'I speak about the toilet.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tomate','A1','die','Tomate',{nom:'die',akk:'die',dat:'der'},'Tomaten','tomato',[
-    {de:'Die Tomate ist hier.',en:'The tomato is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tomate.',en:'I see the tomato.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tomate.',en:'I speak about the tomato.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-treppe','A1','die','Treppe',{nom:'die',akk:'die',dat:'der'},'Treppen','stairs',[
-    {de:'Die Treppe ist hier.',en:'The stairs is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Treppe.',en:'I see the stairs.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Treppe.',en:'I speak about the stairs.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-uhr','A1','die','Uhr',{nom:'die',akk:'die',dat:'der'},'Uhren','hours',[
-    {de:'Es ist vier Uhr.',en:'It is four o\'clock.',focus:'Uhr'},
+  _noun('gen-noun-uhr','A1','die','Uhr',{nom:'die',akk:'die',dat:'der'},'Uhren','hours','easy',[
+    {de:'Es ist vier Uhr zwölf.',en:'It is twelve minutes past four.',focus:'Uhr'},
     {de:'Ich sehe die Uhr.',en:'I see the hours.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Uhr.',en:'I speak about the hours.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-unterricht','A1','der','Unterricht',{nom:'der',akk:'den',dat:'dem'},'Unterrichte','lesson',[
-    {de:'Der Unterricht ist hier.',en:'The lesson is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Unterricht.',en:'I see the lesson.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Unterricht.',en:'I speak about the lesson.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-unterschrift','A1','die','Unterschrift',{nom:'die',akk:'die',dat:'der'},'Unterschriften','signature',[
-    {de:'Das ist eine gefälschte Unterschrift!',en:'That\'s a forged signature!',focus:'Unterschrift'},
+  _noun('gen-noun-unterschrift','A1','die','Unterschrift',{nom:'die',akk:'die',dat:'der'},'Unterschriften','signature','easy',[
+    {de:'Die Unterschrift unter diesem Bild besagt, dass es sich um einen Esel handelt.',en:'The caption below says it\'s an ass.',focus:'Unterschrift'},
     {de:'Ich sehe die Unterschrift.',en:'I see the signature.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Unterschrift.',en:'I speak about the signature.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-urlaub','A1','der','Urlaub',{nom:'der',akk:'den',dat:'dem'},'Urlaube','holiday',[
-    {de:'Der Urlaub ist hier.',en:'The holiday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Urlaub.',en:'I see the holiday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Urlaub.',en:'I speak about the holiday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vater','A1','der','Vater',{nom:'der',akk:'den',dat:'dem'},'Väter','father',[
+  _noun('gen-noun-vater','A1','der','Vater',{nom:'der',akk:'den',dat:'dem'},'Väter','father','easy',[
     {de:'Mein Vater erklärt mir jeden Sonntag unsere neun Planeten.',en:'My father explains to me our nine planets every Sunday.',focus:'Vater'},
     {de:'Ich sehe den Vater.',en:'I see the father.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vater.',en:'I speak about the father.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-verein','A1','der','Verein',{nom:'der',akk:'den',dat:'dem'},'Vereine','association',[
-    {de:'Der Verein ist hier.',en:'The association is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Verein.',en:'I see the association.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Verein.',en:'I speak about the association.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-verkaeufer','A1','der','Verkäufer',{nom:'der',akk:'den',dat:'dem'},'Verkäufer','agent noun of verkaufen seller salesclerk',[
-    {de:'Der Verkäufer ist hier.',en:'The agent noun of verkaufen seller salesclerk is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Verkäufer.',en:'I see the agent noun of verkaufen seller salesclerk.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Verkäufer.',en:'I speak about the agent noun of verkaufen seller salesclerk.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vermieter','A1','der','Vermieter',{nom:'der',akk:'den',dat:'dem'},'Vermieter','landlord',[
-    {de:'Der Vermieter ist hier.',en:'The landlord is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Vermieter.',en:'I see the landlord.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vermieter.',en:'I speak about the landlord.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-viertel','A1','das','Viertel',{nom:'das',akk:'das',dat:'dem'},'Viertel','quarter',[
-    {de:'Das Viertel ist hier.',en:'The quarter is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Viertel.',en:'I see the quarter.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Viertel.',en:'I speak about the quarter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vormittag','A1','der','Vormittag',{nom:'der',akk:'den',dat:'dem'},'Vormittage','mid-morning',[
-    {de:'Der Vormittag ist hier.',en:'The mid-morning is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Vormittag.',en:'I see the mid-morning.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vormittag.',en:'I speak about the mid-morning.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vorname','A1','der','Vorname',{nom:'der',akk:'den',dat:'dem'},'Vornamen','given name',[
-    {de:'Der Vorname ist hier.',en:'The given name is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Vornamen.',en:'I see the given name.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vornamen.',en:'I speak about the given name.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vorsicht','A1','die','Vorsicht',{nom:'die',akk:'die',dat:'der'},'—','caution',[
-    {de:'Die Vorsicht ist hier.',en:'The caution is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Vorsicht.',en:'I see the caution.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Vorsicht.',en:'I speak about the caution.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vorwahl','A1','die','Vorwahl',{nom:'die',akk:'die',dat:'der'},'Vorwahlen','area code',[
-    {de:'Die Vorwahl ist hier.',en:'The area code is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Vorwahl.',en:'I see the area code.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Vorwahl.',en:'I speak about the area code.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wagen','A1','der','Wagen',{nom:'der',akk:'den',dat:'dem'},'—','wheeled vehicle for transporting anything a car',[
-    {de:'Der Wagen ist hier.',en:'The wheeled vehicle for transporting anything a car is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wagen.',en:'I see the wheeled vehicle for transporting anything a car.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wagen.',en:'I speak about the wheeled vehicle for transporting anything a car.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-welt','A1','die','Welt',{nom:'die',akk:'die',dat:'der'},'Welten','world',[
-    {de:'Die Welt ist hier.',en:'The world is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Welt.',en:'I see the world.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Welt.',en:'I speak about the world.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-westen','A1','der','Westen',{nom:'der',akk:'den',dat:'dem'},'—','west',[
-    {de:'Der Westen ist hier.',en:'The west is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Westen.',en:'I see the west.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Westen.',en:'I speak about the west.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wetter','A1','das','Wetter',{nom:'das',akk:'das',dat:'dem'},'Wetter','weather',[
-    {de:'Heute ist schönes Wetter.',en:'The weather is nice today.',focus:'Wetter'},
+  _noun('gen-noun-wetter','A1','das','Wetter',{nom:'das',akk:'das',dat:'dem'},'Wetter','weather','easy',[
+    {de:'Das Wetter in Griechenland war wirklich toll.',en:'The weather in Greece was wonderful.',focus:'Wetter'},
     {de:'Ich sehe das Wetter.',en:'I see the weather.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wetter.',en:'I speak about the weather.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-wiederhoeren','A1','das','Wiederhören',{nom:'das',akk:'das',dat:'dem'},'—','hearing again',[
-    {de:'Das Wiederhören ist hier.',en:'The hearing again is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Wiederhören.',en:'I see the hearing again.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wiederhören.',en:'I speak about the hearing again.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wiedersehen','A1','das','Wiedersehen',{nom:'das',akk:'das',dat:'dem'},'Wiedersehen','reunion',[
-    {de:'Das Wiedersehen ist hier.',en:'The reunion is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Wiedersehen.',en:'I see the reunion.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wiedersehen.',en:'I speak about the reunion.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wind','A1','der','Wind',{nom:'der',akk:'den',dat:'dem'},'Winde','wind',[
-    {de:'Der Wind ist hier.',en:'The wind is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wind.',en:'I see the wind.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wind.',en:'I speak about the wind.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-winter','A1','der','Winter',{nom:'der',akk:'den',dat:'dem'},'Winter','winter',[
-    {de:'Der Winter ist hier.',en:'The winter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Winter.',en:'I see the winter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Winter.',en:'I speak about the winter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-woche','A1','die','Woche',{nom:'die',akk:'die',dat:'der'},'Wochen','week',[
-    {de:'ab nächster Woche',en:'from next week on',focus:'Woche'},
-    {de:'Ich sehe die Woche.',en:'I see the week.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Woche.',en:'I speak about the week.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wochenende','A1','das','Wochenende',{nom:'das',akk:'das',dat:'dem'},'Wochenenden','weekend',[
-    {de:'Das Wochenende ist hier.',en:'The weekend is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Wochenende.',en:'I see the weekend.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wochenende.',en:'I speak about the weekend.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wochentag','A1','der','Wochentag',{nom:'der',akk:'den',dat:'dem'},'Wochentage','weekday',[
-    {de:'Der Wochentag ist hier.',en:'The weekday is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wochentag.',en:'I see the weekday.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wochentag.',en:'I speak about the weekday.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wohnung','A1','die','Wohnung',{nom:'die',akk:'die',dat:'der'},'Wohnungen','domicile',[
-    {de:'Die Wohnung ist hier.',en:'The domicile is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Wohnung.',en:'I see the domicile.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Wohnung.',en:'I speak about the domicile.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wort','A1','das','Wort',{nom:'das',akk:'das',dat:'dem'},'Wörter','word as an isolated unit',[
+  _noun('gen-noun-wort','A1','das','Wort',{nom:'das',akk:'das',dat:'dem'},'Wörter','word as an isolated unit','easy',[
     {de:'Er erklärte das Problem mit wenigen Worten.',en:'He explained the problem in few words.',focus:'Worten'},
+    {de:'Keiner wagte dem Wort des Königs zu widersprechen.',en:'No one dared contradict the king\'s word.',focus:'Wort'},
     {de:'Ich sehe das Wort.',en:'I see the word as an isolated unit.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wort.',en:'I speak about the word as an isolated unit.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-zeitung','A1','die','Zeitung',{nom:'die',akk:'die',dat:'der'},'Zeitungen','newspaper',[
-    {de:'Die Zeitung ist hier.',en:'The newspaper is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Zeitung.',en:'I see the newspaper.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Zeitung.',en:'I speak about the newspaper.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zentimeter','A1','der','Zentimeter',{nom:'der',akk:'den',dat:'dem'},'Zentimeter','centimetre',[
-    {de:'Der Zentimeter ist hier.',en:'The centimetre is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Zentimeter.',en:'I see the centimetre.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zentimeter.',en:'I speak about the centimetre.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zigarette','A1','die','Zigarette',{nom:'die',akk:'die',dat:'der'},'Zigaretten','cigarette',[
-    {de:'Die Zigarette ist hier.',en:'The cigarette is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Zigarette.',en:'I see the cigarette.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Zigarette.',en:'I speak about the cigarette.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zimmer','A1','das','Zimmer',{nom:'das',akk:'das',dat:'dem'},'Zimmer','room',[
-    {de:'Das Zimmer ist hier.',en:'The room is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Zimmer.',en:'I see the room.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zimmer.',en:'I speak about the room.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zoll','A1','der','Zoll',{nom:'der',akk:'den',dat:'dem'},'Zölle','custom',[
-    {de:'seinen Zoll fordern',en:'to take one\'s toll',focus:'Zoll'},
-    {de:'Ich sehe den Zoll.',en:'I see the custom.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zoll.',en:'I speak about the custom.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-oel','A1','das','Öl',{nom:'das',akk:'das',dat:'dem'},'Öle','oil',[
-    {de:'Das Öl ist hier.',en:'The oil is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Öl.',en:'I see the oil.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Öl.',en:'I speak about the oil.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ahnung','A2','die','Ahnung',{nom:'die',akk:'die',dat:'der'},'Ahnungen','anticipation',[
-    {de:'Die Ahnung ist hier.',en:'The anticipation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ahnung.',en:'I see the anticipation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ahnung.',en:'I speak about the anticipation.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ampel','A2','die','Ampel',{nom:'die',akk:'die',dat:'der'},'Ampeln','traffic light',[
-    {de:'Die Ampel ist hier.',en:'The traffic light is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ampel.',en:'I see the traffic light.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ampel.',en:'I speak about the traffic light.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-angst','A2','die','Angst',{nom:'die',akk:'die',dat:'der'},'Ängste','fear',[
-    {de:'Die Angst ist hier.',en:'The fear is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Angst.',en:'I see the fear.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Angst.',en:'I speak about the fear.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-anzug','A2','der','Anzug',{nom:'der',akk:'den',dat:'dem'},'Anzüge','suit',[
+  _noun('gen-noun-anzug','A2','der','Anzug',{nom:'der',akk:'den',dat:'dem'},'Anzüge','suit','easy',[
     {de:'Der Anzug steht dir gut.',en:'The suit looks great on you.',focus:'Anzug'},
+    {de:'Die feindlichen Truppen sind im Anzug.',en:'The enemy troops are approaching.',focus:'Anzug'},
     {de:'Ich sehe den Anzug.',en:'I see the suit.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Anzug.',en:'I speak about the suit.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-apotheke','A2','die','Apotheke',{nom:'die',akk:'die',dat:'der'},'Apotheken','pharmacy',[
-    {de:'Die Apotheke ist hier.',en:'The pharmacy is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Apotheke.',en:'I see the pharmacy.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Apotheke.',en:'I speak about the pharmacy.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-apparat','A2','der','Apparat',{nom:'der',akk:'den',dat:'dem'},'Apparate','apparatus',[
-    {de:'Der Apparat ist hier.',en:'The apparatus is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Apparat.',en:'I see the apparatus.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Apparat.',en:'I speak about the apparatus.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-artikel','A2','der','Artikel',{nom:'der',akk:'den',dat:'dem'},'Artikel','article',[
-    {de:'Der Artikel ist hier.',en:'The article is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Artikel.',en:'I see the article.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Artikel.',en:'I speak about the article.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausbildung','A2','die','Ausbildung',{nom:'die',akk:'die',dat:'der'},'Ausbildungen','training',[
-    {de:'Die Ausbildung ist hier.',en:'The training is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ausbildung.',en:'I see the training.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ausbildung.',en:'I speak about the training.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ausstellung','A2','die','Ausstellung',{nom:'die',akk:'die',dat:'der'},'Ausstellungen','exhibition',[
-    {de:'Die Ausstellung ist hier.',en:'The exhibition is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ausstellung.',en:'I see the exhibition.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ausstellung.',en:'I speak about the exhibition.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-babysitter','A2','der','Babysitter',{nom:'der',akk:'den',dat:'dem'},'Babysitter','babysitter',[
-    {de:'Der Babysitter ist hier.',en:'The babysitter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Babysitter.',en:'I see the babysitter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Babysitter.',en:'I speak about the babysitter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ball','A2','der','Ball',{nom:'der',akk:'den',dat:'dem'},'Bälle','ball',[
+  _noun('gen-noun-ball','A2','der','Ball',{nom:'der',akk:'den',dat:'dem'},'Bälle','ball','easy',[
     {de:'Können wir uns deinen Ball ausleihen?',en:'Can we borrow your ball?',focus:'Ball'},
+    {de:'Er formte einen Ball aus Papier.',en:'He shaped the paper into a ball.',focus:'Ball'},
     {de:'Ich sehe den Ball.',en:'I see the ball.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ball.',en:'I speak about the ball.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-band','A2','die','Band',{nom:'die',akk:'die',dat:'der'},'—','tape',[
-    {de:'Die Band ist hier.',en:'The tape is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Band.',en:'I see the tape.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Band.',en:'I speak about the tape.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-basketball','A2','der','Basketball',{nom:'der',akk:'den',dat:'dem'},'Basketbälle','basketball',[
-    {de:'Der Basketball ist hier.',en:'The basketball is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Basketball.',en:'I see the basketball.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Basketball.',en:'I speak about the basketball.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-baustelle','A2','die','Baustelle',{nom:'die',akk:'die',dat:'der'},'Baustellen','building site',[
+  _noun('gen-noun-baustelle','A2','die','Baustelle',{nom:'die',akk:'die',dat:'der'},'Baustellen','building site','easy',[
     {de:'Dies ist nicht meine Baustelle.',en:'That\'s not my field of interest.',focus:'Baustelle'},
+    {de:'Häkeln ist eigentlich so gar nicht meine Baustelle.',en:'Crochet is absolutely not my cup of tea.',focus:'Baustelle'},
     {de:'Ich sehe die Baustelle.',en:'I see the building site.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Baustelle.',en:'I speak about the building site.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-berg','A2','der','Berg',{nom:'der',akk:'den',dat:'dem'},'Berge','mountain',[
-    {de:'Der Berg ist hier.',en:'The mountain is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Berg.',en:'I see the mountain.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Berg.',en:'I speak about the mountain.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bescheid','A2','der','Bescheid',{nom:'der',akk:'den',dat:'dem'},'Bescheide','notification',[
-    {de:'Der Bescheid ist hier.',en:'The notification is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Bescheid.',en:'I see the notification.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Bescheid.',en:'I speak about the notification.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-besuch','A2','der','Besuch',{nom:'der',akk:'den',dat:'dem'},'Besuche','visit',[
-    {de:'Der Besuch ist hier.',en:'The visit is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Besuch.',en:'I see the visit.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Besuch.',en:'I speak about the visit.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bewerbung','A2','die','Bewerbung',{nom:'die',akk:'die',dat:'der'},'Bewerbungen','application',[
-    {de:'Die Bewerbung ist hier.',en:'The application is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bewerbung.',en:'I see the application.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bewerbung.',en:'I speak about the application.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bibliothek','A2','die','Bibliothek',{nom:'die',akk:'die',dat:'der'},'Bibliotheken','library',[
-    {de:'Die Bibliothek ist hier.',en:'The library is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bibliothek.',en:'I see the library.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bibliothek.',en:'I speak about the library.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-blatt','A2','das','Blatt',{nom:'das',akk:'das',dat:'dem'},'Blätter','leaf petal',[
+  _noun('gen-noun-blatt','A2','das','Blatt',{nom:'das',akk:'das',dat:'dem'},'Blätter','leaf petal','easy',[
     {de:'Auf dem Blatt steht nichts drauf.',en:'There is nothing written on this sheet of paper.',focus:'Blatt'},
+    {de:'ein Blatt ist zwei oder vier Seiten',en:'one sheet is two to four pages',focus:'Blatt'},
     {de:'Ich sehe das Blatt.',en:'I see the leaf petal.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Blatt.',en:'I speak about the leaf petal.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-blog','A2','das','Blog',{nom:'das',akk:'das',dat:'dem'},'Blogs','blog',[
-    {de:'Das Blog ist hier.',en:'The blog is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Blog.',en:'I see the blog.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Blog.',en:'I speak about the blog.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bluse','A2','die','Bluse',{nom:'die',akk:'die',dat:'der'},'Blusen','blouse',[
-    {de:'Die Bluse ist hier.',en:'The blouse is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bluse.',en:'I see the blouse.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bluse.',en:'I speak about the blouse.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bohne','A2','die','Bohne',{nom:'die',akk:'die',dat:'der'},'Bohnen','bean',[
-    {de:'Die Bohne ist hier.',en:'The bean is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Bohne.',en:'I see the bean.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Bohne.',en:'I speak about the bean.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-brille','A2','die','Brille',{nom:'die',akk:'die',dat:'der'},'Brillen','glasses',[
-    {de:'Die Brille ist hier.',en:'The glasses is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Brille.',en:'I see the glasses.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Brille.',en:'I speak about the glasses.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-bruecke','A2','die','Brücke',{nom:'die',akk:'die',dat:'der'},'Brücken','bridge',[
-    {de:'Die Brücke ist hier.',en:'The bridge is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Brücke.',en:'I see the bridge.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Brücke.',en:'I speak about the bridge.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-buero','A2','das','Büro',{nom:'das',akk:'das',dat:'dem'},'Büros','office',[
+  _noun('gen-noun-buero','A2','das','Büro',{nom:'das',akk:'das',dat:'dem'},'Büros','office','easy',[
     {de:'Sie sitzt in ihrem Büro.',en:'She’s sitting in her office.',focus:'Büro'},
+    {de:'Der Chef lädt das ganze Büro zum Essen ein.',en:'The boss is inviting the whole office to dinner.',focus:'Büro'},
     {de:'Ich sehe das Büro.',en:'I see the office.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Büro.',en:'I speak about the office.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-cafeteria','A2','die','Cafeteria',{nom:'die',akk:'die',dat:'der'},'—','cafeteria',[
-    {de:'Die Cafeteria ist hier.',en:'The cafeteria is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Cafeteria.',en:'I see the cafeteria.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Cafeteria.',en:'I speak about the cafeteria.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-chefin','A2','die','Chefin',{nom:'die',akk:'die',dat:'der'},'Chefinnen','female boss',[
-    {de:'Die Chefin ist hier.',en:'The female boss is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Chefin.',en:'I see the female boss.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Chefin.',en:'I speak about the female boss.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-comic','A2','der','Comic',{nom:'der',akk:'den',dat:'dem'},'Comics','comic',[
-    {de:'Der Comic ist hier.',en:'The comic is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Comic.',en:'I see the comic.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Comic.',en:'I speak about the comic.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-creme','A2','die','Creme',{nom:'die',akk:'die',dat:'der'},'—','cream',[
-    {de:'Die Creme ist hier.',en:'The cream is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Creme.',en:'I see the cream.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Creme.',en:'I speak about the cream.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-dame','A2','die','Dame',{nom:'die',akk:'die',dat:'der'},'Damen','lady',[
-    {de:'Die Dame ist hier.',en:'The lady is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Dame.',en:'I see the lady.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Dame.',en:'I speak about the lady.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-datei','A2','die','Datei',{nom:'die',akk:'die',dat:'der'},'Dateien','file',[
-    {de:'Die Datei ist hier.',en:'The file is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Datei.',en:'I see the file.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Datei.',en:'I speak about the file.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ding','A2','das','Ding',{nom:'das',akk:'das',dat:'dem'},'—','thing',[
-    {de:'Was ist das für ein Ding?',en:'What is that thing?',focus:'Ding'},
-    {de:'Ich sehe das Ding.',en:'I see the thing.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ding.',en:'I speak about the thing.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-disco','A2','die','Disco',{nom:'die',akk:'die',dat:'der'},'Discos','discotheque',[
-    {de:'Die Disco ist hier.',en:'The discotheque is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Disco.',en:'I see the discotheque.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Disco.',en:'I speak about the discotheque.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-e-book','A2','das','E-Book',{nom:'das',akk:'das',dat:'dem'},'E-Books','e-book',[
-    {de:'Das E-Book ist hier.',en:'The e-book is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das E-Book.',en:'I see the e-book.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem E-Book.',en:'I speak about the e-book.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ehepartner','A2','der','Ehepartner',{nom:'der',akk:'den',dat:'dem'},'Ehepartner','spouse',[
-    {de:'Der Ehepartner ist hier.',en:'The spouse is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ehepartner.',en:'I see the spouse.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ehepartner.',en:'I speak about the spouse.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-einkaufszentrum','A2','das','Einkaufszentrum',{nom:'das',akk:'das',dat:'dem'},'Einkaufszentren','shopping center',[
-    {de:'Das Einkaufszentrum ist hier.',en:'The shopping center is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Einkaufszentrum.',en:'I see the shopping center.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Einkaufszentrum.',en:'I speak about the shopping center.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-eis','A2','das','Eis',{nom:'das',akk:'das',dat:'dem'},'—','ice',[
-    {de:'Das Eis ist hier.',en:'The ice is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Eis.',en:'I see the ice.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Eis.',en:'I speak about the ice.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-erdgeschoss','A2','das','Erdgeschoss',{nom:'das',akk:'das',dat:'dem'},'Erdgeschosse','first floor',[
-    {de:'Das Erdgeschoss ist hier.',en:'The first floor is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Erdgeschoss.',en:'I see the first floor.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Erdgeschoss.',en:'I speak about the first floor.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-erfahrung','A2','die','Erfahrung',{nom:'die',akk:'die',dat:'der'},'Erfahrungen','experience',[
-    {de:'unmittelbare körperliche Erfahrungen.',en:'direct physical experience.',focus:'Erfahrungen'},
-    {de:'Ich sehe die Erfahrung.',en:'I see the experience.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Erfahrung.',en:'I speak about the experience.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-erlaubnis','A2','die','Erlaubnis',{nom:'die',akk:'die',dat:'der'},'Erlaubnisse','permission',[
-    {de:'Die Erlaubnis ist hier.',en:'The permission is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Erlaubnis.',en:'I see the permission.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Erlaubnis.',en:'I speak about the permission.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ermaessigung','A2','die','Ermäßigung',{nom:'die',akk:'die',dat:'der'},'Ermäßigungen','discount',[
-    {de:'Die Ermäßigung ist hier.',en:'The discount is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ermäßigung.',en:'I see the discount.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ermäßigung.',en:'I speak about the discount.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fach','A2','das','Fach',{nom:'das',akk:'das',dat:'dem'},'Fächer','compartment',[
-    {de:'Das Fach ist hier.',en:'The compartment is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Fach.',en:'I see the compartment.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fach.',en:'I speak about the compartment.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fahrplan','A2','der','Fahrplan',{nom:'der',akk:'den',dat:'dem'},'Fahrpläne','timetable',[
-    {de:'Der Fahrplan ist hier.',en:'The timetable is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fahrplan.',en:'I see the timetable.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fahrplan.',en:'I speak about the timetable.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fan','A2','der','Fan',{nom:'der',akk:'den',dat:'dem'},'Fans','fan',[
-    {de:'ein riesiger Fan.',en:'a huge fan.',focus:'Fan'},
-    {de:'Ich sehe den Fan.',en:'I see the fan.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fan.',en:'I speak about the fan.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-feier','A2','die','Feier',{nom:'die',akk:'die',dat:'der'},'Feiern','celebration',[
-    {de:'Die Feier ist hier.',en:'The celebration is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Feier.',en:'I see the celebration.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Feier.',en:'I speak about the celebration.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fenster','A2','das','Fenster',{nom:'das',akk:'das',dat:'dem'},'Fenster','window',[
+  _noun('gen-noun-fenster','A2','das','Fenster',{nom:'das',akk:'das',dat:'dem'},'Fenster','window','easy',[
     {de:'sich weit aus dem Fenster lehnen',en:'to go out on a limb',focus:'Fenster'},
+    {de:'Sie schaute auf dem Fenster.',en:'She looked out the window.',focus:'Fenster'},
     {de:'Ich sehe das Fenster.',en:'I see the window.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fenster.',en:'I speak about the window.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-fest','A2','das','Fest',{nom:'das',akk:'das',dat:'dem'},'Feste','feast',[
-    {de:'Das Fest ist hier.',en:'The feast is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Fest.',en:'I see the feast.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fest.',en:'I speak about the feast.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-festival','A2','das','Festival',{nom:'das',akk:'das',dat:'dem'},'Festivals','festival',[
-    {de:'Das Festival ist hier.',en:'The festival is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Festival.',en:'I see the festival.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Festival.',en:'I speak about the festival.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-flohmarkt','A2','der','Flohmarkt',{nom:'der',akk:'den',dat:'dem'},'Flohmärkte','flea market',[
-    {de:'Der Flohmarkt ist hier.',en:'The flea market is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Flohmarkt.',en:'I see the flea market.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Flohmarkt.',en:'I speak about the flea market.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-flug','A2','der','Flug',{nom:'der',akk:'den',dat:'dem'},'Flüge','flight',[
+  _noun('gen-noun-flug','A2','der','Flug',{nom:'der',akk:'den',dat:'dem'},'Flüge','flight','easy',[
     {de:'Der Flug verlief sehr ruhig.',en:'The flight went very smoothly.',focus:'Flug'},
     {de:'Ich sehe den Flug.',en:'I see the flight.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Flug.',en:'I speak about the flight.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-fluss','A2','der','Fluss',{nom:'der',akk:'den',dat:'dem'},'Flüsse','river',[
-    {de:'Der Fluss ist hier.',en:'The river is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fluss.',en:'I see the river.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fluss.',en:'I speak about the river.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fotoapparat','A2','der','Fotoapparat',{nom:'der',akk:'den',dat:'dem'},'Fotoapparate','camera',[
-    {de:'Der Fotoapparat ist hier.',en:'The camera is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Fotoapparat.',en:'I see the camera.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Fotoapparat.',en:'I speak about the camera.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-fuehrerschein','A2','der','Führerschein',{nom:'der',akk:'den',dat:'dem'},'Führerscheine','driver\'s license',[
+  _noun('gen-noun-fuehrerschein','A2','der','Führerschein',{nom:'der',akk:'den',dat:'dem'},'Führerscheine','driver\'s license','easy',[
     {de:'Der Führer war ein armes Schwein, er hatte keinen Führerschein.',en:'The Führer was a poor sod, he had no driving licence.',focus:'Führerschein'},
     {de:'Ich sehe den Führerschein.',en:'I see the driver\'s license.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Führerschein.',en:'I speak about the driver\'s license.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-gabel','A2','die','Gabel',{nom:'die',akk:'die',dat:'der'},'Gabeln','fork',[
-    {de:'Die Gabel ist hier.',en:'The fork is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Gabel.',en:'I see the fork.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Gabel.',en:'I speak about the fork.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-garage','A2','die','Garage',{nom:'die',akk:'die',dat:'der'},'Garagen','garage',[
-    {de:'Die Garage ist hier.',en:'The garage is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Garage.',en:'I see the garage.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Garage.',en:'I speak about the garage.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gegenteil','A2','das','Gegenteil',{nom:'das',akk:'das',dat:'dem'},'Gegenteile','opposite',[
-    {de:'Das Gegenteil ist hier.',en:'The opposite is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gegenteil.',en:'I see the opposite.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gegenteil.',en:'I speak about the opposite.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gehalt','A2','das','Gehalt',{nom:'das',akk:'das',dat:'dem'},'Gehalte','content',[
-    {de:'Das Gehalt ist hier.',en:'The content is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gehalt.',en:'I see the content.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gehalt.',en:'I speak about the content.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geldboerse','A2','die','Geldbörse',{nom:'die',akk:'die',dat:'der'},'Geldbörsen','wallet',[
-    {de:'Die Geldbörse ist hier.',en:'The wallet is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Geldbörse.',en:'I see the wallet.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Geldbörse.',en:'I speak about the wallet.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gericht','A2','das','Gericht',{nom:'das',akk:'das',dat:'dem'},'Gerichte','court',[
-    {de:'Das Gericht ist hier.',en:'The court is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gericht.',en:'I see the court.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gericht.',en:'I speak about the court.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geraet','A2','das','Gerät',{nom:'das',akk:'das',dat:'dem'},'Geräte','device',[
+  _noun('gen-noun-geraet','A2','das','Gerät',{nom:'das',akk:'das',dat:'dem'},'Geräte','device','easy',[
     {de:'Bitte schalten Sie Ihre elektronischen Geräte aus.',en:'Please turn off your electronic devices.',focus:'Geräte'},
     {de:'Ich sehe das Gerät.',en:'I see the device.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gerät.',en:'I speak about the device.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-geschichte','A2','die','Geschichte',{nom:'die',akk:'die',dat:'der'},'Geschichten','history',[
-    {de:'in die Geschichte eingehen',en:'to go down in history',focus:'Geschichte'},
-    {de:'Ich sehe die Geschichte.',en:'I see the history.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Geschichte.',en:'I speak about the history.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-geschirr','A2','das','Geschirr',{nom:'das',akk:'das',dat:'dem'},'Geschirre','dishware',[
-    {de:'Das Geschirr ist hier.',en:'The dishware is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Geschirr.',en:'I see the dishware.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Geschirr.',en:'I speak about the dishware.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gesundheit','A2','die','Gesundheit',{nom:'die',akk:'die',dat:'der'},'—','health',[
-    {de:'Die Gesundheit ist hier.',en:'The health is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Gesundheit.',en:'I see the health.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Gesundheit.',en:'I speak about the health.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gewitter','A2','das','Gewitter',{nom:'das',akk:'das',dat:'dem'},'Gewitter','thunderstorm',[
-    {de:'Das Gewitter ist hier.',en:'The thunderstorm is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Gewitter.',en:'I see the thunderstorm.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Gewitter.',en:'I speak about the thunderstorm.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-gitarre','A2','die','Gitarre',{nom:'die',akk:'die',dat:'der'},'Gitarren','guitar',[
-    {de:'Die Gitarre ist hier.',en:'The guitar is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Gitarre.',en:'I see the guitar.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Gitarre.',en:'I speak about the guitar.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-grippe','A2','die','Grippe',{nom:'die',akk:'die',dat:'der'},'Grippen','flu',[
-    {de:'Die Grippe ist hier.',en:'The flu is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Grippe.',en:'I see the flu.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Grippe.',en:'I speak about the flu.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hals','A2','der','Hals',{nom:'der',akk:'den',dat:'dem'},'Hälse','neck',[
-    {de:'Der Hals ist hier.',en:'The neck is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Hals.',en:'I see the neck.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hals.',en:'I speak about the neck.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hamburger','A2','der','Hamburger',{nom:'der',akk:'den',dat:'dem'},'Hamburger','Hamburger',[
-    {de:'Der Hamburger ist hier.',en:'The Hamburger is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Hamburger.',en:'I see the Hamburger.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hamburger.',en:'I speak about the Hamburger.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-handtuch','A2','das','Handtuch',{nom:'das',akk:'das',dat:'dem'},'Handtücher','towel',[
-    {de:'Das Handtuch ist hier.',en:'The towel is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Handtuch.',en:'I see the towel.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Handtuch.',en:'I speak about the towel.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hauptstadt','A2','die','Hauptstadt',{nom:'die',akk:'die',dat:'der'},'Hauptstädte','capital',[
-    {de:'Die Hauptstadt ist hier.',en:'The capital is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hauptstadt.',en:'I see the capital.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hauptstadt.',en:'I speak about the capital.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-haushalt','A2','der','Haushalt',{nom:'der',akk:'den',dat:'dem'},'Haushalte','household',[
+  _noun('gen-noun-haushalt','A2','der','Haushalt',{nom:'der',akk:'den',dat:'dem'},'Haushalte','household','easy',[
     {de:'Eine moderne Windkraftanlage mit 3 MW Leistung erzeugt soviel Strom, wie 2.000 Haushalte benötigen.',en:'A modern 3 MW wind turbine generates as much electricity as 2.000 households require.',focus:'Haushalte'},
+    {de:'Die Haushalte des Bundes und der Länder sind nicht ausgeglichen.',en:'The federal and the state budgets are not balanced.',focus:'Haushalte'},
     {de:'Ich sehe den Haushalt.',en:'I see the household.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Haushalt.',en:'I speak about the household.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-heft','A2','das','Heft',{nom:'das',akk:'das',dat:'dem'},'Hefte','notebook',[
-    {de:'Das Heft ist hier.',en:'The notebook is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Heft.',en:'I see the notebook.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Heft.',en:'I speak about the notebook.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-heizung','A2','die','Heizung',{nom:'die',akk:'die',dat:'der'},'Heizungen','heating',[
-    {de:'Dreh die Heizung auf.',en:'turn the heat up.',focus:'Heizung'},
+  _noun('gen-noun-heizung','A2','die','Heizung',{nom:'die',akk:'die',dat:'der'},'Heizungen','heating','easy',[
+    {de:'Ich hab mich an der Heizung gestoßen.',en:'I bumped into the radiator.',focus:'Heizung'},
     {de:'Ich sehe die Heizung.',en:'I see the heating.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Heizung.',en:'I speak about the heating.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-hemd','A2','das','Hemd',{nom:'das',akk:'das',dat:'dem'},'Hemden','shirt',[
-    {de:'Das Hemd ist hier.',en:'The shirt is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Hemd.',en:'I see the shirt.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Hemd.',en:'I speak about the shirt.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-himmel','A2','der','Himmel',{nom:'der',akk:'den',dat:'dem'},'Himmel','sky',[
-    {de:'Der Himmel ist hier.',en:'The sky is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Himmel.',en:'I see the sky.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Himmel.',en:'I speak about the sky.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-homepage','A2','die','Homepage',{nom:'die',akk:'die',dat:'der'},'Homepages','homepage',[
-    {de:'Die Homepage ist hier.',en:'The homepage is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Homepage.',en:'I see the homepage.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Homepage.',en:'I speak about the homepage.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-hose','A2','die','Hose',{nom:'die',akk:'die',dat:'der'},'Hosen','trousers',[
-    {de:'Die Hose ist hier.',en:'The trousers is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Hose.',en:'I see the trousers.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Hose.',en:'I speak about the trousers.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-idee','A2','die','Idee',{nom:'die',akk:'die',dat:'der'},'Ideen','idea',[
+  _noun('gen-noun-idee','A2','die','Idee',{nom:'die',akk:'die',dat:'der'},'Ideen','idea','easy',[
     {de:'Hast du eine Idee, wo meine Schlüssel sind?',en:'You have any idea where my keys are?',focus:'Idee'},
+    {de:'Das ist der Wert dieser Veranstaltung, diese neuen Ideen aufkommen zu lassen.',en:'That is the value of this event, to get these new ideas emerging.',focus:'Ideen'},
     {de:'Ich sehe die Idee.',en:'I see the idea.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Idee.',en:'I speak about the idea.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-insel','A2','die','Insel',{nom:'die',akk:'die',dat:'der'},'Inseln','island',[
-    {de:'Die Insel ist hier.',en:'The island is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Insel.',en:'I see the island.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Insel.',en:'I speak about the island.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-instrument','A2','das','Instrument',{nom:'das',akk:'das',dat:'dem'},'Instrumente','instrument',[
-    {de:'Das Instrument ist hier.',en:'The instrument is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Instrument.',en:'I see the instrument.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Instrument.',en:'I speak about the instrument.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-interesse','A2','das','Interesse',{nom:'das',akk:'das',dat:'dem'},'Interessen','interest',[
-    {de:'Das Interesse ist hier.',en:'The interest is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Interesse.',en:'I see the interest.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Interesse.',en:'I speak about the interest.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-interview','A2','das','Interview',{nom:'das',akk:'das',dat:'dem'},'Interviews','interview',[
-    {de:'Das Interview ist hier.',en:'The interview is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Interview.',en:'I see the interview.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Interview.',en:'I speak about the interview.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-jeans','A2','die','Jeans',{nom:'die',akk:'die',dat:'der'},'Jeans','pair of jeans',[
-    {de:'Die Jeans ist hier.',en:'The pair of jeans is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Jeans.',en:'I see the pair of jeans.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Jeans.',en:'I speak about the pair of jeans.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-jugendherberge','A2','die','Jugendherberge',{nom:'die',akk:'die',dat:'der'},'Jugendherbergen','youth hostel',[
-    {de:'Die Jugendherberge ist hier.',en:'The youth hostel is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Jugendherberge.',en:'I see the youth hostel.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Jugendherberge.',en:'I speak about the youth hostel.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kalender','A2','der','Kalender',{nom:'der',akk:'den',dat:'dem'},'Kalender','calendar',[
-    {de:'Der Kalender ist hier.',en:'The calendar is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kalender.',en:'I see the calendar.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kalender.',en:'I speak about the calendar.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kamera','A2','die','Kamera',{nom:'die',akk:'die',dat:'der'},'Kameras','camera',[
-    {de:'Die Kamera ist hier.',en:'The camera is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kamera.',en:'I see the camera.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kamera.',en:'I speak about the camera.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kaufhaus','A2','das','Kaufhaus',{nom:'das',akk:'das',dat:'dem'},'Kaufhäuser','department store',[
-    {de:'Das Kaufhaus ist hier.',en:'The department store is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Kaufhaus.',en:'I see the department store.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kaufhaus.',en:'I speak about the department store.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-keller','A2','der','Keller',{nom:'der',akk:'den',dat:'dem'},'Keller','cellar',[
-    {de:'Der Keller ist hier.',en:'The cellar is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Keller.',en:'I see the cellar.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Keller.',en:'I speak about the cellar.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kenntnis','A2','die','Kenntnis',{nom:'die',akk:'die',dat:'der'},'Kenntnisse','knowledge',[
-    {de:'Das entzieht sich meiner Kenntnis.',en:'I don\'t know.',focus:'Kenntnis'},
-    {de:'Ich sehe die Kenntnis.',en:'I see the knowledge.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kenntnis.',en:'I speak about the knowledge.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kette','A2','die','Kette',{nom:'die',akk:'die',dat:'der'},'Ketten','chain',[
-    {de:'Die Kette ist hier.',en:'The chain is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kette.',en:'I see the chain.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kette.',en:'I speak about the chain.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kirche','A2','die','Kirche',{nom:'die',akk:'die',dat:'der'},'Kirchen','church',[
+  _noun('gen-noun-kirche','A2','die','Kirche',{nom:'die',akk:'die',dat:'der'},'Kirchen','church','easy',[
     {de:'Wir gehen zu der Kirche, weil es heute Sonntag ist.',en:'We\'re going to church, because today is Sunday.',focus:'Kirche'},
     {de:'Ich sehe die Kirche.',en:'I see the church.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kirche.',en:'I speak about the church.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-klavier','A2','das','Klavier',{nom:'das',akk:'das',dat:'dem'},'Klaviere','piano',[
-    {de:'Das Klavier ist hier.',en:'The piano is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Klavier.',en:'I see the piano.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Klavier.',en:'I speak about the piano.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kleid','A2','das','Kleid',{nom:'das',akk:'das',dat:'dem'},'Kleider','dress',[
-    {de:'Das Kleid ist hier.',en:'The dress is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Kleid.',en:'I see the dress.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kleid.',en:'I speak about the dress.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kollegin','A2','die','Kollegin',{nom:'die',akk:'die',dat:'der'},'Kolleginnen','female equivalent of Kollege',[
-    {de:'Die Kollegin ist hier.',en:'The female equivalent of Kollege is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kollegin.',en:'I see the female equivalent of Kollege.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kollegin.',en:'I speak about the female equivalent of Kollege.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kontakt','A2','der','Kontakt',{nom:'der',akk:'den',dat:'dem'},'Kontakte','contact',[
-    {de:'Der Kontakt ist hier.',en:'The contact is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kontakt.',en:'I see the contact.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kontakt.',en:'I speak about the contact.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-konzert','A2','das','Konzert',{nom:'das',akk:'das',dat:'dem'},'Konzerte','concert',[
-    {de:'Das Konzert ist hier.',en:'The concert is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Konzert.',en:'I see the concert.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Konzert.',en:'I speak about the concert.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kosmetik','A2','die','Kosmetik',{nom:'die',akk:'die',dat:'der'},'Kosmetika','cosmetics',[
-    {de:'Die Kosmetik ist hier.',en:'The cosmetics is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kosmetik.',en:'I see the cosmetics.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kosmetik.',en:'I speak about the cosmetics.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-krankenhaus','A2','das','Krankenhaus',{nom:'das',akk:'das',dat:'dem'},'Krankenhäuser','hospital',[
-    {de:'Das Krankenhaus ist hier.',en:'The hospital is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Krankenhaus.',en:'I see the hospital.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Krankenhaus.',en:'I speak about the hospital.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-krankenkasse','A2','die','Krankenkasse',{nom:'die',akk:'die',dat:'der'},'Krankenkassen','health insurance company',[
+  _noun('gen-noun-krankenkasse','A2','die','Krankenkasse',{nom:'die',akk:'die',dat:'der'},'Krankenkassen','health insurance company','easy',[
     {de:'Bist du bei einer gesetzlichen oder privaten Krankenkasse versichert?',en:'Is your health insurance company state-owned or private?',focus:'Krankenkasse'},
     {de:'Ich sehe die Krankenkasse.',en:'I see the health insurance company.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Krankenkasse.',en:'I speak about the health insurance company.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-krankheit','A2','die','Krankheit',{nom:'die',akk:'die',dat:'der'},'Krankheiten','sickness',[
-    {de:'Die Krankheit ist hier.',en:'The sickness is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Krankheit.',en:'I see the sickness.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Krankheit.',en:'I speak about the sickness.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kredit','A2','der','Kredit',{nom:'der',akk:'den',dat:'dem'},'Kredite','loan or anything afforded to someone in the expectation of return',[
-    {de:'Der Kredit ist hier.',en:'The loan or anything afforded to someone in the expectation of return is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Kredit.',en:'I see the loan or anything afforded to someone in the expectation of return.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Kredit.',en:'I speak about the loan or anything afforded to someone in the expectation of return.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kreuzung','A2','die','Kreuzung',{nom:'die',akk:'die',dat:'der'},'Kreuzungen','crossing',[
-    {de:'Die Kreuzung ist hier.',en:'The crossing is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kreuzung.',en:'I see the crossing.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kreuzung.',en:'I speak about the crossing.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-krimi','A2','der','Krimi',{nom:'der',akk:'den',dat:'dem'},'Krimis','crime story',[
-    {de:'Der Krimi ist hier.',en:'The crime story is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Krimi.',en:'I see the crime story.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Krimi.',en:'I speak about the crime story.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kultur','A2','die','Kultur',{nom:'die',akk:'die',dat:'der'},'Kulturen','culture',[
-    {de:'Die Kultur ist hier.',en:'The culture is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Kultur.',en:'I see the culture.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kultur.',en:'I speak about the culture.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-kunst','A2','die','Kunst',{nom:'die',akk:'die',dat:'der'},'Künste','art',[
+  _noun('gen-noun-kunst','A2','die','Kunst',{nom:'die',akk:'die',dat:'der'},'Künste','art','easy',[
     {de:'Diese Woche wird im Museum mittelalterliche Kunst ausgestellt.',en:'This week, medieval works of art are on display in the museum.',focus:'Kunst'},
     {de:'Ich sehe die Kunst.',en:'I see the art.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Kunst.',en:'I speak about the art.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-kaese','A2','der','Käse',{nom:'der',akk:'den',dat:'dem'},'Käse','cheese',[
-    {de:'Der Käse ist hier.',en:'The cheese is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Käse.',en:'I see the cheese.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Käse.',en:'I speak about the cheese.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-koerper','A2','der','Körper',{nom:'der',akk:'den',dat:'dem'},'Körper','body',[
-    {de:'Der Körper ist hier.',en:'The body is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Körper.',en:'I see the body.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Körper.',en:'I speak about the body.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lampe','A2','die','Lampe',{nom:'die',akk:'die',dat:'der'},'Lampen','lamp',[
-    {de:'Die Lampe ist hier.',en:'The lamp is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Lampe.',en:'I see the lamp.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Lampe.',en:'I speak about the lamp.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-landschaft','A2','die','Landschaft',{nom:'die',akk:'die',dat:'der'},'Landschaften','landscape land as defined by its geographical features',[
+  _noun('gen-noun-landschaft','A2','die','Landschaft',{nom:'die',akk:'die',dat:'der'},'Landschaften','landscape land as defined by its geographical features','easy',[
     {de:'Die Landschaft der Tundra ist von Moos, Gras und flachen Sträuchern geprägt.',en:'The landscape of the tundra is dominated by moss, grass, and short shrubs.',focus:'Landschaft'},
+    {de:'Vom Gipfel hat man einen wunderbaren Blick über die Landschaft.',en:'From the mountain top you have a wonderful view of the landscape.',focus:'Landschaft'},
     {de:'Ich sehe die Landschaft.',en:'I see the landscape land as defined by its geographical features.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Landschaft.',en:'I speak about the landscape land as defined by its geographical features.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-laptop','A2','der','Laptop',{nom:'der',akk:'den',dat:'dem'},'Laptops','laptop computer',[
-    {de:'Der Laptop ist hier.',en:'The laptop computer is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Laptop.',en:'I see the laptop computer.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Laptop.',en:'I speak about the laptop computer.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-liebe','A2','die','Liebe',{nom:'die',akk:'die',dat:'der'},'Lieben','love',[
-    {de:'Die Liebe ist hier.',en:'The love is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Liebe.',en:'I see the love.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Liebe.',en:'I speak about the love.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-link','A2','der','Link',{nom:'der',akk:'den',dat:'dem'},'Links','hyperlink',[
-    {de:'Der Link ist hier.',en:'The hyperlink is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Link.',en:'I see the hyperlink.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Link.',en:'I speak about the hyperlink.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-lust','A2','die','Lust',{nom:'die',akk:'die',dat:'der'},'Lüste','desire',[
+  _noun('gen-noun-lust','A2','die','Lust',{nom:'die',akk:'die',dat:'der'},'Lüste','desire','easy',[
     {de:'Hast du Lust auf Schokolade?',en:'Would you fancy some chocolate?',focus:'Lust'},
+    {de:'Es ist mir eine Lust, wenn ich die Eichhörnchen klettern sehe!',en:'It’s a joy to me watching those squirrels climbing!',focus:'Lust'},
     {de:'Ich sehe die Lust.',en:'I see the desire.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Lust.',en:'I speak about the desire.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-loeffel','A2','der','Löffel',{nom:'der',akk:'den',dat:'dem'},'Löffel','spoon',[
-    {de:'Der Löffel ist hier.',en:'The spoon is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Löffel.',en:'I see the spoon.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Löffel.',en:'I speak about the spoon.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-luege','A2','die','Lüge',{nom:'die',akk:'die',dat:'der'},'Lügen','lie',[
-    {de:'Die Lüge ist hier.',en:'The lie is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Lüge.',en:'I see the lie.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Lüge.',en:'I speak about the lie.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-magen','A2','der','Magen',{nom:'der',akk:'den',dat:'dem'},'Mägen','stomach',[
-    {de:'Der Magen ist hier.',en:'The stomach is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Magen.',en:'I see the stomach.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Magen.',en:'I speak about the stomach.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mail','A2','die','Mail',{nom:'die',akk:'die',dat:'der'},'Mails','E-Mail',[
+  _noun('gen-noun-mail','A2','die','Mail',{nom:'die',akk:'die',dat:'der'},'Mails','E-Mail','easy',[
     {de:'Die Bewerbungen können per Post oder Mail eingereicht werden.',en:'The applications can be handed in by mail or e-mail.',focus:'Mail'},
     {de:'Ich sehe die Mail.',en:'I see the E-Mail.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mail.',en:'I speak about the E-Mail.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-mailbox','A2','die','Mailbox',{nom:'die',akk:'die',dat:'der'},'Mailboxen','mailbox',[
-    {de:'Die Mailbox ist hier.',en:'The mailbox is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Mailbox.',en:'I see the mailbox.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mailbox.',en:'I speak about the mailbox.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mannschaft','A2','die','Mannschaft',{nom:'die',akk:'die',dat:'der'},'Mannschaften','crew members of a ship',[
+  _noun('gen-noun-mannschaft','A2','die','Mannschaft',{nom:'die',akk:'die',dat:'der'},'Mannschaften','crew members of a ship','easy',[
     {de:'Wenn unsere Mannschaft so weiterspielt, werden wir bestimmt gewinnen!',en:'If our team keeps playing like this, we will definitely win!',focus:'Mannschaft'},
+    {de:'Sie sind die allerbesten Mannschaften',en:'They are the very best teams',focus:'Mannschaften'},
     {de:'Ich sehe die Mannschaft.',en:'I see the crew members of a ship.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mannschaft.',en:'I speak about the crew members of a ship.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-mantel','A2','der','Mantel',{nom:'der',akk:'den',dat:'dem'},'Mäntel','coat',[
-    {de:'Der Mantel ist hier.',en:'The coat is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Mantel.',en:'I see the coat.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mantel.',en:'I speak about the coat.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-markt','A2','der','Markt',{nom:'der',akk:'den',dat:'dem'},'Märkte','market',[
-    {de:'Der Markt ist hier.',en:'The market is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Markt.',en:'I see the market.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Markt.',en:'I speak about the market.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-medikament','A2','das','Medikament',{nom:'das',akk:'das',dat:'dem'},'Medikamente','drug',[
-    {de:'Das Medikament ist hier.',en:'The drug is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Medikament.',en:'I see the drug.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Medikament.',en:'I speak about the drug.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-meinung','A2','die','Meinung',{nom:'die',akk:'die',dat:'der'},'Meinungen','opinion',[
+  _noun('gen-noun-meinung','A2','die','Meinung',{nom:'die',akk:'die',dat:'der'},'Meinungen','opinion','easy',[
     {de:'Sie ist der Meinung, dass...',en:'She is of the opinion that...',focus:'Meinung'},
     {de:'Ich sehe die Meinung.',en:'I see the opinion.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Meinung.',en:'I speak about the opinion.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-menge','A2','die','Menge',{nom:'die',akk:'die',dat:'der'},'Mengen','quantity',[
-    {de:'Die Menge ist hier.',en:'The quantity is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Menge.',en:'I see the quantity.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Menge.',en:'I speak about the quantity.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-messe','A2','die','Messe',{nom:'die',akk:'die',dat:'der'},'Messen','fair',[
-    {de:'Die Messe ist hier.',en:'The fair is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Messe.',en:'I see the fair.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Messe.',en:'I speak about the fair.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-messer','A2','das','Messer',{nom:'das',akk:'das',dat:'dem'},'Messer','knife',[
-    {de:'Das Messer ist hier.',en:'The knife is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Messer.',en:'I see the knife.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Messer.',en:'I speak about the knife.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mineralwasser','A2','das','Mineralwasser',{nom:'das',akk:'das',dat:'dem'},'—','mineral water',[
-    {de:'Das Mineralwasser ist hier.',en:'The mineral water is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Mineralwasser.',en:'I see the mineral water.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mineralwasser.',en:'I speak about the mineral water.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mitarbeiter','A2','der','Mitarbeiter',{nom:'der',akk:'den',dat:'dem'},'Mitarbeiter','employee',[
-    {de:'Dozenten und Mitarbeiter',en:'faculty and staff [at a university]',focus:'Mitarbeiter'},
-    {de:'Ich sehe den Mitarbeiter.',en:'I see the employee.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mitarbeiter.',en:'I speak about the employee.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mittagessen','A2','das','Mittagessen',{nom:'das',akk:'das',dat:'dem'},'Mittagessen','lunch',[
+  _noun('gen-noun-mittagessen','A2','das','Mittagessen',{nom:'das',akk:'das',dat:'dem'},'Mittagessen','lunch','easy',[
     {de:'Ein Butterbrot war mein einziges Mittagessen.',en:'A single sandwich was my whole lunch.',focus:'Mittagessen'},
     {de:'Ich sehe das Mittagessen.',en:'I see the lunch.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mittagessen.',en:'I speak about the lunch.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-mittel','A2','das','Mittel',{nom:'das',akk:'das',dat:'dem'},'Mittel','agent',[
-    {de:'Das Mittel ist hier.',en:'The agent is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Mittel.',en:'I see the agent.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mittel.',en:'I speak about the agent.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mobiltelefon','A2','das','Mobiltelefon',{nom:'das',akk:'das',dat:'dem'},'Mobiltelefone','mobile phone',[
-    {de:'Das Mobiltelefon ist hier.',en:'The mobile phone is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Mobiltelefon.',en:'I see the mobile phone.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Mobiltelefon.',en:'I speak about the mobile phone.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-mode','A2','die','Mode',{nom:'die',akk:'die',dat:'der'},'Moden','fashion',[
-    {de:'Die Mode ist hier.',en:'The fashion is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Mode.',en:'I see the fashion.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mode.',en:'I speak about the fashion.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-motor','A2','der','Motor',{nom:'der',akk:'den',dat:'dem'},'—','engine',[
-    {de:'Der Motor ist hier.',en:'The engine is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Motor.',en:'I see the engine.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Motor.',en:'I speak about the engine.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-motorroller','A2','der','Motorroller',{nom:'der',akk:'den',dat:'dem'},'Motorroller','scooter',[
-    {de:'Der Motorroller ist hier.',en:'The scooter is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Motorroller.',en:'I see the scooter.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Motorroller.',en:'I speak about the scooter.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-museum','A2','das','Museum',{nom:'das',akk:'das',dat:'dem'},'Museen','museum',[
-    {de:'Das Museum ist hier.',en:'The museum is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Museum.',en:'I see the museum.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Museum.',en:'I speak about the museum.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-musik','A2','die','Musik',{nom:'die',akk:'die',dat:'der'},'Musiken','music',[
+  _noun('gen-noun-musik','A2','die','Musik',{nom:'die',akk:'die',dat:'der'},'Musiken','music','easy',[
     {de:'Was hörst du für Musik?',en:'What kind of music do you listen to?',focus:'Musik'},
     {de:'Ich sehe die Musik.',en:'I see the music.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Musik.',en:'I speak about the music.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-muell','A2','der','Müll',{nom:'der',akk:'den',dat:'dem'},'—','rubbish',[
-    {de:'Der Müll ist hier.',en:'The rubbish is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Müll.',en:'I see the rubbish.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Müll.',en:'I speak about the rubbish.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-muetze','A2','die','Mütze',{nom:'die',akk:'die',dat:'der'},'Mützen','cap',[
-    {de:'Die Mütze ist hier.',en:'The cap is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Mütze.',en:'I see the cap.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Mütze.',en:'I speak about the cap.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nachbar','A2','der','Nachbar',{nom:'der',akk:'den',dat:'dem'},'Nachbarn','neighbour',[
-    {de:'Der Nachbar ist hier.',en:'The neighbour is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Nachbar.',en:'I see the neighbour.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Nachbar.',en:'I speak about the neighbour.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nachbarin','A2','die','Nachbarin',{nom:'die',akk:'die',dat:'der'},'Nachbarinnen','female neighbor',[
-    {de:'Die Nachbarin ist hier.',en:'The female neighbor is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Nachbarin.',en:'I see the female neighbor.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Nachbarin.',en:'I speak about the female neighbor.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nachricht','A2','die','Nachricht',{nom:'die',akk:'die',dat:'der'},'Nachrichten','news',[
+  _noun('gen-noun-nachricht','A2','die','Nachricht',{nom:'die',akk:'die',dat:'der'},'Nachrichten','news','easy',[
     {de:'Die Nachricht von seinem Tod hat mich tief erschüttert.',en:'The news of his death shocked me deeply.',focus:'Nachricht'},
     {de:'Ich sehe die Nachricht.',en:'I see the news.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Nachricht.',en:'I speak about the news.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-natur','A2','die','Natur',{nom:'die',akk:'die',dat:'der'},'Naturen','nature',[
+  _noun('gen-noun-natur','A2','die','Natur',{nom:'die',akk:'die',dat:'der'},'Naturen','nature','easy',[
     {de:'Wissenschaft ist das Studium der Natur.',en:'Science is the study of nature.',focus:'Natur'},
     {de:'Ich sehe die Natur.',en:'I see the nature.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Natur.',en:'I speak about the nature.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-note','A2','die','Note',{nom:'die',akk:'die',dat:'der'},'Noten','note',[
-    {de:'Die Note ist hier.',en:'The note is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Note.',en:'I see the note.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Note.',en:'I speak about the note.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-notiz','A2','die','Notiz',{nom:'die',akk:'die',dat:'der'},'Notizen','note',[
-    {de:'Die Notiz ist hier.',en:'The note is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Notiz.',en:'I see the note.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Notiz.',en:'I speak about the note.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-nudel','A2','die','Nudel',{nom:'die',akk:'die',dat:'der'},'Nudeln','noodle',[
-    {de:'Die Nudel ist hier.',en:'The noodle is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Nudel.',en:'I see the noodle.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Nudel.',en:'I speak about the noodle.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-naehe','A2','die','Nähe',{nom:'die',akk:'die',dat:'der'},'—','nearness',[
+  _noun('gen-noun-naehe','A2','die','Nähe',{nom:'die',akk:'die',dat:'der'},'—','nearness','easy',[
     {de:'Ich habe ihn nie aus der Nähe gesehen.',en:'I\'ve never seen him up close.',focus:'Nähe'},
     {de:'Ich sehe die Nähe.',en:'I see the nearness.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Nähe.',en:'I speak about the nearness.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-ohr','A2','das','Ohr',{nom:'das',akk:'das',dat:'dem'},'Ohren','ear',[
+  _noun('gen-noun-ohr','A2','das','Ohr',{nom:'das',akk:'das',dat:'dem'},'Ohren','ear','easy',[
     {de:'Du musst lauter Sprechen, meine Ohren sind nicht mehr so gut.',en:'You\'ll have to speak up, my ears aren\'t quite as good anymore.',focus:'Ohren'},
+    {de:'Er hat kein Ohr für Musik.',en:'He has no ear for music.',focus:'Ohr'},
     {de:'Ich sehe das Ohr.',en:'I see the ear.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ohr.',en:'I speak about the ear.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-orange','A2','die','Orange',{nom:'die',akk:'die',dat:'der'},'Orangen','orange',[
-    {de:'Die Orange ist hier.',en:'The orange is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Orange.',en:'I see the orange.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Orange.',en:'I speak about the orange.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-paar','A2','das','Paar',{nom:'das',akk:'das',dat:'dem'},'Paare','pair',[
-    {de:'Ein Paar brauner Schuhe.',en:'A pair of brown shoes.',focus:'Paar'},
-    {de:'Ich sehe das Paar.',en:'I see the pair.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Paar.',en:'I speak about the pair.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-paket','A2','das','Paket',{nom:'das',akk:'das',dat:'dem'},'Pakete','packet',[
-    {de:'Das Paket ist hier.',en:'The packet is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Paket.',en:'I see the packet.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Paket.',en:'I speak about the packet.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-parfuem','A2','das','Parfüm',{nom:'das',akk:'das',dat:'dem'},'Parfüms','perfume',[
-    {de:'Das Parfüm ist hier.',en:'The perfume is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Parfüm.',en:'I see the perfume.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Parfüm.',en:'I speak about the perfume.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-park','A2','der','Park',{nom:'der',akk:'den',dat:'dem'},'—','park',[
-    {de:'Der Park ist hier.',en:'The park is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Park.',en:'I see the park.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Park.',en:'I speak about the park.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-passwort','A2','das','Passwort',{nom:'das',akk:'das',dat:'dem'},'Passwörter','password',[
-    {de:'Das Passwort ist hier.',en:'The password is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Passwort.',en:'I see the password.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Passwort.',en:'I speak about the password.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-person','A2','die','Person',{nom:'die',akk:'die',dat:'der'},'Personen','person',[
+  _noun('gen-noun-person','A2','die','Person',{nom:'die',akk:'die',dat:'der'},'Personen','person','easy',[
     {de:'Ein Tisch für zwei Personen, bitte!',en:'Table for two [persons], please!',focus:'Personen'},
+    {de:'An der Schlägerei waren mehrere polizeibekannte Personen beteiligt.',en:'Several individuals known to police were involved in the brawl.',focus:'Personen'},
     {de:'Ich sehe die Person.',en:'I see the person.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Person.',en:'I speak about the person.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-pferd','A2','das','Pferd',{nom:'das',akk:'das',dat:'dem'},'Pferde','horse',[
+  _noun('gen-noun-pferd','A2','das','Pferd',{nom:'das',akk:'das',dat:'dem'},'Pferde','horse','easy',[
     {de:'Meine Mutter hat ein Pferd und das ist sehr süß.',en:'My mother has a horse and it is very cute.',focus:'Pferd'},
+    {de:'Mein Pferd ist zu schnell.',en:'My horse is too fast.',focus:'Pferd'},
     {de:'Ich sehe das Pferd.',en:'I see the horse.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Pferd.',en:'I speak about the horse.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-pflanze','A2','die','Pflanze',{nom:'die',akk:'die',dat:'der'},'Pflanzen','plant',[
+  _noun('gen-noun-pflanze','A2','die','Pflanze',{nom:'die',akk:'die',dat:'der'},'Pflanzen','plant','easy',[
     {de:'Der Garten war voll mit vielen verschiedenen Arten von Pflanzen.',en:'The garden was full of many different kinds of plants.',focus:'Pflanzen'},
     {de:'Ich sehe die Pflanze.',en:'I see the plant.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Pflanze.',en:'I speak about the plant.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-pizza','A2','die','Pizza',{nom:'die',akk:'die',dat:'der'},'—','pizza',[
-    {de:'Die Pizza ist hier.',en:'The pizza is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Pizza.',en:'I see the pizza.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Pizza.',en:'I speak about the pizza.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-plakat','A2','das','Plakat',{nom:'das',akk:'das',dat:'dem'},'Plakate','poster',[
-    {de:'Das Plakat ist hier.',en:'The poster is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Plakat.',en:'I see the poster.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Plakat.',en:'I speak about the poster.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-portion','A2','die','Portion',{nom:'die',akk:'die',dat:'der'},'Portionen','portion',[
-    {de:'Die Portion ist hier.',en:'The portion is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Portion.',en:'I see the portion.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Portion.',en:'I speak about the portion.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-poster','A2','das','Poster',{nom:'das',akk:'das',dat:'dem'},'—','poster',[
-    {de:'Das Poster ist hier.',en:'The poster is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Poster.',en:'I see the poster.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Poster.',en:'I speak about the poster.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-postkarte','A2','die','Postkarte',{nom:'die',akk:'die',dat:'der'},'Postkarten','postcard',[
-    {de:'Die Postkarte ist hier.',en:'The postcard is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Postkarte.',en:'I see the postcard.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Postkarte.',en:'I speak about the postcard.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-produkt','A2','das','Produkt',{nom:'das',akk:'das',dat:'dem'},'Produkte','product',[
-    {de:'Das Produkt ist hier.',en:'The product is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Produkt.',en:'I see the product.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Produkt.',en:'I speak about the product.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-programm','A2','das','Programm',{nom:'das',akk:'das',dat:'dem'},'Programme','program',[
-    {de:'Das Programm ist hier.',en:'The program is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Programm.',en:'I see the program.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Programm.',en:'I speak about the program.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-projekt','A2','das','Projekt',{nom:'das',akk:'das',dat:'dem'},'Projekte','project',[
+  _noun('gen-noun-projekt','A2','das','Projekt',{nom:'das',akk:'das',dat:'dem'},'Projekte','project','easy',[
     {de:'Ein solch großes Projekt sollte professionell betreut werden.',en:'Such a big project should be managed professionally.',focus:'Projekt'},
     {de:'Ich sehe das Projekt.',en:'I see the project.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Projekt.',en:'I speak about the project.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-pullover','A2','der','Pullover',{nom:'der',akk:'den',dat:'dem'},'Pullover','sweater',[
-    {de:'Der Pullover ist hier.',en:'The sweater is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Pullover.',en:'I see the sweater.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Pullover.',en:'I speak about the sweater.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-qualitaet','A2','die','Qualität',{nom:'die',akk:'die',dat:'der'},'Qualitäten','quality',[
+  _noun('gen-noun-qualitaet','A2','die','Qualität',{nom:'die',akk:'die',dat:'der'},'Qualitäten','quality','easy',[
     {de:'Qualität ist dann, wenn sie alle wiederkommen – die Kunden natürlich, nicht die Produkte!',en:'Quality exists when they all come back – the customers of course, not the products!',focus:'Qualität'},
     {de:'Ich sehe die Qualität.',en:'I see the quality.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Qualität.',en:'I speak about the quality.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-quiz','A2','das','Quiz',{nom:'das',akk:'das',dat:'dem'},'—','quiz',[
-    {de:'Das Quiz ist hier.',en:'The quiz is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Quiz.',en:'I see the quiz.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Quiz.',en:'I speak about the quiz.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rad','A2','das','Rad',{nom:'das',akk:'das',dat:'dem'},'Räder','wheel',[
-    {de:'Das Rad ist hier.',en:'The wheel is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Rad.',en:'I see the wheel.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rad.',en:'I speak about the wheel.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-radio','A2','das','Radio',{nom:'das',akk:'das',dat:'dem'},'Radios','radio',[
-    {de:'Das Radio ist hier.',en:'The radio is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Radio.',en:'I see the radio.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Radio.',en:'I speak about the radio.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rathaus','A2','das','Rathaus',{nom:'das',akk:'das',dat:'dem'},'Rathäuser','city hall',[
-    {de:'Das Rathaus ist hier.',en:'The city hall is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Rathaus.',en:'I see the city hall.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rathaus.',en:'I speak about the city hall.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reifen','A2','der','Reifen',{nom:'der',akk:'den',dat:'dem'},'Reifen','tyre',[
-    {de:'Der Reifen ist hier.',en:'The tyre is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Reifen.',en:'I see the tyre.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Reifen.',en:'I speak about the tyre.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reihe','A2','die','Reihe',{nom:'die',akk:'die',dat:'der'},'Reihen','row',[
-    {de:'Die Reihe ist hier.',en:'The row is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Reihe.',en:'I see the row.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Reihe.',en:'I speak about the row.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-reinigung','A2','die','Reinigung',{nom:'die',akk:'die',dat:'der'},'Reinigungen','cleaning',[
-    {de:'Die Reinigung ist hier.',en:'The cleaning is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Reinigung.',en:'I see the cleaning.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Reinigung.',en:'I speak about the cleaning.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rentner','A2','der','Rentner',{nom:'der',akk:'den',dat:'dem'},'Rentner','pensioner',[
-    {de:'Der Rentner ist hier.',en:'The pensioner is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Rentner.',en:'I see the pensioner.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rentner.',en:'I speak about the pensioner.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rentnerin','A2','die','Rentnerin',{nom:'die',akk:'die',dat:'der'},'Rentnerinnen','female pensioner',[
-    {de:'Die Rentnerin ist hier.',en:'The female pensioner is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Rentnerin.',en:'I see the female pensioner.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Rentnerin.',en:'I speak about the female pensioner.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rest','A2','der','Rest',{nom:'der',akk:'den',dat:'dem'},'Reste','rest',[
-    {de:'Der Rest ist hier.',en:'The rest is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Rest.',en:'I see the rest.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rest.',en:'I speak about the rest.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rezept','A2','das','Rezept',{nom:'das',akk:'das',dat:'dem'},'Rezepte','recipe',[
-    {de:'Das Rezept ist hier.',en:'The recipe is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Rezept.',en:'I see the recipe.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rezept.',en:'I speak about the recipe.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rind','A2','das','Rind',{nom:'das',akk:'das',dat:'dem'},'Rinder','cow',[
-    {de:'Das Rind ist hier.',en:'The cow is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Rind.',en:'I see the cow.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rind.',en:'I speak about the cow.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ring','A2','der','Ring',{nom:'der',akk:'den',dat:'dem'},'Ringe','ring',[
-    {de:'Der Ring ist hier.',en:'The ring is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Ring.',en:'I see the ring.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ring.',en:'I speak about the ring.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rock','A2','der','Rock',{nom:'der',akk:'den',dat:'dem'},'Röcke','skirt',[
-    {de:'Der Rock ist hier.',en:'The skirt is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Rock.',en:'I see the skirt.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rock.',en:'I speak about the skirt.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rose','A2','die','Rose',{nom:'die',akk:'die',dat:'der'},'Rosen','rose',[
-    {de:'Die Rose ist hier.',en:'The rose is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Rose.',en:'I see the rose.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Rose.',en:'I speak about the rose.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rucksack','A2','der','Rucksack',{nom:'der',akk:'den',dat:'dem'},'Rucksäcke','backpack',[
-    {de:'Der Rucksack ist hier.',en:'The backpack is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Rucksack.',en:'I see the backpack.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rucksack.',en:'I speak about the backpack.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ruhe','A2','die','Ruhe',{nom:'die',akk:'die',dat:'der'},'—','calm',[
-    {de:'Die Ruhe ist hier.',en:'The calm is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Ruhe.',en:'I see the calm.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Ruhe.',en:'I speak about the calm.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-rundgang','A2','der','Rundgang',{nom:'der',akk:'den',dat:'dem'},'Rundgänge','walk',[
-    {de:'Der Rundgang ist hier.',en:'The walk is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Rundgang.',en:'I see the walk.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rundgang.',en:'I speak about the walk.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-raetsel','A2','das','Rätsel',{nom:'das',akk:'das',dat:'dem'},'Rätsel','riddle',[
-    {de:'Das Rätsel ist hier.',en:'The riddle is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Rätsel.',en:'I see the riddle.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rätsel.',en:'I speak about the riddle.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ruecken','A2','der','Rücken',{nom:'der',akk:'den',dat:'dem'},'Rücken','back',[
-    {de:'Mir tut der Rücken weh.',en:'My back hurts.',focus:'Rücken'},
+  _noun('gen-noun-ruecken','A2','der','Rücken',{nom:'der',akk:'den',dat:'dem'},'Rücken','back','easy',[
+    {de:'Wer so viel malocht wie sie, kriegt irgendwann halt Rücken.',en:'If you work as extraneously as she does, you’re gonna get back pain eventually.',focus:'Rücken'},
     {de:'Ich sehe den Rücken.',en:'I see the back.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Rücken.',en:'I speak about the back.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sache','A2','die','Sache',{nom:'die',akk:'die',dat:'der'},'Sachen','matter',[
+  _noun('gen-noun-sache','A2','die','Sache',{nom:'die',akk:'die',dat:'der'},'Sachen','matter','easy',[
     {de:'Die Polizei untersuchte die Sache ohne Ergebnis.',en:'The police investigated the matter with no result.',focus:'Sache'},
+    {de:'Da ist noch eine Sache.',en:'There\'s one more thing (for me to say).',focus:'Sache'},
     {de:'Ich sehe die Sache.',en:'I see the matter.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sache.',en:'I speak about the matter.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schere','A2','die','Schere',{nom:'die',akk:'die',dat:'der'},'Scheren','pair of scissors',[
+  _noun('gen-noun-schere','A2','die','Schere',{nom:'die',akk:'die',dat:'der'},'Scheren','pair of scissors','easy',[
     {de:'Kann ich mir eben deine Schere ausleihen?',en:'Can I borrow your scissors for a minute?',focus:'Schere'},
+    {de:'die Schere zwischen Arm und Reich',en:'the (widening) gap between the poor and rich',focus:'Schere'},
     {de:'Ich sehe die Schere.',en:'I see the pair of scissors.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Schere.',en:'I speak about the pair of scissors.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schiff','A2','das','Schiff',{nom:'das',akk:'das',dat:'dem'},'Schiffe','ship',[
-    {de:'Das Schiff ist hier.',en:'The ship is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Schiff.',en:'I see the ship.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schiff.',en:'I speak about the ship.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schirm','A2','der','Schirm',{nom:'der',akk:'den',dat:'dem'},'Schirme','screen umbrella bill',[
-    {de:'Der Schirm ist hier.',en:'The screen umbrella bill is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Schirm.',en:'I see the screen umbrella bill.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schirm.',en:'I speak about the screen umbrella bill.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schlafzimmer','A2','das','Schlafzimmer',{nom:'das',akk:'das',dat:'dem'},'Schlafzimmer','bedroom',[
-    {de:'Das Schlafzimmer ist hier.',en:'The bedroom is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Schlafzimmer.',en:'I see the bedroom.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schlafzimmer.',en:'I speak about the bedroom.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schloss','A2','das','Schloss',{nom:'das',akk:'das',dat:'dem'},'Schlösser','lock',[
-    {de:'hinter Schloss und Riegel',en:'in prison, under lock and key',focus:'Schloss'},
-    {de:'Ich sehe das Schloss.',en:'I see the lock.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schloss.',en:'I speak about the lock.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schmerz','A2','der','Schmerz',{nom:'der',akk:'den',dat:'dem'},'Schmerzen','physical pain',[
-    {de:'Haben Sie Schmerzen?',en:'Do you feel pain?',focus:'Schmerzen'},
+  _noun('gen-noun-schmerz','A2','der','Schmerz',{nom:'der',akk:'den',dat:'dem'},'Schmerzen','physical pain','easy',[
+    {de:'Das waren die schlimmsten Schmerzen, die ich je erlebt habe.',en:'That was the worst pain I have ever felt.',focus:'Schmerzen'},
+    {de:'Schmerz ist ein Alarmsignal des Körpers.',en:'Pain is an emergency signal of the body.',focus:'Schmerz'},
     {de:'Ich sehe den Schmerz.',en:'I see the physical pain.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schmerz.',en:'I speak about the physical pain.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schnee','A2','der','Schnee',{nom:'der',akk:'den',dat:'dem'},'—','snow',[
+  _noun('gen-noun-schnee','A2','der','Schnee',{nom:'der',akk:'den',dat:'dem'},'—','snow','easy',[
     {de:'Der Schnee schmilzt wegen des heißen Wetters.',en:'The snow is melting because of the hot weather.',focus:'Schnee'},
     {de:'Ich sehe den Schnee.',en:'I see the snow.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schnee.',en:'I speak about the snow.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-schokolade','A2','die','Schokolade',{nom:'die',akk:'die',dat:'der'},'Schokoladen','chocolate',[
-    {de:'Die Schokolade ist hier.',en:'The chocolate is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Schokolade.',en:'I see the chocolate.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Schokolade.',en:'I speak about the chocolate.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schwein','A2','das','Schwein',{nom:'das',akk:'das',dat:'dem'},'Schweine','swine',[
-    {de:'Das Schwein ist hier.',en:'The swine is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Schwein.',en:'I see the swine.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Schwein.',en:'I speak about the swine.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-schuelerin','A2','die','Schülerin',{nom:'die',akk:'die',dat:'der'},'Schülerinnen','schoolgirl',[
-    {de:'Die Schülerin ist hier.',en:'The schoolgirl is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Schülerin.',en:'I see the schoolgirl.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Schülerin.',en:'I speak about the schoolgirl.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-seife','A2','die','Seife',{nom:'die',akk:'die',dat:'der'},'Seifen','soap',[
-    {de:'Die Seife ist hier.',en:'The soap is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Seife.',en:'I see the soap.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Seife.',en:'I speak about the soap.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-seite','A2','die','Seite',{nom:'die',akk:'die',dat:'der'},'Seiten','side',[
+  _noun('gen-noun-seite','A2','die','Seite',{nom:'die',akk:'die',dat:'der'},'Seiten','side','easy',[
     {de:'Ein Dreieck hat drei Seiten.',en:'A triangle has three sides.',focus:'Seiten'},
+    {de:'Ein Würfel hat sechs identische Seiten.',en:'A cube has six identical sides.',focus:'Seiten'},
     {de:'Ich sehe die Seite.',en:'I see the side.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Seite.',en:'I speak about the side.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sendung','A2','die','Sendung',{nom:'die',akk:'die',dat:'der'},'Sendungen','delivery',[
-    {de:'Die Sendung ist hier.',en:'The delivery is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Sendung.',en:'I see the delivery.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sendung.',en:'I speak about the delivery.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-service','A2','der','Service',{nom:'der',akk:'den',dat:'dem'},'Services','service',[
+  _noun('gen-noun-service','A2','der','Service',{nom:'der',akk:'den',dat:'dem'},'Services','service','easy',[
     {de:'Der Service hier ist sehr gut.',en:'The service is very good here.',focus:'Service'},
     {de:'Ich sehe den Service.',en:'I see the service.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Service.',en:'I speak about the service.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-situation','A2','die','Situation',{nom:'die',akk:'die',dat:'der'},'Situationen','situation',[
-    {de:'Die Situation ist hier.',en:'The situation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Situation.',en:'I see the situation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Situation.',en:'I speak about the situation.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-spass','A2','der','Spass',{nom:'der',akk:'den',dat:'dem'},'Spässe','Switzerland and Liechtenstein standard spelling of Spaß',[
-    {de:'Der Spass ist hier.',en:'The Switzerland and Liechtenstein standard spelling of Spaß is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Spass.',en:'I see the Switzerland and Liechtenstein standard spelling of Spaß.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Spass.',en:'I speak about the Switzerland and Liechtenstein standard spelling of Spaß.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-spaziergang','A2','der','Spaziergang',{nom:'der',akk:'den',dat:'dem'},'Spaziergänge','walk',[
+  _noun('gen-noun-spaziergang','A2','der','Spaziergang',{nom:'der',akk:'den',dat:'dem'},'Spaziergänge','walk','easy',[
     {de:'Viele Menschen machen am Sonntag einen Spaziergang mit ihrer Familie.',en:'On Sunday, many people go for a walk with their families.',focus:'Spaziergang'},
+    {de:'Dieser Kampf wird für ihn kein Spaziergang.',en:'This fight won’t be a walk in the park for him.',focus:'Spaziergang'},
     {de:'Ich sehe den Spaziergang.',en:'I see the walk.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Spaziergang.',en:'I speak about the walk.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-spass','A2','der','Spaß',{nom:'der',akk:'den',dat:'dem'},'Späße','fun',[
-    {de:'sich einen Spaß erlauben',en:'to make a joke, to play a prank',focus:'Spaß'},
+  _noun('gen-noun-spass','A2','der','Spaß',{nom:'der',akk:'den',dat:'dem'},'Späße','fun','easy',[
+    {de:'Beim letzten Formular habe ich aus Versehen das Fenster geschlossen. Jetzt darf ich den ganzen Spaß nochmal machen.',en:'I accidentally closed the window on the last form. Now I get to do the whole thing all over.',focus:'Spaß'},
     {de:'Ich sehe den Spaß.',en:'I see the fun.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Spaß.',en:'I speak about the fun.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-spiel','A2','das','Spiel',{nom:'das',akk:'das',dat:'dem'},'Spiele','game',[
+  _noun('gen-noun-spiel','A2','das','Spiel',{nom:'das',akk:'das',dat:'dem'},'Spiele','game','easy',[
     {de:'Der Personaler sagte mir, beim Gehalt sei noch Spiel nach oben.',en:'The HR guy told me there was some leeway for a higher salary.',focus:'Spiel'},
     {de:'Ich sehe das Spiel.',en:'I see the game.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Spiel.',en:'I speak about the game.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-sportplatz','A2','der','Sportplatz',{nom:'der',akk:'den',dat:'dem'},'Sportplätze','sports field',[
-    {de:'Der Sportplatz ist hier.',en:'The sports field is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Sportplatz.',en:'I see the sports field.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Sportplatz.',en:'I speak about the sports field.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-sprechstunde','A2','die','Sprechstunde',{nom:'die',akk:'die',dat:'der'},'Sprechstunden','office hours',[
-    {de:'Die Sprechstunde ist hier.',en:'The office hours is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Sprechstunde.',en:'I see the office hours.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Sprechstunde.',en:'I speak about the office hours.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stadtplan','A2','der','Stadtplan',{nom:'der',akk:'den',dat:'dem'},'Stadtpläne','street map',[
-    {de:'Der Stadtplan ist hier.',en:'The street map is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Stadtplan.',en:'I see the street map.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stadtplan.',en:'I speak about the street map.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-star','A2','der','Star',{nom:'der',akk:'den',dat:'dem'},'Stare','starling',[
-    {de:'Der Star ist hier.',en:'The starling is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Star.',en:'I see the starling.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Star.',en:'I speak about the starling.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stiefel','A2','der','Stiefel',{nom:'der',akk:'den',dat:'dem'},'Stiefel','boot',[
-    {de:'Der Stiefel ist hier.',en:'The boot is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Stiefel.',en:'I see the boot.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stiefel.',en:'I speak about the boot.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stift','A2','der','Stift',{nom:'der',akk:'den',dat:'dem'},'Stifte','pin',[
-    {de:'Der Stift ist hier.',en:'The pin is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Stift.',en:'I see the pin.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stift.',en:'I speak about the pin.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stipendium','A2','das','Stipendium',{nom:'das',akk:'das',dat:'dem'},'Stipendien','scholarship',[
-    {de:'Das Stipendium ist hier.',en:'The scholarship is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Stipendium.',en:'I see the scholarship.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stipendium.',en:'I speak about the scholarship.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stockwerk','A2','das','Stockwerk',{nom:'das',akk:'das',dat:'dem'},'Stockwerke','floor',[
-    {de:'Das Stockwerk ist hier.',en:'The floor is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Stockwerk.',en:'I see the floor.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stockwerk.',en:'I speak about the floor.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-strand','A2','der','Strand',{nom:'der',akk:'den',dat:'dem'},'Strände','beach',[
-    {de:'Der Strand ist hier.',en:'The beach is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Strand.',en:'I see the beach.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Strand.',en:'I speak about the beach.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stress','A2','der','Stress',{nom:'der',akk:'den',dat:'dem'},'Stresse','stress',[
-    {de:'Der Stress ist hier.',en:'The stress is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Stress.',en:'I see the stress.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stress.',en:'I speak about the stress.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-studentin','A2','die','Studentin',{nom:'die',akk:'die',dat:'der'},'Studentinnen','female equivalent of Student',[
-    {de:'Die Studentin ist hier.',en:'The female equivalent of Student is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Studentin.',en:'I see the female equivalent of Student.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Studentin.',en:'I speak about the female equivalent of Student.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-stuhl','A2','der','Stuhl',{nom:'der',akk:'den',dat:'dem'},'Stühle','chair',[
+  _noun('gen-noun-stuhl','A2','der','Stuhl',{nom:'der',akk:'den',dat:'dem'},'Stühle','chair','easy',[
     {de:'Ich habe die ganze Zeit auf meinem Stuhl gesessen!',en:'I\'ve been sitting on my chair the whole time!',focus:'Stuhl'},
+    {de:'Professor Martin wurde überraschend auf den Stuhl berufen.',en:'Professor Martin unexpectedly received the professorship.',focus:'Stuhl'},
     {de:'Ich sehe den Stuhl.',en:'I see the chair.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stuhl.',en:'I speak about the chair.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-stueck','A2','das','Stück',{nom:'das',akk:'das',dat:'dem'},'Stücke','one',[
+  _noun('gen-noun-stueck','A2','das','Stück',{nom:'das',akk:'das',dat:'dem'},'Stücke','one','easy',[
     {de:'Ich brauche noch Glühbirnen. Geben Sie mir bitte drei Stück!',en:'I also need light bulbs. Give me three, please!',focus:'Stück'},
+    {de:'Wie viel Stück wollen Sie?',en:'How many do you want?',focus:'Stück'},
     {de:'Ich sehe das Stück.',en:'I see the one.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Stück.',en:'I speak about the one.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-supermarkt','A2','der','Supermarkt',{nom:'der',akk:'den',dat:'dem'},'Supermärkte','supermarket',[
-    {de:'Der Supermarkt ist hier.',en:'The supermarket is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Supermarkt.',en:'I see the supermarket.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Supermarkt.',en:'I speak about the supermarket.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-suppe','A2','die','Suppe',{nom:'die',akk:'die',dat:'der'},'Suppen','soup',[
-    {de:'Die Suppe ist hier.',en:'The soup is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Suppe.',en:'I see the soup.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Suppe.',en:'I speak about the soup.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-suessigkeit','A2','die','Süßigkeit',{nom:'die',akk:'die',dat:'der'},'Süßigkeiten','sweet',[
+  _noun('gen-noun-suessigkeit','A2','die','Süßigkeit',{nom:'die',akk:'die',dat:'der'},'Süßigkeiten','sweet','easy',[
     {de:'Die Süßigkeit des Honigs gibt der Soße eine besondere Note.',en:'The sweetness of the honey adds a special touch to the sauce.',focus:'Süßigkeit'},
     {de:'Ich sehe die Süßigkeit.',en:'I see the sweet.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Süßigkeit.',en:'I speak about the sweet.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-t-shirt','A2','das','T-Shirt',{nom:'das',akk:'das',dat:'dem'},'T-Shirts','T-shirt',[
-    {de:'Das T-Shirt ist hier.',en:'The T-shirt is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das T-Shirt.',en:'I see the T-shirt.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem T-Shirt.',en:'I speak about the T-shirt.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tablet','A2','das','Tablet',{nom:'das',akk:'das',dat:'dem'},'Tablets','tablet',[
-    {de:'Das Tablet ist hier.',en:'The tablet is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Tablet.',en:'I see the tablet.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Tablet.',en:'I speak about the tablet.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tablette','A2','die','Tablette',{nom:'die',akk:'die',dat:'der'},'Tabletten','tablet',[
-    {de:'Die Tablette ist hier.',en:'The tablet is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tablette.',en:'I see the tablet.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tablette.',en:'I speak about the tablet.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tafel','A2','die','Tafel',{nom:'die',akk:'die',dat:'der'},'Tafeln','panel',[
-    {de:'Die Tafel ist hier.',en:'The panel is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tafel.',en:'I see the panel.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tafel.',en:'I speak about the panel.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-taschengeld','A2','das','Taschengeld',{nom:'das',akk:'das',dat:'dem'},'Taschengelder','pocket money',[
-    {de:'Das Taschengeld ist hier.',en:'The pocket money is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Taschengeld.',en:'I see the pocket money.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Taschengeld.',en:'I speak about the pocket money.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tasse','A2','die','Tasse',{nom:'die',akk:'die',dat:'der'},'Tassen','cup',[
-    {de:'Die Tasse ist hier.',en:'The cup is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Tasse.',en:'I see the cup.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tasse.',en:'I speak about the cup.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-team','A2','das','Team',{nom:'das',akk:'das',dat:'dem'},'Teams','team',[
-    {de:'Das Team ist hier.',en:'The team is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Team.',en:'I see the team.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Team.',en:'I speak about the team.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-teller','A2','der','Teller',{nom:'der',akk:'den',dat:'dem'},'Teller','plate',[
-    {de:'Der Teller ist hier.',en:'The plate is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Teller.',en:'I see the plate.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Teller.',en:'I speak about the plate.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tennis','A2','das','Tennis',{nom:'das',akk:'das',dat:'dem'},'—','tennis',[
-    {de:'Das Tennis ist hier.',en:'The tennis is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Tennis.',en:'I see the tennis.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Tennis.',en:'I speak about the tennis.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-theater','A2','das','Theater',{nom:'das',akk:'das',dat:'dem'},'Theater','theater',[
-    {de:'Das Theater ist hier.',en:'The theater is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Theater.',en:'I see the theater.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Theater.',en:'I speak about the theater.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tier','A2','das','Tier',{nom:'das',akk:'das',dat:'dem'},'Tiere','animal',[
+  _noun('gen-noun-tier','A2','das','Tier',{nom:'das',akk:'das',dat:'dem'},'Tiere','animal','easy',[
     {de:'Wenn er getrunken hat, wird er zum Tier.',en:'When he’s had a drink, he turns into an animal.',focus:'Tier'},
     {de:'Ich sehe das Tier.',en:'I see the animal.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Tier.',en:'I speak about the animal.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-tipp','A2','der','Tipp',{nom:'der',akk:'den',dat:'dem'},'Tipps','tip',[
-    {de:'Der Tipp ist hier.',en:'The tip is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Tipp.',en:'I see the tip.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Tipp.',en:'I speak about the tip.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-titel','A2','der','Titel',{nom:'der',akk:'den',dat:'dem'},'Titel','title',[
-    {de:'Der Titel ist hier.',en:'The title is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Titel.',en:'I see the title.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Titel.',en:'I speak about the title.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-topf','A2','der','Topf',{nom:'der',akk:'den',dat:'dem'},'Töpfe','pot',[
-    {de:'Der Topf ist hier.',en:'The pot is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Topf.',en:'I see the pot.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Topf.',en:'I speak about the pot.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-torte','A2','die','Torte',{nom:'die',akk:'die',dat:'der'},'Torten','typically multilayered',[
-    {de:'Die Torte ist hier.',en:'The typically multilayered is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Torte.',en:'I see the typically multilayered.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Torte.',en:'I speak about the typically multilayered.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-tour','A2','die','Tour',{nom:'die',akk:'die',dat:'der'},'Touren','tour',[
+  _noun('gen-noun-tour','A2','die','Tour',{nom:'die',akk:'die',dat:'der'},'Touren','tour','easy',[
     {de:'Wir haben eine zweiwöchige Tour durch acht Städte gemacht.',en:'We did a two-week tour of eight cities.',focus:'Tour'},
+    {de:'Etappensiege sind ihm egal; er will die Tour gewinnen.',en:'He doesn\'t care about winning stages; he wants to win the tour.',focus:'Tour'},
     {de:'Ich sehe die Tour.',en:'I see the tour.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Tour.',en:'I speak about the tour.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-tourist','A2','der','Tourist',{nom:'der',akk:'den',dat:'dem'},'Touristen','tourist',[
-    {de:'Der Tourist ist hier.',en:'The tourist is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Touristen.',en:'I see the tourist.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Touristen.',en:'I speak about the tourist.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-touristin','A2','die','Touristin',{nom:'die',akk:'die',dat:'der'},'Touristinnen','female equivalent of Tourist',[
-    {de:'Die Touristin ist hier.',en:'The female equivalent of Tourist is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Touristin.',en:'I see the female equivalent of Tourist.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Touristin.',en:'I speak about the female equivalent of Tourist.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-training','A2','das','Training',{nom:'das',akk:'das',dat:'dem'},'Trainings','training',[
-    {de:'Das Training ist hier.',en:'The training is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Training.',en:'I see the training.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Training.',en:'I speak about the training.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-traum','A2','der','Traum',{nom:'der',akk:'den',dat:'dem'},'Träume','dream',[
-    {de:'Der Traum ist hier.',en:'The dream is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Traum.',en:'I see the dream.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Traum.',en:'I speak about the dream.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-umzug','A2','der','Umzug',{nom:'der',akk:'den',dat:'dem'},'Umzüge','move',[
-    {de:'Der Umzug ist hier.',en:'The move is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Umzug.',en:'I see the move.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Umzug.',en:'I speak about the move.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-unfall','A2','der','Unfall',{nom:'der',akk:'den',dat:'dem'},'Unfälle','accident',[
-    {de:'Der Unfall ist hier.',en:'The accident is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Unfall.',en:'I see the accident.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Unfall.',en:'I speak about the accident.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-universitaet','A2','die','Universität',{nom:'die',akk:'die',dat:'der'},'Universitäten','university',[
-    {de:'Die Universität ist hier.',en:'The university is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Universität.',en:'I see the university.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Universität.',en:'I speak about the university.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-unterkunft','A2','die','Unterkunft',{nom:'die',akk:'die',dat:'der'},'Unterkünfte','accommodation',[
-    {de:'Die Unterkunft ist hier.',en:'The accommodation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Unterkunft.',en:'I see the accommodation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Unterkunft.',en:'I speak about the accommodation.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-unterschied','A2','der','Unterschied',{nom:'der',akk:'den',dat:'dem'},'Unterschiede','difference',[
+  _noun('gen-noun-unterschied','A2','der','Unterschied',{nom:'der',akk:'den',dat:'dem'},'Unterschiede','difference','easy',[
     {de:'Was ist der Unterschied zwischen Männern und Frauen?',en:'What is the difference between men and women?',focus:'Unterschied'},
     {de:'Ich sehe den Unterschied.',en:'I see the difference.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Unterschied.',en:'I speak about the difference.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-verkehr','A2','der','Verkehr',{nom:'der',akk:'den',dat:'dem'},'Verkehre','ellipsis of Straßenverkehr',[
+  _noun('gen-noun-verkehr','A2','der','Verkehr',{nom:'der',akk:'den',dat:'dem'},'Verkehre','ellipsis of Straßenverkehr','easy',[
     {de:'Der Verkehr war heute wieder dicht!',en:'The traffic today has been dense again!',focus:'Verkehr'},
     {de:'Ich sehe den Verkehr.',en:'I see the ellipsis of Straßenverkehr.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Verkehr.',en:'I speak about the ellipsis of Straßenverkehr.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-verkehrsmittel','A2','das','Verkehrsmittel',{nom:'das',akk:'das',dat:'dem'},'Verkehrsmittel','transport',[
-    {de:'Das Verkehrsmittel ist hier.',en:'The transport is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Verkehrsmittel.',en:'I see the transport.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Verkehrsmittel.',en:'I speak about the transport.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vermieterin','A2','die','Vermieterin',{nom:'die',akk:'die',dat:'der'},'Vermieterinnen','company that rents something',[
-    {de:'Die Vermieterin ist hier.',en:'The company that rents something is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Vermieterin.',en:'I see the company that rents something.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Vermieterin.',en:'I speak about the company that rents something.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-verspaetung','A2','die','Verspätung',{nom:'die',akk:'die',dat:'der'},'Verspätungen','delay',[
-    {de:'Die Verspätung ist hier.',en:'The delay is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Verspätung.',en:'I see the delay.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Verspätung.',en:'I speak about the delay.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vertrag','A2','der','Vertrag',{nom:'der',akk:'den',dat:'dem'},'Verträge','contract',[
-    {de:'Der Vertrag ist hier.',en:'The contract is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Vertrag.',en:'I see the contract.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vertrag.',en:'I speak about the contract.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vogel','A2','der','Vogel',{nom:'der',akk:'den',dat:'dem'},'Vögel','bird',[
-    {de:'Was für ’n Vogel bist du denn?',en:'How dumb are you?',focus:'Vogel'},
+  _noun('gen-noun-vogel','A2','der','Vogel',{nom:'der',akk:'den',dat:'dem'},'Vögel','bird','easy',[
+    {de:'Junge, du bist so ein Vogel!',en:'Dude, you are such an idiot!',focus:'Vogel'},
+    {de:'Lasst uns den Vogel in die Luft bringen.',en:'Let\'s take off with this kite.',focus:'Vogel'},
     {de:'Ich sehe den Vogel.',en:'I see the bird.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vogel.',en:'I speak about the bird.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-volleyball','A2','der','Volleyball',{nom:'der',akk:'den',dat:'dem'},'Volleybälle','volleyball',[
-    {de:'Der Volleyball ist hier.',en:'The volleyball is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Volleyball.',en:'I see the volleyball.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Volleyball.',en:'I speak about the volleyball.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-vorschlag','A2','der','Vorschlag',{nom:'der',akk:'den',dat:'dem'},'Vorschläge','suggestion',[
+  _noun('gen-noun-vorschlag','A2','der','Vorschlag',{nom:'der',akk:'den',dat:'dem'},'Vorschläge','suggestion','easy',[
     {de:'Wir hätten auf ihren Vorschlag hören sollen.',en:'We should have listened to their suggestion.',focus:'Vorschlag'},
+    {de:'Bitte spiele den Vorschlag in Takt 23 etwas länger.',en:'Please play the appoggiatura in bar 23 a little longer.',focus:'Vorschlag'},
     {de:'Ich sehe den Vorschlag.',en:'I see the suggestion.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Vorschlag.',en:'I speak about the suggestion.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-wald','A2','der','Wald',{nom:'der',akk:'den',dat:'dem'},'Wälder','forest',[
-    {de:'Der Wald ist hier.',en:'The forest is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wald.',en:'I see the forest.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wald.',en:'I speak about the forest.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-webseite','A2','die','Webseite',{nom:'die',akk:'die',dat:'der'},'Webseiten','web page',[
-    {de:'Die Webseite ist hier.',en:'The web page is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Webseite.',en:'I see the web page.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Webseite.',en:'I speak about the web page.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-weg','A2','der','Weg',{nom:'der',akk:'den',dat:'dem'},'Wege','path',[
+  _noun('gen-noun-weg','A2','der','Weg',{nom:'der',akk:'den',dat:'dem'},'Wege','path','easy',[
     {de:'Der Wald kann gefährlich sein, also bleib auf dem Weg.',en:'The forest can be dangerous, so stay on the path.',focus:'Weg'},
+    {de:'Kennst du den Weg nach Schönebeck?',en:'Do you know the way to Schönebeck?',focus:'Weg'},
     {de:'Ich sehe den Weg.',en:'I see the path.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Weg.',en:'I speak about the path.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-werkstatt','A2','die','Werkstatt',{nom:'die',akk:'die',dat:'der'},'Werkstätten','workshop',[
-    {de:'Die Werkstatt ist hier.',en:'The workshop is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Werkstatt.',en:'I see the workshop.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Werkstatt.',en:'I speak about the workshop.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wettbewerb','A2','der','Wettbewerb',{nom:'der',akk:'den',dat:'dem'},'Wettbewerbe','competition',[
-    {de:'Der Wettbewerb ist hier.',en:'The competition is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wettbewerb.',en:'I see the competition.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wettbewerb.',en:'I speak about the competition.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-witz','A2','der','Witz',{nom:'der',akk:'den',dat:'dem'},'Witze','joke',[
-    {de:'über einen Witz lachen',en:'to laugh at a joke',focus:'Witz'},
+  _noun('gen-noun-witz','A2','der','Witz',{nom:'der',akk:'den',dat:'dem'},'Witze','joke','easy',[
+    {de:'Die Prüfung ist ein Witz, die besteht wirklich jeder.',en:'The exam is a joke, literally everyone passes.',focus:'Witz'},
+    {de:'Was war jetzt der Witz der ganzen Aktion?',en:'So what was the point of doing all that?',focus:'Witz'},
     {de:'Ich sehe den Witz.',en:'I see the joke.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Witz.',en:'I speak about the joke.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-wohnzimmer','A2','das','Wohnzimmer',{nom:'das',akk:'das',dat:'dem'},'Wohnzimmer','living room',[
-    {de:'Das Wohnzimmer ist hier.',en:'The living room is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Wohnzimmer.',en:'I see the living room.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wohnzimmer.',en:'I speak about the living room.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wolke','A2','die','Wolke',{nom:'die',akk:'die',dat:'der'},'Wolken','cloud',[
+  _noun('gen-noun-wolke','A2','die','Wolke',{nom:'die',akk:'die',dat:'der'},'Wolken','cloud','easy',[
     {de:'Der Himmel ist heute von Wolken bedeckt.',en:'The sky is covered in clouds today.',focus:'Wolken'},
+    {de:'Bei Vulkanausbrüchen entstehen meist riesige Aschewolken.',en:'During volcanic eruptions, vast ash clouds do often appear.',focus:'wolken'},
     {de:'Ich sehe die Wolke.',en:'I see the cloud.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Wolke.',en:'I speak about the cloud.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-workshop','A2','der','Workshop',{nom:'der',akk:'den',dat:'dem'},'Workshops','workshop',[
-    {de:'Der Workshop ist hier.',en:'The workshop is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Workshop.',en:'I see the workshop.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Workshop.',en:'I speak about the workshop.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wunsch','A2','der','Wunsch',{nom:'der',akk:'den',dat:'dem'},'Wünsche','wish',[
-    {de:'Der Wunsch ist hier.',en:'The wish is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Wunsch.',en:'I see the wish.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Wunsch.',en:'I speak about the wish.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-wurst','A2','die','Wurst',{nom:'die',akk:'die',dat:'der'},'Würste','sausage',[
-    {de:'Die Wurst ist hier.',en:'The sausage is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Wurst.',en:'I see the sausage.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Wurst.',en:'I speak about the sausage.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-waesche','A2','die','Wäsche',{nom:'die',akk:'die',dat:'der'},'Wäschen','wash',[
+  _noun('gen-noun-waesche','A2','die','Wäsche',{nom:'die',akk:'die',dat:'der'},'Wäschen','wash','easy',[
     {de:'Nach der Wäsche muss ich meine Hemden bügeln.',en:'After washing I need to iron my shirts.',focus:'Wäsche'},
+    {de:'Kannst du die Wäsche aus der Maschine holen?',en:'Could you remove the laundry from the machine?',focus:'Wäsche'},
     {de:'Ich sehe die Wäsche.',en:'I see the wash.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Wäsche.',en:'I speak about the wash.',focus:'der',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-zahl','A2','die','Zahl',{nom:'die',akk:'die',dat:'der'},'Zahlen','number',[
-    {de:'Die Zahl ist hier.',en:'The number is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Zahl.',en:'I see the number.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Zahl.',en:'I speak about the number.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zahn','A2','der','Zahn',{nom:'der',akk:'den',dat:'dem'},'Zähne','tooth',[
-    {de:'Der Zahn ist hier.',en:'The tooth is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Zahn.',en:'I see the tooth.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zahn.',en:'I speak about the tooth.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zeitschrift','A2','die','Zeitschrift',{nom:'die',akk:'die',dat:'der'},'Zeitschriften','magazine',[
-    {de:'Die Zeitschrift ist hier.',en:'The magazine is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Zeitschrift.',en:'I see the magazine.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Zeitschrift.',en:'I speak about the magazine.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zelt','A2','das','Zelt',{nom:'das',akk:'das',dat:'dem'},'Zelte','tent',[
+  _noun('gen-noun-zelt','A2','das','Zelt',{nom:'das',akk:'das',dat:'dem'},'Zelte','tent','easy',[
     {de:'Stellen wir unser Zelt hier auf dieser Wiese auf.',en:'Let\'s pitch our tent here in this meadow.',focus:'Zelt'},
     {de:'Ich sehe das Zelt.',en:'I see the tent.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zelt.',en:'I speak about the tent.',focus:'dem',caseLabel:'Dat'},
   ]),
-  _noun('gen-noun-zentrum','A2','das','Zentrum',{nom:'das',akk:'das',dat:'dem'},'Zentren','center',[
-    {de:'im Zentrum der Aufmerksamkeit',en:'at the center of attention',focus:'Zentrum'},
-    {de:'Ich sehe das Zentrum.',en:'I see the center.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zentrum.',en:'I speak about the center.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zettel','A2','der','Zettel',{nom:'der',akk:'den',dat:'dem'},'Zettel','small or loose piece of paper',[
-    {de:'Der Zettel ist hier.',en:'The small or loose piece of paper is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Zettel.',en:'I see the small or loose piece of paper.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zettel.',en:'I speak about the small or loose piece of paper.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zeugnis','A2','das','Zeugnis',{nom:'das',akk:'das',dat:'dem'},'Zeugnisse','testimony',[
-    {de:'Das Zeugnis ist hier.',en:'The testimony is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Zeugnis.',en:'I see the testimony.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zeugnis.',en:'I speak about the testimony.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-ziel','A2','das','Ziel',{nom:'das',akk:'das',dat:'dem'},'Ziele','target',[
-    {de:'Das Ziel ist hier.',en:'The target is here.',focus:'Das',caseLabel:'Nom'},
-    {de:'Ich sehe das Ziel.',en:'I see the target.',focus:'das',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Ziel.',en:'I speak about the target.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zirkus','A2','der','Zirkus',{nom:'der',akk:'den',dat:'dem'},'Zirkusse','circus',[
+  _noun('gen-noun-zirkus','A2','der','Zirkus',{nom:'der',akk:'den',dat:'dem'},'Zirkusse','circus','easy',[
     {de:'Mach keinen Zirkus und setz dich hin!',en:'Don\'t make a dog and pony show and sit down!',focus:'Zirkus'},
+    {de:'Das ist immer ein Zirkus, hier langzufahren, wenn Schalke spielt.',en:'It’s always a rigmarole driving around here when Schalke are playing.',focus:'Zirkus'},
     {de:'Ich sehe den Zirkus.',en:'I see the circus.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zirkus.',en:'I speak about the circus.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zitrone','A2','die','Zitrone',{nom:'die',akk:'die',dat:'der'},'Zitronen','lemon',[
-    {de:'Die Zitrone ist hier.',en:'The lemon is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Zitrone.',en:'I see the lemon.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Zitrone.',en:'I speak about the lemon.',focus:'der',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zoo','A2','der','Zoo',{nom:'der',akk:'den',dat:'dem'},'Zoos','zoo',[
-    {de:'Der Zoo ist hier.',en:'The zoo is here.',focus:'Der',caseLabel:'Nom'},
-    {de:'Ich sehe den Zoo.',en:'I see the zoo.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zoo.',en:'I speak about the zoo.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-zucker','A2','der','Zucker',{nom:'der',akk:'den',dat:'dem'},'Zucker','sugar',[
-    {de:'ein Stück Zucker',en:'a lump of sugar',focus:'Zucker'},
-    {de:'Ich sehe den Zucker.',en:'I see the sugar.',focus:'den',caseLabel:'Akk'},
-    {de:'Ich spreche von dem Zucker.',en:'I speak about the sugar.',focus:'dem',caseLabel:'Dat'},
-  ]),
-  _noun('gen-noun-uebersetzung','A2','die','Übersetzung',{nom:'die',akk:'die',dat:'der'},'Übersetzungen','translation',[
-    {de:'Die Übersetzung ist hier.',en:'The translation is here.',focus:'Die',caseLabel:'Nom'},
-    {de:'Ich sehe die Übersetzung.',en:'I see the translation.',focus:'die',caseLabel:'Akk'},
-    {de:'Ich spreche von der Übersetzung.',en:'I speak about the translation.',focus:'der',caseLabel:'Dat'},
   ]),
 ];
 

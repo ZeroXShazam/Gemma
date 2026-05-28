@@ -10,6 +10,18 @@ import {
 } from '@/lib/types'
 import { ALL_SECTION_IDS, cardSection, sectionTitle, type SectionId } from '@/lib/curriculum-de'
 import { CurriculumSidebar } from '@/components/CurriculumSidebar'
+import { mixQueue, sortNewCardsForBudget } from '@/lib/deck-queue'
+import {
+  DEFAULT_TRAINER_DIFFICULTY,
+  acceptableFocuses,
+  applyNounStudyMode,
+  canonicalFocus,
+  pickExampleIdx,
+  pickReverse,
+  resolveLemmaHint,
+  showPrepChoices,
+} from '@/lib/trainer-pick'
+import { gradeAnswer } from '@/lib/grading'
 
 const DEFAULT_NEW_LIMIT_SUGGESTION = 20 // shown as placeholder in the limit input
 
@@ -43,39 +55,14 @@ const RATING_CFG = [
 
 function todayStr() { return new Date().toISOString().slice(0, 10) }
 
-function canonicalFocus(focus: string | string[]): string {
-  return Array.isArray(focus) ? focus[0] : focus
-}
-
-function acceptableFocuses(focus: string | string[]): string[] {
-  return Array.isArray(focus) ? focus : [focus]
-}
-
-const REVERSE_PROBABILITY = 0.33
 const RECENT_MAX = 5
-
-function pickReverse(card: SRSCard | undefined): boolean {
-  if (!card) return false
-  if (card.state !== 'review' && card.state !== 'mature') return false
-  if (card.type === 'prep') return false // prep uses choice chips, no production
-  return Math.random() < REVERSE_PROBABILITY
-}
-
-function pickExampleIdx(card: SRSCard): number {
-  const len = card.examples.length
-  if (len <= 1) return 0
-  const misses = card.exampleMisses ?? {}
-  const weights = card.examples.map((_, i) => (misses[String(i)] ?? 0) + 1)
-  const total = weights.reduce((a, b) => a + b, 0)
-  let r = Math.random() * total
-  for (let i = 0; i < weights.length; i++) {
-    r -= weights[i]
-    if (r <= 0) return i
-  }
-  return len - 1
-}
-
 const MAX_FLIP_EXAMPLES = 5
+
+function blankParts(de: string, focus: string | string[]): [string, string] {
+  const c = canonicalFocus(focus)
+  const i = de.indexOf(c)
+  return i === -1 ? [de, ''] : [de.slice(0, i), de.slice(i + c.length)]
+}
 
 // Pick at most MAX_FLIP_EXAMPLES examples to show on the flip side.
 // Always include the just-answered example first, then fill remaining
@@ -134,20 +121,6 @@ function nextStreak(s: Settings, today: string): { streakDays: number; lastRevie
   return { streakDays: 1, lastReviewDate: today }
 }
 
-function expandNounFocus(ex: Example, noun: string): Example {
-  const c = canonicalFocus(ex.focus)
-  const expected = `${c} ${noun}`
-  if (!ex.de.includes(expected)) return ex
-  const expanded = acceptableFocuses(ex.focus).map((f) => `${f} ${noun}`)
-  return { ...ex, focus: expanded.length === 1 ? expanded[0] : expanded }
-}
-
-function blankParts(de: string, focus: string | string[]): [string, string] {
-  const c = canonicalFocus(focus)
-  const i = de.indexOf(c)
-  return i === -1 ? [de, ''] : [de.slice(0, i), de.slice(i + c.length)]
-}
-
 function normalize(s: string): string {
   return s
     .trim()
@@ -160,7 +133,8 @@ function normalize(s: string): string {
     .replace(/[\u0300-\u036f]/g, '')
 }
 
-function answerOk(input: string, focus: string | string[]): boolean {
+function answerOk(input: string, focus: string | string[], ex?: Example, card?: CardDef): boolean {
+  if (ex) return gradeAnswer(input, ex, card).ok
   const n = normalize(input)
   return acceptableFocuses(focus).some((f) => normalize(f) === n)
 }
@@ -178,6 +152,12 @@ interface Settings {
   lastReviewDate: string
   dailyNewLimit: number | null  // null = unlimited
   theme: Theme
+  nounHardMode: boolean
+  hideHintsAfterNew: boolean
+  reverseRateMature: number
+  prepProduction: boolean
+  preferGrammarNew: boolean
+  hideEasyGen: boolean
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -191,10 +171,14 @@ const DEFAULT_SETTINGS: Settings = {
   lastReviewDate: '',
   dailyNewLimit: null,
   theme: 'dark',
+  ...DEFAULT_TRAINER_DIFFICULTY,
+  preferGrammarNew: false,
+  hideEasyGen: true,
 }
 
 function cardInQueue(card: CardDef, s: Settings, lv: string): boolean {
   if (lv !== 'All' && card.level !== lv) return false
+  if (s.hideEasyGen && card.source === 'gen' && card.difficulty === 'easy') return false
   if (s.activeLanguage === 'de') {
     if (s.enabledSections.length === 0) return false
     return s.enabledSections.includes(cardSection(card))
@@ -229,14 +213,10 @@ function buildQueue(cards: CardDef[], pm: Record<string, SRSState>, s: Settings,
     const j = Math.floor(Math.random() * (i + 1))
     ;[allNew[i], allNew[j]] = [allNew[j], allNew[i]]
   }
-  newCards.push(...allNew.slice(0, budget))
+  const sortedNew = sortNewCardsForBudget(allNew, s.preferGrammarNew)
+  newCards.push(...sortedNew.slice(0, budget))
 
-  const all = [...learning, ...review, ...newCards]
-  for (let i = all.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[all[i], all[j]] = [all[j], all[i]]
-  }
-  return all
+  return mixQueue([...learning, ...review, ...newCards])
 }
 
 const sInput: React.CSSProperties = {
@@ -505,6 +485,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [prevExIdx, setPrevExIdx] = useState(0)
   const [prevReverse, setPrevReverse] = useState(false)
   const [reviewingPrev, setReviewingPrev] = useState(false)
+  const [nearMiss, setNearMiss] = useState<string | null>(null)
   const [showSections, setShowSections] = useState(false)
   const inputEl = useRef<HTMLInputElement>(null)
 
@@ -531,6 +512,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             lapses: row.lapses, due: row.due, state: row.state, step: row.step,
             exampleMisses: (row.example_misses ?? {}) as Record<string, number>,
             recentResults: typeof row.recent_results === 'string' ? row.recent_results : '',
+            lastExampleIdx: typeof row.last_example_idx === 'number' ? row.last_example_idx : undefined,
           }
         }
       }
@@ -548,6 +530,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             lastReviewDate: sr.last_review_date ?? '',
             dailyNewLimit: typeof sr.daily_new_limit === 'number' ? sr.daily_new_limit : null,
             theme: sr.theme === 'light' ? 'light' : 'dark',
+            nounHardMode: sr.noun_hard_mode === true,
+            hideHintsAfterNew: sr.hide_hints_after_new !== false,
+            reverseRateMature: typeof sr.reverse_rate_mature === 'number' ? sr.reverse_rate_mature : 0.55,
+            prepProduction: sr.prep_production !== false,
+            preferGrammarNew: sr.prefer_grammar_new === true,
+            hideEasyGen: sr.hide_easy_gen !== false,
           }
         : DEFAULT_SETTINGS
       const fetched = await fetchCards(loaded.activeLanguage)
@@ -564,7 +552,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       if (q.length > 0) {
         const first = q[0] as SRSCard
         setExIdx(pickExampleIdx(first))
-        setReverse(pickReverse(first))
+        setReverse(pickReverse(first, loaded))
       }
     } finally {
       setLoading(false)
@@ -580,10 +568,11 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     setChecked(false)
     setCorrect(false)
     setReviewingPrev(false)
+    setNearMiss(null)
     if (q.length > 0) {
       const first = q[0] as SRSCard
       setExIdx(pickExampleIdx(first))
-      setReverse(pickReverse(first))
+      setReverse(pickReverse(first, newSettings))
     }
     setTimeout(() => inputEl.current?.focus(), 50)
   }
@@ -604,6 +593,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         activeLanguage: ns.activeLanguage,
         streakDays: ns.streakDays, lastReviewDate: ns.lastReviewDate,
         dailyNewLimit: ns.dailyNewLimit, theme: ns.theme,
+        nounHardMode: ns.nounHardMode, hideHintsAfterNew: ns.hideHintsAfterNew,
+        reverseRateMature: ns.reverseRateMature, prepProduction: ns.prepProduction,
+        preferGrammarNew: ns.preferGrammarNew, hideEasyGen: ns.hideEasyGen,
       }),
     })
   }
@@ -629,6 +621,17 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     persistSettings(ns)
   }
 
+  function changeTrainerDifficulty(patch: Partial<Pick<Settings, 'nounHardMode' | 'hideHintsAfterNew' | 'reverseRateMature' | 'prepProduction' | 'preferGrammarNew' | 'hideEasyGen'>>) {
+    const ns = { ...settings, ...patch }
+    setSettings(ns)
+    if ('hideEasyGen' in patch) applyQueueChange(cards, pm, ns, lv)
+    persistSettings(ns)
+  }
+
+  function toggleSetting(key: 'nounHardMode' | 'hideHintsAfterNew' | 'prepProduction' | 'preferGrammarNew' | 'hideEasyGen') {
+    changeTrainerDifficulty({ [key]: !settings[key] })
+  }
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', settings.theme)
     try { localStorage.setItem('theme', settings.theme) } catch {}
@@ -651,7 +654,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
   const card = queue[idx] as SRSCard | undefined
   const baseEx = card ? card.examples[exIdx % card.examples.length] : undefined
-  const ex = baseEx && card?.type === 'noun' && card.noun ? expandNounFocus(baseEx, card.noun) : baseEx
+  const ex = baseEx && card?.type === 'noun' && card.noun
+    ? applyNounStudyMode(baseEx, card.noun, settings.nounHardMode)
+    : baseEx
   const intervals = card ? previewIntervals(card) : null
 
   useEffect(() => {
@@ -680,23 +685,25 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   function doCheck() {
-    if (!ex || checked) return
+    if (!ex || checked || !card) return
     if (input.trim() === '') return
-    const ok = answerOk(input, ex.focus)
-    setCorrect(ok)
+    const result = gradeAnswer(input, ex, card)
+    setCorrect(result.ok)
+    setNearMiss(result.nearMiss ?? null)
     setChecked(true)
-    recordCheck(ok)
-    if (ok) setTimeout(() => setPhase('flip'), 800)
+    recordCheck(result.ok)
+    if (result.ok) setTimeout(() => setPhase('flip'), 800)
   }
 
   function pickChoice(value: string) {
-    if (!ex || checked) return
-    const ok = answerOk(value, ex.focus)
+    if (!ex || checked || !card) return
+    const result = gradeAnswer(value, ex, card)
     setInput(value)
-    setCorrect(ok)
+    setCorrect(result.ok)
+    setNearMiss(result.nearMiss ?? null)
     setChecked(true)
-    recordCheck(ok)
-    if (ok) setTimeout(() => setPhase('flip'), 800)
+    recordCheck(result.ok)
+    if (result.ok) setTimeout(() => setPhase('flip'), 800)
   }
 
   async function doRate(rating: Rating) {
@@ -704,7 +711,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     setSaving(true)
     const wasNew = card.state === 'new'
     const latest = pm[card.id] ?? defaultSRS()
-    const next = computeNext({ ...card, ...latest }, rating)
+    const next = { ...computeNext({ ...card, ...latest }, rating), lastExampleIdx: exIdx }
     const newPm = { ...pm, [card.id]: next }
     setPm(newPm)
     const today = todayStr()
@@ -730,6 +737,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           due: next.due, state: next.state, step: next.step,
           exampleMisses: next.exampleMisses,
           recentResults: next.recentResults,
+          lastExampleIdx: next.lastExampleIdx,
         }),
       }),
       persistSettings(ns),
@@ -748,8 +756,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
       setInput('')
       setChecked(false)
       setCorrect(false)
+      setNearMiss(null)
       setExIdx(pickExampleIdx(enriched))
-      setReverse(pickReverse(enriched))
+      setReverse(pickReverse(enriched, settings))
       setTimeout(() => inputEl.current?.focus(), 50)
     } else {
       setIdx(queue.length)
@@ -879,9 +888,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   }
 
   const [before, after] = ex ? blankParts(ex.de, ex.focus) : ['', '']
-  const rawHint = reverse
-    ? (card?.verb ?? card?.noun ?? card?.word ?? null)
-    : ((card?.type === 'noun' || card?.type === 'prep') ? null : (card?.verb ?? card?.word ?? null))
+  const rawHint = resolveLemmaHint(card, reverse, settings.hideHintsAfterNew)
   const hint = rawHint && ex && lemmaRevealsFocus(rawHint, acceptableFocuses(ex.focus)) ? null : rawHint
 
   const prevCardBase = idx > 0 ? queue[idx - 1] : undefined
@@ -890,7 +897,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     : undefined
   const prevBaseEx = prevCard ? prevCard.examples[prevExIdx % prevCard.examples.length] : undefined
   const prevEx = prevBaseEx && prevCard?.type === 'noun' && prevCard.noun
-    ? expandNounFocus(prevBaseEx, prevCard.noun)
+    ? applyNounStudyMode(prevBaseEx, prevCard.noun, settings.nounHardMode)
     : prevBaseEx
   const [prevBefore, prevAfter] = prevEx ? blankParts(prevEx.de, prevEx.focus) : ['', '']
   const canReviewPrev = !!prevCard && !!prevEx && !saving
@@ -1005,6 +1012,26 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                         background: 'transparent', color: 'var(--muted)', cursor: 'pointer', fontSize: 12,
                       }}>set</button>
                   )}
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Difficulty</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12, fontSize: 13 }}>
+                  {([
+                    ['nounHardMode', 'Noun hard mode (article + noun)'],
+                    ['hideHintsAfterNew', 'Hide hints after first review'],
+                    ['prepProduction', 'Type prepositions (not chips)'],
+                    ['preferGrammarNew', 'Prefer grammar in new cards'],
+                    ['hideEasyGen', 'Hide easy auto-generated vocab'],
+                  ] as const).map(([key, label]) => (
+                    <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', color: 'var(--text-soft)' }}>
+                      <input
+                        type="checkbox"
+                        checked={settings[key]}
+                        onChange={() => toggleSetting(key)}
+                        style={{ accentColor: '#3b82f6' }}
+                      />
+                      {label}
+                    </label>
+                  ))}
                 </div>
                 <div style={{ borderTop: '1px solid var(--border-soft)', marginTop: 12, paddingTop: 12 }}>
                   <button onClick={onSignOut} style={{ ...sBtnSecondary, width: '100%', fontSize: 12, padding: '7px 0' }}>
@@ -1185,7 +1212,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 </div>
               )}
 
-              {card.type === 'prep' && choices.length > 0 && !checked && (
+              {showPrepChoices(card, settings.prepProduction, card.state) && choices.length > 0 && !checked && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
                   {choices.map(c => (
                     <button key={c} onClick={() => pickChoice(c)} style={{
@@ -1216,11 +1243,14 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
 
               {checked && !correct && (
                 <div style={{ marginTop: 16 }}>
-                  <p style={{ color: '#f87171', fontWeight: 600, marginBottom: ex.note ? 6 : 14 }}>
+                  <p style={{ color: '#f87171', fontWeight: 600, marginBottom: nearMiss || ex.note ? 6 : 14 }}>
                     The answer was <span style={{ color: 'var(--text)' }}>
                       {'"' + acceptableFocuses(ex.focus).join('" / "') + '"'}
                     </span>
                   </p>
+                  {nearMiss && (
+                    <p style={{ color: '#fb923c', fontSize: 13, marginBottom: 14 }}>{nearMiss}</p>
+                  )}
                   {ex.note && (
                     <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 14, fontStyle: 'italic' }}>{ex.note}</p>
                   )}

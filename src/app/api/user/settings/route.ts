@@ -38,6 +38,14 @@ export async function PUT(req: NextRequest) {
   if (Array.isArray(body.enabledSections)) {
     row.enabled_sections = body.enabledSections;
   }
+  if (typeof body.nounHardMode === 'boolean') row.noun_hard_mode = body.nounHardMode;
+  if (typeof body.hideHintsAfterNew === 'boolean') row.hide_hints_after_new = body.hideHintsAfterNew;
+  if (typeof body.reverseRateMature === 'number' && body.reverseRateMature >= 0 && body.reverseRateMature <= 1) {
+    row.reverse_rate_mature = body.reverseRateMature;
+  }
+  if (typeof body.prepProduction === 'boolean') row.prep_production = body.prepProduction;
+  if (typeof body.preferGrammarNew === 'boolean') row.prefer_grammar_new = body.preferGrammarNew;
+  if (typeof body.hideEasyGen === 'boolean') row.hide_easy_gen = body.hideEasyGen;
   const { error } = await supabaseAdmin()
     .from('user_settings')
     .upsert(row, { onConflict: 'user_id' });

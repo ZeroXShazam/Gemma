@@ -462,6 +462,14 @@ function tsExample(e: NounExample): string {
   return `    {${parts.join(',')}},`;
 }
 
+function countWords(s: string): number {
+  return s.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function isQualityRealExample(ex: RichExample): boolean {
+  return countWords(ex.de) >= 5 && countWords(ex.en) >= 5;
+}
+
 function emitNoun(
   lemma: string,
   article: Article,
@@ -486,37 +494,38 @@ function emitNoun(
   const datForm = parsedNoun.datSg && parsedNoun.datSg !== '—' ? parsedNoun.datSg : lemma;
   const NOM = forms.nom[0].toUpperCase() + forms.nom.slice(1);
 
-  // Mix strategy for nouns:
-  //  - Always show the three core cases (Nom / Akk / Dat) so the learner gets
-  //    full article+case practice.
-  //  - When wiktionary has a real-world bilingual example that contains the
-  //    lemma, swap it in for the Nom template — this gives one authentic
-  //    usage alongside the structured case drills.
   const stemKey = lemma.toLowerCase().slice(0, Math.min(4, lemma.length));
-  const realNomCandidates = realExamples.filter((ex) => {
+  const qualityReal = realExamples.filter((ex) => {
+    if (!isQualityRealExample(ex)) return false;
     const flat = Array.isArray(ex.focus) ? ex.focus.join(' ') : ex.focus;
     return flat && flat.toLowerCase().includes(stemKey);
   });
-  const realFirst = realNomCandidates[0];
-  // Real example deliberately has no caseLabel — the case of the bolded form
-  // in wiktionary's sentence might be Akk or Dat, and a wrong label would
-  // confuse the learner. The two templated drills below still carry case
-  // labels so the user practices den/dem explicitly.
-  const examples: NounExample[] = [
-    realFirst
-      ? { de: realFirst.de, en: realFirst.en, focus: realFirst.focus }
-      : { de: `${NOM} ${nomForm} ist hier.`, en: `The ${enNoun} is here.`, focus: NOM, caseLabel: 'Nom' },
-    { de: `Ich sehe ${forms.akk} ${akkForm}.`, en: `I see the ${enNoun}.`, focus: forms.akk, caseLabel: 'Akk' },
-    { de: `Ich spreche von ${forms.dat} ${datForm}.`, en: `I speak about the ${enNoun}.`, focus: forms.dat, caseLabel: 'Dat' },
-  ];
 
-  // Plural — emit "—" sentinel for uncountable, never the singular as a fake plural.
+  if (qualityReal.length === 0) return null;
+
+  const examples: NounExample[] = qualityReal.slice(0, 2).map((ex) => ({
+    de: ex.de,
+    en: ex.en,
+    focus: ex.focus,
+  }));
+
+  if (examples.length < 3) {
+    examples.push({
+      de: `Ich sehe ${forms.akk} ${akkForm}.`,
+      en: `I see the ${enNoun}.`,
+      focus: forms.akk,
+      caseLabel: 'Akk',
+    });
+  }
+
+  const difficulty: 'easy' | 'standard' = qualityReal.length >= 2 && examples.length <= 2 ? 'standard' : 'easy';
+
   const pluralOut = parsedNoun.uncountable ? '—' : (parsedNoun.plural || '—');
 
   const src =
     `  _noun(${ts(id)},${ts(level)},${ts(article)},${ts(lemma)},` +
     `{nom:${ts(forms.nom)},akk:${ts(forms.akk)},dat:${ts(forms.dat)}},` +
-    `${ts(pluralOut)},${ts(enNoun)},[\n` +
+    `${ts(pluralOut)},${ts(enNoun)},${ts(difficulty)},[\n` +
     examples.map(tsExample).join('\n') +
     `\n  ]),`;
   return { type: 'noun', level, source: src, id, lemma };
@@ -601,7 +610,7 @@ function emitVerb(
   enInf: string,
   level: Level,
   realExamples: RichExample[],
-): Emission {
+): Emission | null {
   const id = slugId('gen-verb', lemma);
   const c = deriveConjugations(lemma, conj);
   const { ich, du, er, wir, ihr, sie: sie3 } = c;
@@ -618,27 +627,27 @@ function emitVerb(
   const usable = realExamples.filter((ex) => {
     const spans = Array.isArray(ex.focus) ? ex.focus : [ex.focus];
     if (spans.length === 0 || !spans[0]) return false;
-    return spans.some((s) => looksLikeInflection(s, lemma));
+    return spans.some((s) => looksLikeInflection(s, lemma)) && isQualityRealExample(ex);
   });
 
-  // Mix strategy: lead with a real example when available, then drill du/er
-  // forms so the learner still gets active conjugation practice.
+  if (usable.length === 0) return null;
+
   const drillDu: VerbExample = { de: `Du ${du}?`, en: `Do you ${enInf}?`, focus: du, subject: 'du' };
-  const drillEr: VerbExample = { de: `Er ${er}.`, en: `He ${en3}.`, focus: er, subject: 'er' };
-  const drillIch: VerbExample = { de: `Ich ${ich}.`, en: `I ${enInf}.`, focus: ich, subject: 'ich' };
   let examples: VerbExample[];
+  let difficulty: 'easy' | 'standard';
+
   if (usable.length >= 2) {
     examples = usable.slice(0, 3).map((ex) => ({ de: ex.de, en: ex.en, focus: ex.focus }));
-  } else if (usable.length === 1) {
-    examples = [{ de: usable[0].de, en: usable[0].en, focus: usable[0].focus }, drillDu, drillEr];
+    difficulty = 'standard';
   } else {
-    examples = [drillIch, drillDu, drillEr];
+    examples = [{ de: usable[0].de, en: usable[0].en, focus: usable[0].focus }, drillDu];
+    difficulty = 'easy';
   }
 
   const src =
     `  _verb(${ts(id)},${ts(level)},${ts(lemma)},` +
     `{ich:${ts(ich)},du:${ts(du)},er:${ts(er)},wir:${ts(wir)},ihr:${ts(ihr)},sie:${ts(sie3)}},` +
-    `${ts(praet)},${ts(perf)},[\n` +
+    `${ts(praet)},${ts(perf)},${ts(difficulty)},[\n` +
     examples.map(tsVerbExample).join('\n') +
     `\n  ]),`;
   return { type: 'verb', level, source: src, id, lemma };
@@ -838,7 +847,12 @@ async function main() {
         drop('noun: polluted/empty gloss');
         continue;
       }
-      emissions.push(emitNoun(lemma, article, parsed.noun, rawGloss, e.level, realExamples) as Emission);
+      const nounEm = emitNoun(lemma, article, parsed.noun, rawGloss, e.level, realExamples);
+      if (!nounEm) {
+        drop('noun: no quality examples');
+        continue;
+      }
+      emissions.push(nounEm);
     } else if (cardType === 'verb') {
       if (!parsed.verb || !parsed.verb.ich) {
         drop('verb: no conjugation');
@@ -857,7 +871,12 @@ async function main() {
         drop('verb: polluted/empty gloss');
         continue;
       }
-      emissions.push(emitVerb(lemma, parsed.verb, rawInf, e.level, realExamples));
+      const verbEm = emitVerb(lemma, parsed.verb, rawInf, e.level, realExamples);
+      if (!verbEm) {
+        drop('verb: no quality examples');
+        continue;
+      }
+      emissions.push(verbEm);
     } else {
       // gram-style card (adjective / prep / conjunction / pronoun / possessive)
       const cleanedDef = cleanGloss(enDef);
@@ -900,12 +919,12 @@ import type { CardDef, Conjugations, Example, Level } from './types';
 
 type Art = 'der'|'die'|'das';
 
-function _verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
-  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex };
+function _verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, diff: 'easy'|'standard'|'hard', ex: Example[]): CardDef {
+  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex, source: 'gen', difficulty: diff };
 }
 
-function _noun(id: string, lv: Level, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, _enN: string, ex: Example[]): CardDef {
-  return { id, type: 'noun', level: lv, article: art, noun: n, nounForms: forms, plural: pl, examples: ex };
+function _noun(id: string, lv: Level, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, _enN: string, diff: 'easy'|'standard'|'hard', ex: Example[]): CardDef {
+  return { id, type: 'noun', level: lv, article: art, noun: n, nounForms: forms, plural: pl, examples: ex, source: 'gen', difficulty: diff };
 }
 
 `;

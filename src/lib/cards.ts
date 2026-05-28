@@ -1,9 +1,10 @@
 import type { CardDef, Conjugations, Example, Level } from './types';
 import { CARDS_GENERATED } from './cards-generated';
+import { DEPTH_CARDS } from './cards-depth';
 export { ALL_TYPES } from './types';
 
 function verb(id: string, lv: Level, v: string, c: Conjugations, prat: string, perf: string, ex: Example[]): CardDef {
-  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex };
+  return { id, type: 'verb', level: lv, verb: v, conjugations: c, praeteritum: prat, perfekt: perf, examples: ex, source: 'hand' };
 }
 type Art = 'der'|'die'|'das';
 type Cas = 'nom'|'akk'|'dat';
@@ -34,10 +35,10 @@ function genPossEx(art: Art, n: string, enN: string): Example[] {
 }
 
 function noun(id: string, art: Art, n: string, forms: {nom:string;akk:string;dat:string}, pl: string, enN: string, ex: Example[]): CardDef {
-  return { id, type: 'noun', level: 'A1', article: art, noun: n, nounForms: forms, plural: pl, examples: [...ex, ...genPossEx(art, n, enN)] };
+  return { id, type: 'noun', level: 'A1', article: art, noun: n, nounForms: forms, plural: pl, examples: [...ex, ...genPossEx(art, n, enN)], source: 'hand' };
 }
 function gram(id: string, type: CardDef['type'], lv: Level, rule: string, ex: Example[], word?: string): CardDef {
-  return { id, type, level: lv, rule, examples: ex, word };
+  return { id, type, level: lv, rule, examples: ex, word, source: 'hand' };
 }
 
 // ─── VERBS ────────────────────────────────────────────────────────────────────
@@ -914,6 +915,7 @@ const HAND_CURATED: CardDef[] = [
   ...NEGATION, ...COMPARATIVE, ...REFLEXIVE,
   ...PRAETERITUM, ...FUTURE, ...IMPERATIVE, ...ACCUSATIVE,
   ...CONJUNCTIONS,
+  ...DEPTH_CARDS,
 ];
 
 // De-duplicate generated cards against hand-curated ones (by id and by lemma per type).

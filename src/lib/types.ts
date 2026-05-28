@@ -34,6 +34,7 @@ export interface Example {
   subject?: string;   // verb cards: 'ich'|'du'|'er'|'wir'|'ihr'|'sie'
   caseLabel?: string; // noun cards: 'Nom'|'Akk'|'Dat'
   note?: string;      // optional one-liner shown only on miss
+  accept?: string[];  // alternate accepted answers (normalized match)
 }
 
 export interface Conjugations {
@@ -45,6 +46,9 @@ export interface Conjugations {
   sie: string;
 }
 
+export type CardDifficulty = 'easy' | 'standard' | 'hard';
+export type CardSource = 'hand' | 'gen';
+
 export interface CardDef {
   id: string;
   language?: Language;
@@ -52,6 +56,8 @@ export interface CardDef {
   level: Level;
   /** Curriculum section (German deck). Assigned at runtime if omitted. */
   sectionId?: string;
+  difficulty?: CardDifficulty;
+  source?: CardSource;
   examples: Example[];
   rule?: string;
   verb?: string;
@@ -75,6 +81,8 @@ export interface SRSState {
   step: number;
   exampleMisses: Record<string, number>;
   recentResults: string; // oldest-to-newest, '1' = correct, '0' = wrong, max length 5
+  /** Last example index shown (for cooldown when picking next). */
+  lastExampleIdx?: number;
 }
 
 export type SRSCard = CardDef & SRSState;

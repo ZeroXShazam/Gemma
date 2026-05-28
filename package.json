@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "build:deck": "tsx scripts/build-deck.ts",
+    "audit:deck": "tsx scripts/audit-deck.ts",
+    "audit:deck:db": "tsx --env-file=.env.local scripts/audit-deck.ts --db",
     "seed:de": "tsx --env-file=.env.local scripts/seed-de.ts"
   },
   "dependencies": {

@@ -152,6 +152,10 @@ export function cardSection(card: CardDef): SectionId {
   if (id.startsWith('refl-')) return 'a2-reflexive';
   if (id.startsWith('neg-')) return 'a1-negation';
   if (id.startsWith('conj-')) return 'a2-clauses';
+  if (id.startsWith('dat-')) return 'a1-dative';
+  if (id.startsWith('pack-travel-')) return 'a2-travel';
+  if (id.startsWith('pack-doctor-')) return 'a2-health-work';
+  if (id.startsWith('pack-work-')) return 'a2-health-work';
   if (id.startsWith('adj-')) return 'a2-adj-endings';
   if (id.startsWith('wh-')) return 'a1-questions';
   if (id.startsWith('poss-')) return 'a1-possessives';
