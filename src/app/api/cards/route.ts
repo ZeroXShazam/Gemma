@@ -22,11 +22,11 @@ export async function GET(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const cards: CardDef[] = (data ?? []).map((row) => ({
+    ...(row.data as Omit<CardDef, 'id' | 'language' | 'type' | 'level'>),
     id: row.id as string,
     language: row.language as Language,
     type: row.type,
     level: row.level,
-    ...(row.data as Omit<CardDef, 'id' | 'language' | 'type' | 'level'>),
   }));
 
   return NextResponse.json(cards);

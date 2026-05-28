@@ -245,12 +245,18 @@ function parseItConjFlags(enWt: string): { isc: boolean } {
   return { isc: tpl.includes('+isc') };
 }
 
-function areForm(stem: string, ending: string): string {
+function areForm(stem: string, ending: string, lemma: string): string {
   let s = stem;
   if (s.endsWith('i') && ['o', 'i', 'iamo', 'iate', 'a', 'ano'].includes(ending)) {
     if (ending === 'o' || ending === 'iamo' || ending === 'iate') s = s.slice(0, -1);
   }
-  if ((s.endsWith('c') || s.endsWith('g')) && ['i', 'iamo', 'iate'].includes(ending)) s += 'h';
+  const careGare =
+    (lemma.endsWith('care') || lemma.endsWith('gare')) &&
+    !lemma.endsWith('scare') &&
+    !lemma.endsWith('sgare');
+  if (s.endsWith('c') || s.endsWith('g')) {
+    if (ending === 'i' || (careGare && (ending === 'iamo' || ending === 'iate'))) s += 'h';
+  }
   return s + ending;
 }
 
@@ -262,12 +268,12 @@ function conjugateItalian(lemma: string, enWt: string): Parsed['verb'] | undefin
 
   if (lemma.endsWith('are')) {
     const stem = lemma.slice(0, -3);
-    const ich = areForm(stem, 'o');
-    const du = areForm(stem, 'i');
-    const er = areForm(stem, 'a');
-    const wir = areForm(stem, 'iamo');
-    const ihr = areForm(stem, 'iate');
-    const sie = areForm(stem, 'ano');
+    const ich = areForm(stem, 'o', lemma);
+    const du = areForm(stem, 'i', lemma);
+    const er = areForm(stem, 'a', lemma);
+    const wir = areForm(stem, 'iamo', lemma);
+    const ihr = areForm(stem, 'iate', lemma);
+    const sie = areForm(stem, 'ano', lemma);
     const imperf = stem.replace(/i$/, '') + 'ava';
     const part = stem.replace(/i$/, '') + 'ato';
     return { ich, du, er, wir, ihr, sie, praeteritum: imperf, perfekt: `ha ${part}` };

@@ -340,9 +340,9 @@ function AuthForm() {
   )
 }
 
-function CardBack({ card }: { card: SRSCard }) {
+function CardBack({ card, language }: { card: SRSCard; language: Language }) {
   const c = card.conjugations
-  const isIt = card.language === 'it'
+  const isIt = language === 'it' || card.language === 'it' || card.id.startsWith('it-')
   const verbDict = isIt ? VERB_EN_IT : VERB_EN
 
   if ((card.type === 'verb' || card.type === 'modal') && c) {
@@ -1183,7 +1183,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 <div style={{ fontSize: 14, color: 'var(--dim)', marginBottom: 20 }}>{prevEx.en}</div>
               )}
               <div style={{ borderTop: '1px solid var(--elev)', paddingTop: 20, marginBottom: 20 }}>
-                <CardBack card={prevCard} />
+                <CardBack card={prevCard} language={settings.activeLanguage} />
               </div>
               <button onClick={() => setReviewingPrev(false)} style={{ ...sBtnPrimary, width: '100%' }}>
                 ↩ Resume
@@ -1197,7 +1197,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               {reverse ? (
                 <div>
                   <div style={{ fontSize: 11, color: 'var(--dim)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>
-                    EN → DE · Translate the missing piece
+                    EN → {settings.activeLanguage.toUpperCase()} · Translate the missing piece
                   </div>
                   <div style={{ fontSize: 18, color: 'var(--text-soft)', marginBottom: 16, lineHeight: 1.5 }}>{ex.en}</div>
                   {!checked ? (
@@ -1208,7 +1208,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       onChange={e => setInput(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); doCheck() } }}
                       autoFocus
-                      placeholder="Type the German…"
+                      placeholder={`Type the ${LANGUAGE_LABELS[settings.activeLanguage]}…`}
                       {...langInputProps(settings.activeLanguage)}
                       style={{
                         ...sInput,
@@ -1347,7 +1347,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
               <div style={{ fontSize: 14, color: 'var(--dim)', marginBottom: 20 }}>{ex.en}</div>
 
               <div style={{ borderTop: '1px solid var(--elev)', paddingTop: 20, marginBottom: 20 }}>
-                <CardBack card={card} />
+                <CardBack card={card} language={settings.activeLanguage} />
               </div>
 
               <div style={{ marginBottom: 24 }}>

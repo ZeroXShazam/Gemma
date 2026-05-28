@@ -40,7 +40,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Digiuno.',en:'I fast.',focus:'digiuno',subject:'ich'},
     {de:'Digiuni?',en:'Do you fast?',focus:'digiuni',subject:'du'},
   ]),
-  _verb('gen-verb-bisticciare','A1','bisticciare',{ich:'bisticco',du:'bisticcii',er:'bisticcia',wir:'bisticchiamo',ihr:'bisticchiate',sie:'bisticciano'},'bisticcava','ha bisticcato','easy',[
+  _verb('gen-verb-bisticciare','A1','bisticciare',{ich:'bisticco',du:'bisticcii',er:'bisticcia',wir:'bisticciamo',ihr:'bisticciate',sie:'bisticciano'},'bisticcava','ha bisticcato','easy',[
     {de:'Bisticco.',en:'I bicker.',focus:'bisticco',subject:'ich'},
     {de:'Bisticcii?',en:'Do you bicker?',focus:'bisticcii',subject:'du'},
   ]),
@@ -56,7 +56,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'A chi avrà conseguito l\'attestato saranno accreditate 5 ore di PCTO.',en:'A grand total of 5 PCTO hours will be awarded to whomever will have attained the certificate.',focus:'avrà conseguito'},
     {de:'da ciò consegue che.../ne consegue che...',en:'off of this/it, as a consequence, follows that...',focus:['consegue','consegue']},
   ]),
-  _verb('gen-verb-contagiare','A1','contagiare',{ich:'contago',du:'contagii',er:'contagia',wir:'contaghiamo',ihr:'contaghiate',sie:'contagiano'},'contagava','ha contagato','easy',[
+  _verb('gen-verb-contagiare','A1','contagiare',{ich:'contago',du:'contagii',er:'contagia',wir:'contagiamo',ihr:'contagiate',sie:'contagiano'},'contagava','ha contagato','easy',[
     {de:'Contago.',en:'I infect.',focus:'contago',subject:'ich'},
     {de:'Contagii?',en:'Do you infect?',focus:'contagii',subject:'du'},
   ]),
@@ -116,11 +116,11 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Insospettisco.',en:'I arouse suspicion.',focus:'insospettisco',subject:'ich'},
     {de:'Insospettisci?',en:'Do you arouse suspicion?',focus:'insospettisci',subject:'du'},
   ]),
-  _verb('gen-verb-poggiare','A1','poggiare',{ich:'poggo',du:'poggii',er:'poggia',wir:'pogghiamo',ihr:'pogghiate',sie:'poggiano'},'poggava','ha poggato','easy',[
+  _verb('gen-verb-poggiare','A1','poggiare',{ich:'poggo',du:'poggii',er:'poggia',wir:'poggiamo',ihr:'poggiate',sie:'poggiano'},'poggava','ha poggato','easy',[
     {de:'Poggo.',en:'I lean or rest.',focus:'poggo',subject:'ich'},
     {de:'Poggii?',en:'Do you lean or rest?',focus:'poggii',subject:'du'},
   ]),
-  _verb('gen-verb-scocciare','A1','scocciare',{ich:'scocco',du:'scoccii',er:'scoccia',wir:'scocchiamo',ihr:'scocchiate',sie:'scocciano'},'scoccava','ha scoccato','easy',[
+  _verb('gen-verb-scocciare','A1','scocciare',{ich:'scocco',du:'scoccii',er:'scoccia',wir:'scocciamo',ihr:'scocciate',sie:'scocciano'},'scoccava','ha scoccato','easy',[
     {de:'Scocco.',en:'I annoy.',focus:'scocco',subject:'ich'},
     {de:'Scoccii?',en:'Do you annoy?',focus:'scoccii',subject:'du'},
   ]),
@@ -156,7 +156,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Soccorro.',en:'I help.',focus:'soccorro',subject:'ich'},
     {de:'Soccorri?',en:'Do you help?',focus:'soccorri',subject:'du'},
   ]),
-  _verb('gen-verb-ondeggiare','A1','ondeggiare',{ich:'ondeggo',du:'ondeggii',er:'ondeggia',wir:'ondegghiamo',ihr:'ondegghiate',sie:'ondeggiano'},'ondeggava','ha ondeggato','easy',[
+  _verb('gen-verb-ondeggiare','A1','ondeggiare',{ich:'ondeggo',du:'ondeggii',er:'ondeggia',wir:'ondeggiamo',ihr:'ondeggiate',sie:'ondeggiano'},'ondeggava','ha ondeggato','easy',[
     {de:'Ondeggo.',en:'I ripple.',focus:'ondeggo',subject:'ich'},
     {de:'Ondeggii?',en:'Do you ripple?',focus:'ondeggii',subject:'du'},
   ]),
@@ -266,7 +266,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Concorro.',en:'I converge.',focus:'concorro',subject:'ich'},
     {de:'Concorri?',en:'Do you converge?',focus:'concorri',subject:'du'},
   ]),
-  _verb('gen-verb-bocciare','A1','bocciare',{ich:'bocco',du:'boccii',er:'boccia',wir:'bocchiamo',ihr:'bocchiate',sie:'bocciano'},'boccava','ha boccato','easy',[
+  _verb('gen-verb-bocciare','A1','bocciare',{ich:'bocco',du:'boccii',er:'boccia',wir:'bocciamo',ihr:'bocciate',sie:'bocciano'},'boccava','ha boccato','easy',[
     {de:'Bocco.',en:'I reject.',focus:'bocco',subject:'ich'},
     {de:'Boccii?',en:'Do you reject?',focus:'boccii',subject:'du'},
   ]),
@@ -343,7 +343,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Graffo.',en:'I scratch.',focus:'graffo',subject:'ich'},
     {de:'Graffii?',en:'Do you scratch?',focus:'graffii',subject:'du'},
   ]),
-  _verb('gen-verb-cascare','A1','cascare',{ich:'casco',du:'caschi',er:'casca',wir:'caschiamo',ihr:'caschiate',sie:'cascano'},'cascava','ha cascato','easy',[
+  _verb('gen-verb-cascare','A1','cascare',{ich:'casco',du:'caschi',er:'casca',wir:'casciamo',ihr:'casciate',sie:'cascano'},'cascava','ha cascato','easy',[
     {de:'Casco.',en:'I fall.',focus:'casco',subject:'ich'},
     {de:'Caschi?',en:'Do you fall?',focus:'caschi',subject:'du'},
   ]),
@@ -401,7 +401,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Sintetizzo.',en:'I synthesize.',focus:'sintetizzo',subject:'ich'},
     {de:'Sintetizzi?',en:'Do you synthesize?',focus:'sintetizzi',subject:'du'},
   ]),
-  _verb('gen-verb-accorciare','A1','accorciare',{ich:'accorco',du:'accorcii',er:'accorcia',wir:'accorchiamo',ihr:'accorchiate',sie:'accorciano'},'accorcava','ha accorcato','easy',[
+  _verb('gen-verb-accorciare','A1','accorciare',{ich:'accorco',du:'accorcii',er:'accorcia',wir:'accorciamo',ihr:'accorciate',sie:'accorciano'},'accorcava','ha accorcato','easy',[
     {de:'Accorco.',en:'I shorten.',focus:'accorco',subject:'ich'},
     {de:'Accorcii?',en:'Do you shorten?',focus:'accorcii',subject:'du'},
   ]),
@@ -413,7 +413,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Riuscì a scorgere la sagoma di un uomo che usciva furtivamente dalla porta sul retro.',en:'He could make out the silhouette of a man surreptitiously going out the rear door.',focus:'scorgere'},
     {de:'Riuscì a scorgere la sagoma di un uomo che usciva furtivamente dalla porta sul retro.',en:'He could make out the silhouette of a man surreptitiously going out the rear door.',focus:'scorgere'},
   ]),
-  _verb('gen-verb-padroneggiare','A1','padroneggiare',{ich:'padroneggo',du:'padroneggii',er:'padroneggia',wir:'padronegghiamo',ihr:'padronegghiate',sie:'padroneggiano'},'padroneggava','ha padroneggato','easy',[
+  _verb('gen-verb-padroneggiare','A1','padroneggiare',{ich:'padroneggo',du:'padroneggii',er:'padroneggia',wir:'padroneggiamo',ihr:'padroneggiate',sie:'padroneggiano'},'padroneggava','ha padroneggato','easy',[
     {de:'un poliglotto padroneggia tante lingue',en:'A polyglot masters many languages',focus:'padroneggia'},
     {de:'Padroneggii?',en:'Do you master?',focus:'padroneggii',subject:'du'},
   ]),
@@ -517,7 +517,7 @@ export const GENERATED_VERBS_IT: CardDef[] = [
     {de:'Aderisco.',en:'I adhere.',focus:'aderisco',subject:'ich'},
     {de:'Aderisci?',en:'Do you adhere?',focus:'aderisci',subject:'du'},
   ]),
-  _verb('gen-verb-associare','A1','associare',{ich:'assoco',du:'associi',er:'associa',wir:'assochiamo',ihr:'assochiate',sie:'associano'},'assocava','ha assocato','easy',[
+  _verb('gen-verb-associare','A1','associare',{ich:'assoco',du:'associi',er:'associa',wir:'associamo',ihr:'associate',sie:'associano'},'assocava','ha assocato','easy',[
     {de:'Assoco.',en:'I take into partnership.',focus:'assoco',subject:'ich'},
     {de:'Associi?',en:'Do you take into partnership?',focus:'associi',subject:'du'},
   ]),
