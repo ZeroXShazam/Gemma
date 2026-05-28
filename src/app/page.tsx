@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useSession, signIn, signUp, signOut } from '@/lib/auth-client'
 import { defaultSRS, computeNext, previewIntervals } from '@/lib/srs'
 import { speak, cancelSpeech, ttsAvailable } from '@/lib/tts'
@@ -11,6 +11,9 @@ import {
 import { ALL_SECTION_IDS, allSectionIds, cardSection, sectionTitle, type SectionId } from '@/lib/curriculum'
 import { ALL_SECTION_IDS_IT } from '@/lib/curriculum-it'
 import { CurriculumSidebar } from '@/components/CurriculumSidebar'
+import { ClickableSentence } from '@/components/ClickableSentence'
+import { GrammarPopup } from '@/components/GrammarPopup'
+import { buildGrammarIndex, type GrammarEntry } from '@/lib/grammar-index'
 import { mixQueue, sortNewCardsForBudget } from '@/lib/deck-queue'
 import {
   DEFAULT_TRAINER_DIFFICULTY,
@@ -527,15 +530,37 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   const [choices, setChoices]   = useState<string[]>([])
   const [prevExIdx, setPrevExIdx] = useState(0)
   const [prevReverse, setPrevReverse] = useState(false)
+  const [grammarPopup, setGrammarPopup] = useState<{
+    word: string
+    entry: GrammarEntry | null
+    anchor: HTMLElement
+  } | null>(null)
   const [reviewingPrev, setReviewingPrev] = useState(false)
   const [nearMiss, setNearMiss] = useState<string | null>(null)
   const [showSections, setShowSections] = useState(false)
   const inputEl = useRef<HTMLInputElement>(null)
 
+  const grammarIndex = useMemo(
+    () => buildGrammarIndex(cards, settings.activeLanguage),
+    [cards, settings.activeLanguage],
+  )
+
+  const cardsById = useMemo(
+    () => new Map(cards.map((c) => [c.id, c])),
+    [cards],
+  )
+
+  const openGrammarPopup = useCallback((entry: GrammarEntry | null, anchor: HTMLElement, word: string) => {
+    setGrammarPopup({ word, entry, anchor })
+  }, [])
+
+  const closeGrammarPopup = useCallback(() => setGrammarPopup(null), [])
+
   useEffect(() => { loadData() }, [])
 
   async function fetchCards(language: Language): Promise<CardDef[]> {
     const res = await fetch(`/api/cards?language=${language}`)
+    if (!res.ok) return []
     const data = await res.json()
     return Array.isArray(data) ? (data as CardDef[]) : []
   }
@@ -543,10 +568,12 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
   async function loadData() {
     setLoading(true)
     try {
-      const [pr, sr] = await Promise.all([
-        fetch('/api/user/progress').then(r => r.json()),
-        fetch('/api/user/settings').then(r => r.json()),
+      const [prRes, srRes] = await Promise.all([
+        fetch('/api/user/progress'),
+        fetch('/api/user/settings'),
       ])
+      const pr = prRes.ok ? await prRes.json() : []
+      const sr = srRes.ok ? await srRes.json() : null
       const map: Record<string, SRSState> = {}
       if (Array.isArray(pr)) {
         for (const row of pr) {
@@ -588,11 +615,16 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
             hideEasyGen: sr.hide_easy_gen !== false,
           }
         : DEFAULT_SETTINGS
-      const fetched = await fetchCards(loaded.activeLanguage)
-      setCards(fetched)
+      const fetchedRes = await fetch(`/api/cards?language=${loaded.activeLanguage}`)
+      const fetched = fetchedRes.ok ? await fetchedRes.json() : []
+      if (!Array.isArray(fetched)) {
+        console.error('Failed to load cards')
+      }
+      const cardsList = Array.isArray(fetched) ? (fetched as CardDef[]) : []
+      setCards(cardsList)
       setPm(map)
       setSettings(loaded)
-      const q = buildQueue(fetched, map, loaded, lv)
+      const q = buildQueue(cardsList, map, loaded, lv)
       setQueue(q)
       setIdx(0)
       setPhase('cloze')
@@ -716,6 +748,10 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     ? applyNounStudyMode(baseEx, card.noun, settings.nounHardMode)
     : baseEx
   const intervals = card ? previewIntervals(card) : null
+
+  useEffect(() => {
+    setGrammarPopup(null)
+  }, [phase, card?.id, exIdx, reviewingPrev])
 
   useEffect(() => {
     if (!card || card.type !== 'prep' || !card.word) { setChoices([]); return }
@@ -843,6 +879,9 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
         }
         return
       }
+      if (grammarPopup) {
+        return
+      }
       if (phase === 'flip' && !saving) {
         if (e.key === ' ' && ex) { e.preventDefault(); speak(ex.de, settings.activeLanguage); return }
         const map: Record<string, Rating> = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' }
@@ -853,7 +892,7 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, checked, correct, saving, card, input, ex, reviewingPrev])
+  }, [phase, checked, correct, saving, card, input, ex, reviewingPrev, grammarPopup])
 
   useEffect(() => {
     if (phase === 'flip' && ex) speak(ex.de, settings.activeLanguage)
@@ -1152,17 +1191,29 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: 16, color: 'var(--text-soft)', marginBottom: 8, lineHeight: 1.5 }}>{prevEx.en}</div>
                   <div style={{ fontSize: 22, lineHeight: 1.6 }}>
-                    <span>{prevBefore}</span>
-                    <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(prevEx.focus)}</span>
-                    <span>{prevAfter}</span>
+                    <ClickableSentence
+                      text={`${prevBefore}${canonicalFocus(prevEx.focus)}${prevAfter}`}
+                      focus={prevEx.focus}
+                      grammarIndex={grammarIndex}
+                      cardsById={cardsById}
+                      language={settings.activeLanguage}
+                      currentCardId={prevCard.id}
+                      onWordClick={openGrammarPopup}
+                    />
                   </div>
                 </div>
               ) : (
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
-                  <div style={{ fontSize: 22, lineHeight: 1.6, flex: 1 }}>
-                    <span>{prevBefore}</span>
-                    <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(prevEx.focus)}</span>
-                    <span>{prevAfter}</span>
+                  <div style={{ flex: 1 }}>
+                    <ClickableSentence
+                      text={prevEx.de}
+                      focus={prevEx.focus}
+                      grammarIndex={grammarIndex}
+                      cardsById={cardsById}
+                      language={settings.activeLanguage}
+                      currentCardId={prevCard.id}
+                      onWordClick={openGrammarPopup}
+                    />
                   </div>
                   {ttsAvailable() && (
                     <button
@@ -1325,10 +1376,16 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           {!reviewingPrev && phase === 'flip' && ex && (
             <>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
-                <div style={{ fontSize: 22, lineHeight: 1.6, flex: 1 }}>
-                  <span>{before}</span>
-                  <span style={{ color: '#60a5fa', fontWeight: 700 }}>{canonicalFocus(ex.focus)}</span>
-                  <span>{after}</span>
+                <div style={{ flex: 1 }}>
+                  <ClickableSentence
+                    text={ex.de}
+                    focus={ex.focus}
+                    grammarIndex={grammarIndex}
+                    cardsById={cardsById}
+                    language={settings.activeLanguage}
+                    currentCardId={card.id}
+                    onWordClick={openGrammarPopup}
+                  />
                 </div>
                 {ttsAvailable() && (
                   <button
@@ -1359,7 +1416,20 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
                       background: isCurrent ? 'var(--elev)' : 'var(--input-bg)',
                       border: isCurrent ? '1px solid var(--border-strong)' : '1px solid transparent',
                     }}>
-                      <div style={{ fontSize: 14, color: isCurrent ? 'var(--text)' : 'var(--text-soft)' }}>{e.de}</div>
+                      <div style={{ fontSize: 14, color: isCurrent ? 'var(--text)' : 'var(--text-soft)' }}>
+                        <ClickableSentence
+                          text={e.de}
+                          focus={e.focus}
+                          grammarIndex={grammarIndex}
+                          cardsById={cardsById}
+                          language={settings.activeLanguage}
+                          currentCardId={card.id}
+                          fontSize={14}
+                          lineHeight={1.5}
+                          color={isCurrent ? 'var(--text)' : 'var(--text-soft)'}
+                          onWordClick={openGrammarPopup}
+                        />
+                      </div>
                       <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 2 }}>{e.en}</div>
                     </div>
                   )
@@ -1389,6 +1459,15 @@ function Trainer({ onSignOut }: { onSignOut: () => void }) {
           )}
         </div>
       </div>
+
+      {grammarPopup && (
+        <GrammarPopup
+          word={grammarPopup.word}
+          entry={grammarPopup.entry}
+          anchor={grammarPopup.anchor}
+          onClose={closeGrammarPopup}
+        />
+      )}
     </div>
     </TrainerShell>
   )

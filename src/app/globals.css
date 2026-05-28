@@ -218,3 +218,227 @@ input, textarea, select, button {
     display: none;
   }
 }
+
+/* Grammar word tap targets on flip sentences */
+.grammar-word {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted var(--muted);
+  text-underline-offset: 3px;
+}
+
+.grammar-word--focus {
+  color: #60a5fa;
+  font-weight: 700;
+  text-decoration-color: #60a5fa88;
+}
+
+.grammar-word--empty {
+  text-decoration-color: var(--faint);
+  opacity: 0.85;
+}
+
+.grammar-word:hover {
+  color: var(--text-soft);
+  text-decoration-color: var(--text-soft);
+}
+
+.grammar-popup-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 400;
+}
+
+.grammar-popup {
+  position: fixed;
+  z-index: 401;
+  width: min(360px, calc(100vw - 24px));
+  max-height: min(480px, 75vh);
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+}
+
+.grammar-popup--sheet {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-height: 70vh;
+  border-radius: 14px 14px 0 0;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+}
+
+.grammar-popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.grammar-popup-kicker {
+  font-size: 10px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.grammar-popup-title {
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.grammar-popup-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.grammar-popup-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.grammar-headline {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.grammar-section-label {
+  font-size: 10px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.grammar-rule,
+.grammar-detail {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.65;
+}
+
+.grammar-detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.grammar-tip {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #60a5fa14;
+  border: 1px solid #60a5fa33;
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+
+.grammar-tip-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #60a5fa;
+  margin-bottom: 4px;
+}
+
+.grammar-cases {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grammar-cases-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  background: var(--elev);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.grammar-cases-row span:first-child {
+  color: var(--dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.grammar-example {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--input-bg);
+  border: 1px solid transparent;
+  margin-bottom: 6px;
+}
+
+.grammar-example:last-child {
+  margin-bottom: 0;
+}
+
+.grammar-example--current {
+  background: var(--elev);
+  border-color: var(--border-strong);
+}
+
+.grammar-example-de {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.grammar-example-en {
+  font-size: 12px;
+  color: var(--dim);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.grammar-example-meta {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grammar-empty {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}

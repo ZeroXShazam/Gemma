@@ -10,9 +10,19 @@ const pool = new Pool({
   max: 1,
 });
 
+const envTrustedOrigins = (process.env.BETTER_AUTH_TRUSTED_ORIGINS ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET!,
   baseURL: process.env.BETTER_AUTH_URL!,
+  trustedOrigins: [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    ...envTrustedOrigins,
+  ],
   database: {
     dialect: new PostgresDialect({ pool }),
     type: "postgres",
